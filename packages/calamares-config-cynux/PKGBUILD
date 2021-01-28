@@ -1,0 +1,27 @@
+
+pkgname=calamares-config-cynux
+pkgver=2.d256555
+pkgrel=1
+pkgdesc='Calamares config for Cynux Security'
+arch=('any')
+groups=('cynuxsecurity-config')
+url='https://github.com/cynuxsecurity/calamares-config-cynux'
+license=('custom:unknown')
+depends=('calamares')
+makedepends=('git')
+source=("git+https://github.com/cynuxsecurity/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/etc/calamares"
+
+  cp -a calamares/* "$pkgdir/etc/calamares"
+}
