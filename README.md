@@ -1,4 +1,5 @@
 # cynuxsecurity
+[![Download cynuxsecurity](https://img.shields.io/sourceforge/dw/cynuxsecurity.svg)](https://sourceforge.net/projects/cynuxsecurity/files/latest/download) </br>
 Official repository of Cynux Security
 
 Download <https://sourceforge.net/projects/cynuxsecurity/>
