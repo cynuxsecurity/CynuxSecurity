@@ -19,3 +19,7 @@ Just clone our repository with git clone ```https://github.com/cynuxsecurity/Cyn
 
 ## Installation  
 ```sudo install_cynux```
+
+## Contact Info
+
+Email: cynuxos@gmail.com </br>
