@@ -1,4 +1,7 @@
-# cynuxsecurity
+# Cynuxsecurity
+
+![cynux](https://raw.githubusercontent.com/cynuxsecurity/CynuxSecurity/main/usr/share/backgrounds/cynuxsecwap_4.png)
+
 [![Download cynuxsecurity](https://img.shields.io/sourceforge/dw/cynuxsecurity.svg)](https://sourceforge.net/projects/cynuxsecurity/files/latest/download) </br>
 Official repository of Cynux Security
 
