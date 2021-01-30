@@ -1,0 +1,30 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-normality
+_pkgname=normality
+pkgver=2.1.1
+pkgrel=2
+pkgdesc='Micro-library to normalize text strings.'
+arch=('any')
+url='https://pypi.org/project/normality/#files'
+license=('MIT')
+depends=('python' 'python-six' 'python-chardet' 'python-pyicu' 'python-banal')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/94/44/6a6beb3d70008c3ede6785e15772181f79a7d8366c912f8ca43cc056f53a/$_pkgname-$pkgver.tar.gz")
+sha512sums=('24f4fdf964e4b9fff87eebca25c3b51d08120b4294ffa9e9c1e81f10d52f1f676591dd944fe456165708c6e15e58edb1d4020aae65f58f1951f4c755bb7d7e40')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  rm -rf "$pkgdir/usr/lib/python3.9/site-packages/tests"
+}
+

@@ -1,0 +1,62 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=w3af
+pkgver=1.6.49
+pkgrel=8
+groups=('cynuxsecurity' 'cynuxsecurity-fuzzer' 'cynuxsecurity-scanner' 'cynuxsecurity-webapp')
+pkgdesc='Web Application Attack and Audit Framework.'
+arch=('any')
+url='https://github.com/andresriancho/w3af/releases'
+license=('GPL')
+depends=('python2' 'python2-clamd' 'python2-pybloomfiltermmap' 'python2-esmre'
+         'python2-phply' 'python2-pysqlite' 'python2-nltk' 'python2-chardet'
+         'python2-pdfminer' 'python2-futures' 'python2-pyopenssl' 'python2-lxml'
+         'python2-scapy' 'python2-guess-language' 'python2-cluster' 'sqlite'
+         'python2-msgpack' 'python2-ntlm' 'python2-pygithub' 'python2-gitpython'
+         'graphviz' 'pygtk' 'gtk2' 'python2-beautifulsoup3' 'python2-xdot'
+         'python2-xdot' 'libxml2' 'libxslt' 'libyaml' 'python2-yaml'
+         'python2-vulndb' 'python2-pip' 'python2-stopit' 'python2-tblib'
+         'python2-darts.util.lru' 'python2-jinja' 'python2-pyasn1' 'halberd'
+         'python2-markdown' 'pygtksourceview2')
+options=('!strip')
+source=("https://github.com/andresriancho/$pkgname/archive/$pkgver.tar.gz"
+        "$pkgname.desktop")
+sha512sums=('fdcac8baf85e81dcad62b4568cc28b15cb75baeeb8df647ec2ade22b40c0cb4e2483224b8852dd9f891de66f7ac1367d56b3c15b50a3ebab779d4cced750f0f9'
+            '8ce7a6e97bf1d4fd357a7a6ee72638bdb6be0c63dacd4c099a99f64dcb8b30180831074ec1699904233548d385c3b1c445402d9538d50e5be2ea87c84630a38e')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+
+  sed -i -e 's|#!\s*/usr/bin/python[^\d.]*$|#!/usr/bin/python2|' \
+    -e 's|#!\s*/usr/bin/env python[^\d.]*$|#!/usr/bin/env python2|' \
+    $(find . -name '*.py') w3af_{console,gui}
+
+  sed -i 's/dependency_check()/#&/' w3af_{console,gui}
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+  install -dm 755 "$pkgdir/usr/share/applications"
+
+  cp --no-preserve=ownership -a * "$pkgdir/usr/share/$pkgname/"
+
+  install -Dm 644 "$srcdir/$pkgname.desktop" "$pkgdir/usr/share/applications"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+exec python2 /usr/share/$pkgname/w3af_console "\$@"
+EOF
+
+  cat > "$pkgdir/usr/bin/$pkgname-gui" << EOF
+#!/bin/sh
+exec python2 /usr/share/$pkgname/$pkgname_gui "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/share/$pkgname"/w3af_{console,gui} \
+    "$pkgdir/usr/bin"/{w3af,w3af-gui}
+}
+

@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-azure-mgmt-storage
+_pkgname=azure-mgmt-storage
+pkgver=16.0.0
+pkgrel=2
+pkgdesc='Microsoft Azure Storage Management Client Library for Python.'
+arch=('any')
+url='https://pypi.org/project/azure-mgmt-storage/#files'
+license=('MIT')
+depends=('python' 'python-azure-common' 'python-msrestazure' 'python-msrest')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/d9/9a/31529fb92dc5a8c0a0eae73a0e8af8696b1330f53799b93f0aa59566d674/$_pkgname-$pkgver.zip")
+sha512sums=('1193ccea2f49b112beb2514aedc048eeb51b843f7e21fe77a0c973fcc87ec09e9abdf389a0404b599940daf54ef6c2203c63820a43efa98d9dd4f7d3ba95e1d6')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

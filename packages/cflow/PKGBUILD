@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=cflow
+pkgver=1.6
+pkgrel=1
+pkgdesc='A C program flow analyzer.'
+url='http://www.gnu.org/software/cflow/'
+groups=('cynuxsecurity' 'cynuxsecurity-code-audit')
+license=('GPL')
+arch=('x86_64' 'aarch64')
+source=("http://ftp.gnu.org/gnu/$pkgname/$pkgname-$pkgver.tar.bz2")
+sha512sums=('eb26695b479205ea391623d78ee537cac084a168a52c2bf4f2e4206d7a3f813e6e3f92684903673af905172c3b1df3f8ab1ccb7986bd61ed53feee34fb3fd7c6')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  ./configure --prefix=/usr
+
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+}
+

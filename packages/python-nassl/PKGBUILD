@@ -1,0 +1,44 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-nassl
+_pkgname=nassl
+pkgver=4.0.0
+pkgrel=1
+pkgdesc='Experimental Python wrapper for OpenSSL.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/nabla-c0d3/nassl'
+license=('GPL')
+depends=('python')
+makedepends=('openssl' 'openssl-1.0' 'zlib' 'python-setuptools' 'python-invoke'
+             'python-pipenv')
+source=("https://github.com/nabla-c0d3/nassl/archive/$pkgver.tar.gz")
+sha512sums=('7653cea596d349267599fd0657ae1c0428a79609405294b02d402cef63d9dd48a3ce587eef84224f638699fb58aa7d8a95fd9a8f8c445dea0541ed740801875e')
+
+prepare() {
+  cd "$_pkgname-$pkgver"
+
+  sed -i 's/3.7/3.9/' Pipfile
+}
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  pipenv install --dev
+
+  invoke build.zlib
+  invoke build.legacy-openssl
+  invoke build.modern-openssl
+
+  python setup.py build_ext -i -I/usr/include/openssl-1.0/ \
+    -I/usr/include/openssl/
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

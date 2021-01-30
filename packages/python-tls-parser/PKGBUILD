@@ -1,0 +1,44 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-tls-parser
+pkgname=('python2-tls-parser' 'python-tls-parser')
+_pkgname='tls_parser'
+pkgver=1.2.2
+pkgrel=2
+pkgdesc='Small library to parse TLS records.'
+arch=('any')
+url='https://pypi.python.org/pypi/tls-parser/'
+license=('custom:unknown')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/66/4e/da7f727a76bd9abee46f4035dbd7a4711cde408f286dae00c7a1f9dd9cbb/$_pkgname-$pkgver.tar.gz")
+sha512sums=('234a5c4a3037374d3b90741b835786e2bb6b57818f24802462fd1d338a37090ab4a18585f32293c45d85cd95b69cd9d27f17126c4c29eea61b525f8b83fba42c')
+
+prepare() {
+  cp -a "tls_parser-$pkgver" "tls_parser2-$pkgver"
+}
+
+build() {
+  cd "tls_parser2-$pkgver"
+
+  python2 setup.py build
+
+  cd "$srcdir/tls_parser-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-tls-parser() {
+  cd "tls_parser2-$pkgver"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+
+package_python-tls-parser() {
+  cd "tls_parser-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

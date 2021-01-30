@@ -1,0 +1,55 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=shodan
+pkgname=('python2-shodan' 'python-shodan')
+pkgver=1.24.0
+pkgrel=2
+pkgdesc='Python library and command-line utility for Shodan (https://developer.shodan.io).'
+groups=('cynuxsecurity' 'cynuxsecurity-recon' 'cynuxsecurity-scanner'
+        'cynuxsecurity-automation')
+arch=('any')
+url='https://pypi.org/project/shodan/#files'
+makedepends=('python-setuptools' 'python2-setuptools')
+license=('MIT')
+source=("https://files.pythonhosted.org/packages/49/7f/2e1ec600f21b3f84372c1f56df600bc956e5201ac18321b45821051ac248/$pkgbase-$pkgver.tar.gz")
+sha512sums=('f7e13626d5ddbd21687be4c638b755c5986d0fa36494d7684d83d64e592a196c4f1ffb80930b3fe0cfa5adfcedeb6b8d5e4cd338250ca67a45d2f0c5a6b759a2')
+
+prepare() {
+  cp -a "$pkgbase-$pkgver"{,-2}
+}
+
+build_python-shodan() {
+  cd "$pkgbase-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$pkgbase-$pkgver"
+
+  python2 setup.py build
+}
+
+package_python2-shodan() {
+  depends=('python2' 'python2-requests' 'python2-simplejson' 'python2-click'
+           'python2-click-plugins' 'python2-xlsxwriter' 'python2-colorama')
+
+  cd "$pkgbase-$pkgver-2"
+
+  python2 setup.py install --root="$pkgdir" --prefix=/usr -O1
+
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/${pkgname[0]}/LICENSE"
+
+  mv "$pkgdir/usr/bin/$pkgbase" "$pkgdir/usr/bin/${pkgbase}2"
+}
+
+package_python-shodan() {
+  depends=('python' 'python-requests' 'python-simplejson' 'python-click'
+           'python-click-plugins' 'python-xlsxwriter' 'python-colorama')
+
+  cd "$pkgbase-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1
+
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/${pkgname[1]}/LICENSE"
+}
+

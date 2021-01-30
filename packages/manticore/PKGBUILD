@@ -1,0 +1,44 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=manticore
+pkgver=0.2.4.r279.g334b3aa6
+pkgrel=1
+pkgdesc='Symbolic execution tool.'
+arch=('any')
+groups=('cynuxsecurity' 'cynuxsecurity-binary')
+url='https://github.com/trailofbits/manticore'
+license=('AGPL3')
+depends=('python' 'python-pyevmasm' 'python-capstone' 'python-keystone'
+         'python-unicorn' 'python-ply' 'binaryninja-python' 'python-typing'
+         'python-pyelftools' 'python-z3' 'python-pysha3' 'solidity'
+         'python-yaml' 'python-crytic-compile' 'python-rlp'
+         'python-prettytable')
+makedepends=('git' 'python-setuptools')
+source=("git+https://github.com/trailofbits/$pkgname.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd $pkgname
+
+  python setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname" *.md docs/*.rst
+
+  cp -a docs/images "$pkgdir/usr/share/doc/$pkgname/"
+
+  find "$pkgdir" -type f -iname '*.pyc' -print -exec rm -f {} \;
+}
+

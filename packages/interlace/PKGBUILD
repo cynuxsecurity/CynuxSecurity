@@ -1,0 +1,40 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=interlace
+pkgver=315.f38bb59
+pkgrel=1
+pkgdesc='Easily turn single threaded command line applications into a fast, multi-threaded application with CIDR and glob support.'
+groups=('cynuxsecurity' 'cynuxsecurity-networking')
+arch=('any')
+url='https://github.com/codingo/Interlace/releases'
+license=('GPL3')
+depends=('python' 'python-colorclass' 'python-netaddr' 'python-tqdm')
+makedepends=('git' 'python-setuptools')
+source=("$pkgname::git+https://github.com/codingo/Interlace.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  cd $pkgname
+
+  sed -i 's/==.*//g' requirements.txt
+}
+
+build() {
+  cd $pkgname
+
+  python setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-crccheck
+_pkgname=crccheck
+pkgver=1.0
+pkgrel=3
+pkgdesc='Classes to calculate CRCs and checksums from binary data.'
+arch=('any')
+url='https://pypi.org/project/crccheck/#files'
+license=('GPL3')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/b0/40/21652b902a244a8516dc314e6e0053179164ca703628b53419a3b4ec063f/$_pkgname-$pkgver.tar.gz")
+sha512sums=('eab4259404abb618d0dea7848c566161d2e332e3828d4d23f19432d9a5b5a402c015a1f23761ae6a4982725bbb9dbe453b9d7190d6917b63e5a444ecaf69c669')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

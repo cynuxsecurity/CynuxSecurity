@@ -1,0 +1,37 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-semgrep
+_pkgname=semgrep
+pkgver=0.37.0
+pkgrel=1
+pkgdesc='Lightweight static analysis for many languages.'
+arch=('x86_64')
+url='https://github.com/returntocorp/semgrep'
+license=('LGPL')
+depends=('python' 'python-colorama' 'python-requests' 'python-attrs'
+         'python-tqdm' 'python-packaging' 'python-ruamel-yaml' 'python-wheel'
+         'python-jsonschema' 'python-junit-xml')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/78/b9/92cd2546703f222787ca76095da93db26cdbc591223cb25af00b09867d6c/$_pkgname-$pkgver.tar.gz"
+        "https://github.com/returntocorp/$_pkgname/releases/download/v$pkgver/semgrep-v$pkgver-ubuntu-16.04.tgz")
+sha512sums=('a2c5f6b111fd46f8cae6b319dffdb7cb306d0fb6dd0f4f3ca1079fa024d5d860aef52b4cd6f4e5dbcc3803f414b1a5d89df4b01350f110a12d4af6ed75b55396'
+            'dbdfdde1117fff5ead9fff1aabbc53ada8c292dd2b4ee81b2d9ec7d6747b60022e4e7c4c40513a460782ec518fcac44834929edd7be80ae9a0ba4a65e29bf158')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  rm -rf "$pkgdir/usr/lib/python3.9/site-packages/tests"
+
+  # default is enough for now
+  strip "$pkgdir/usr/bin/"{spacegrep,semgrep-core}
+}
+

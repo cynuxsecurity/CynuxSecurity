@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=ruby-rubyzip
+_gemname=rubyzip
+pkgver=2.3.0
+pkgrel=1
+pkgdesc='A ruby module for reading and writing zip files.'
+arch=('any')
+url='http://rubyzip.sourceforge.net/'
+license=('BSD')
+depends=('ruby')
+makedepends=('rubygems' 'ruby-rdoc')
+source=("https://rubygems.org/gems/$_gemname-$pkgver.gem")
+sha512sums=('6c13c5ae766320b0fb74c9de64f5c18d39c9a24725d39571a1c4ed61d559bd97c658cdbf876b7e2a3c0077b67e5407e689952b9a1addc6d655b431eb8146ad8a')
+noextract=("$_gemname-$pkgver.gem")
+
+package() {
+  _gemdir="$(ruby -rubygems -e'puts Gem.default_dir')"
+
+  if [[ $CARCH == arm* ]] ; then
+    gem install --no-user-install --ignore-dependencies --no-rdoc --no-ri \
+      -i "$pkgdir$_gemdir" "$_gemname-$pkgver.gem"
+  else
+    gem install --no-user-install --ignore-dependencies -i "$pkgdir$_gemdir" \
+      "$_gemname-$pkgver.gem"
+  fi
+}
+

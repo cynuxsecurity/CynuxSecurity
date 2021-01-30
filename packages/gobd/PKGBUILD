@@ -1,0 +1,39 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=gobd
+pkgver=82.3bbd17c
+pkgrel=3
+groups=('cynuxsecurity' 'cynuxsecurity-backdoor')
+pkgdesc='A Golang covert backdoor.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/razc411/GoBD'
+license=('custom:unknown')
+depends=('glibc' 'libpcap')
+makedepends=('git' 'libpcap' 'go-pie')
+source=("$pkgname::git+https://github.com/razc411/GoBD.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  GOPATH="$srcdir" go get -d -t .
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+
+  GOPATH="$srcdir" go build -v .
+
+  install -Dm 755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+}
+

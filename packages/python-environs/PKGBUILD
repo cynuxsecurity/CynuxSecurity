@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-environs
+_pkgname=environs
+pkgver=9.3.0
+pkgrel=1
+pkgdesc='Simplified environment variable parsing.'
+arch=('any')
+url='https://pypi.org/project/environs/#files'
+license=('MIT')
+depends=('python' 'python-marshmallow' 'python-dotenv')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/49/2d/d5cd3f8b6d107c44c7b868dafb877cbaa7aa0268ed440902767c211a57c6/$_pkgname-$pkgver.tar.gz")
+sha512sums=('f2f2b66e8f6e493f817e9f11866bd0bd615fc0092242185b5ecf8f9cc40ec163074520fba194918b7f8a6d7226f0ccbbcdc9bb476b68fc1c702c6e1464b9170d')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

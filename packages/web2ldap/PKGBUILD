@@ -1,0 +1,35 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=web2ldap
+pkgver=1.5.112
+pkgrel=1
+pkgdesc='Full-featured LDAP client running as web application.'
+groups=('cynuxsecurity' 'cynuxsecurity-misc')
+arch=('any')
+url='https://web2ldap.de/'
+license=('Apache')
+depends=('python' 'python-dnspython' 'python-paramiko' 'python-asn1crypto'
+         'python-xlwt' 'python-ldap0')
+makedepends=('python-setuptools')
+source=("https://www.web2ldap.de/download/$pkgname-$pkgver.tar.gz")
+sha512sums=('ee4423f2ceca697ad7c24d983c65e5fad8d00797457eca8c606a199d5b8af5c133636cc9abe3e311bcd516b17c1ffae3c94381d3636778069c4764d1180bb384')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  cp -a "$pkgdir/usr/etc" "$pkgdir/etc"
+
+  chmod 644 \
+    "$pkgdir/usr/lib/python3.9/site-packages/web2ldap-$pkgver-py3.9.egg-info/"*
+}
+

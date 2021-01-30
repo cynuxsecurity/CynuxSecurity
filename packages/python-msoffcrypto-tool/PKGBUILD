@@ -1,0 +1,48 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-msoffcrypto-tool
+pkgname=('python2-msoffcrypto-tool' 'python-msoffcrypto-tool')
+_pkgname=msoffcrypto-tool
+pkgver=4.11.0
+pkgrel=2
+pkgdesc='A Python tool and library for decrypting MS Office files with passwords or other keys.'
+arch=('any')
+url='https://pypi.org/project/msoffcrypto-tool/#files'
+license=('MIT')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/4c/fe/0aece2bdb469298c2db33bcd0e1477227719ae71e1e533877f12334bf145/$_pkgname-$pkgver.tar.gz")
+sha512sums=('a405b7208ac0d0512d0eaddd89f4265b202bf2979a1b04f72168ed64ebb071bbd308fca8cdbed8c79f03f7074af4ad2a728846775f9a7d7d8c42908356711836')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-msoffcrypto-tool() {
+  depends=('python2' 'python2-olefile' 'python2-cryptography')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+
+  mv "$pkgdir/usr/bin/$_pkgname" "$pkgdir/usr/bin/${_pkgname}-2"
+}
+
+package_python-msoffcrypto-tool() {
+  depends=('python' 'python-olefile' 'python-cryptography')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

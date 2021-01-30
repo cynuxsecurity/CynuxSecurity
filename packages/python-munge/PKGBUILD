@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-munge
+_pkgname=munge
+pkgver=1.1.0
+pkgrel=2
+pkgdesc='Data manipulation client / library.'
+arch=('any')
+url='https://pypi.org/project/munge/#files'
+license=('Apache')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/58/8e/bff3f079540a0727dfd126512eec0b3f7c4b23fb01c9cb0e1cf335509dff/$_pkgname-$pkgver.tar.gz")
+sha512sums=('fb982e9d238a8380157d1a88ee83832e34d117ee87255d080182d47db118a6abdb78ed960660f39b738ec456048924ea2129e8143497027632166b544c997352')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

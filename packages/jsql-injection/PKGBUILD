@@ -1,0 +1,32 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=jsql-injection
+pkgver=0.82
+pkgrel=1
+pkgdesc='A Java application for automatic SQL database injection.'
+groups=('cynuxsecurity' 'cynuxsecurity-webapp' 'cynuxsecurity-exploitation'
+        'cynuxsecurity-fuzzer')
+arch=('any')
+url='https://github.com/ron190/jsql-injection'
+license=('GPL2')
+depends=('java-environment')
+makedepends=('git')
+noextract=("$pkgname-v$pkgver.jar")
+source=("https://github.com/ron190/jsql-injection/releases/download/v$pkgver/$pkgname-v$pkgver.jar")
+sha512sums=('9b89494d2b80d773587b6fe554ec8efda680dd4e54bdc2be70f37c815b3393011e6ccaa4cc626b68c77dc5645d6928b56c8933aa84e533c9cf8c7b15f41f2a0a')
+
+package() {
+  install -dm 755 "$pkgdir/usr/bin"
+
+  install -Dm 644 "$pkgname-v$pkgver.jar" \
+    "$pkgdir/usr/share/$pkgname/$pkgname-v$pkgver.jar"
+
+  cat > "$pkgdir/usr/bin/$pkgname"<< EOF
+#!/bin/sh
+exec java -jar /usr/share/$pkgname/$pkgname-v$pkgver.jar "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

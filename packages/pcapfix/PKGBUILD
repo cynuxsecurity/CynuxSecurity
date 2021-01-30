@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=pcapfix
+pkgver=1.1.4
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-networking' 'cynuxsecurity-misc')
+pkgdesc='Tries to repair your broken pcap and pcapng files.'
+arch=('x86_64' 'aarch64')
+url='http://f00l.de/pcapfix/'
+license=('GPL3')
+source=("http://f00l.de/$pkgname/$pkgname-$pkgver.tar.gz")
+sha512sums=('6203e9032d2f24fe5d4aaefd9cfd57ece97a318af3ecd8da7171307a59c2a10b2e92206d5cf96e2dd9bfafc239dd9bc95a224bf5fef9e0c0432a6e76ff10d1da')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README INSTALL Changelog
+  install -Dm 644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}
+

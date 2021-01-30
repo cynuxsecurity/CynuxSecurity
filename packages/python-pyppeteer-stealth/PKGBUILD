@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-pyppeteer-stealth
+_pkgname=pyppeteer_stealth
+pkgver=2.6.1
+pkgrel=1
+pkgdesc='A plugin for pyppeteer to prevent detection.'
+arch=('any')
+url='https://pypi.org/project/pyppeteer-stealth/'
+license=('MIT')
+depends=('python' 'python-pyppeteer')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/e4/f3/18b1a249bc9cad8a756f3894001cc3fbd1fa92c3bfa86c7d987afd0b86be/pyppeteer_stealth-$pkgver.tar.gz")
+sha512sums=('04d6d0680f0b32561f40325634a1e41e06a71c203b8535e6b5295da2eef706802ebd681624a897efb176008b8d992235d1ee5f1fef7a3c910b69f35f1952e55d')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

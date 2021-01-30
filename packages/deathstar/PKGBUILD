@@ -1,0 +1,30 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=deathstar
+pkgver=57.1ced058
+pkgrel=1
+pkgdesc='Automate getting Domain Admin using Empire.'
+groups=('cynuxsecurity' 'cynuxsecurity-automation' 'cynuxsecurity-exploitation')
+arch=('any')
+url='https://github.com/byt3bl33d3r/DeathStar'
+license=('GPL3')
+depends=('python' 'python-requests' 'python-termcolor' 'python-pyopenssl')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/byt3bl33d3r/DeathStar.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm 755 DeathStar.py "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

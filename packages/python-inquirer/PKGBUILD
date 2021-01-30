@@ -1,0 +1,38 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-inquirer
+_pkgname=inquirer
+pkgver=2.7.0
+pkgrel=2
+pkgdesc='Collection of common interactive command line user interfaces, based on Inquirer.js.'
+arch=('any')
+url='https://github.com/magmax/python-inquirer'
+license=('MIT')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/84/c9/3d9b224fe0169c41170a3545ba557a9fe8cfe1c3d7f8d2d9a62a5550aa74/$_pkgname-$pkgver.tar.gz")
+sha512sums=('f2d2472fc58d553a874a04a662c15f598171b3a40547e31d6a908e1516991e6a405ff53892132bc40f51630150708768f6b229f9df0d7cd717978c973fd2d63b')
+
+prepare() {
+  cd "$_pkgname-$pkgver"
+
+  # psst, temp fix!
+  touch requirements.txt
+  sed -i 's|long_description=read_description()|long_description=""|' setup.py
+}
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  rm -rf "$pkgdir/usr/lib/python3.9/site-packages/tests/"
+}
+

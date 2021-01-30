@@ -1,0 +1,45 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=perl-cryptx
+_pkgname=CryptX
+pkgver=0.069
+pkgrel=1
+pkgdesc='Cryptographically secure random number generator.'
+arch=('x86_64' 'aarch64')
+license=('PerlArtistic' 'GPL')
+options=('!emptydirs')
+depends=('perl')
+url='http://search.cpan.org/~mik/CryptX-0.051/lib/Crypt/PRNG.pm'
+source=("http://search.cpan.org/CPAN/authors/id/M/MI/MIK/$_pkgname-$pkgver.tar.gz")
+sha512sums=('59fed5c6a0c990807003e4b0eecd469c54d3ea9df231df865002379f5b6f70542a1b7f7af2872491796017624758adfad47ea5e360e84bb1462979f44339701e')
+
+# Function to change to the working directory and set
+# environment variables to override undesired options.
+_enviro() {
+  cd "$_pkgname-$pkgver"
+
+  export \
+    PERL_MM_USE_DEFAULT=1 \
+    PERL_AUTOINSTALL=--skipdeps \
+    PERL_MM_OPT="INSTALLDIRS=vendor DESTDIR='$pkgdir'" \
+    PERL_MB_OPT="--installdirs vendor --destdir '$pkgdir'" \
+    MODULEBUILDRC=/dev/null
+}
+
+build() {
+  _enviro
+
+  /usr/bin/perl Makefile.PL
+
+  make
+}
+
+package() {
+  _enviro
+
+  make install
+
+  find "$pkgdir" -name .packlist -o -name perllocal.pod -delete
+}
+

@@ -1,0 +1,35 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=dhcpig
+pkgver=92.9fd8df5
+pkgrel=2
+epoch=2
+pkgdesc='Enhanced DHCPv4 and DHCPv6 exhaustion and fuzzing script written in python using scapy network library.'
+groups=('cynuxsecurity' 'cynuxsecurity-scanner' 'cynuxsecurity-fuzzer' 'cynuxsecurity-dos')
+url='https://github.com/kamorin/DHCPig'
+license=('GPL2')
+arch=('any')
+depends=('python2' 'python2-scapy')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/kamorin/DHCPig.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  cd $pkgname
+
+  sed -i 's/python/python2/' pig.py
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm 755 pig.py "$pkgdir/usr/bin/$pkgname"
+}
+

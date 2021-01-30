@@ -1,0 +1,30 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-antlr4-python3-runtime
+_pkgname=antlr4-python3-runtime
+pkgver=4.9.1
+pkgrel=1
+pkgdesc='ANTLR 4.9.1 runtime for Python 3.6.3'
+arch=('any')
+url='https://pypi.org/project/antlr4-python3-runtime/#files'
+license=('BSD')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/0a/89/d1926c443bbfdc28321b1435bf9b05019e6d1cc7a685e32bbfb751cf3a78/$_pkgname-$pkgver.tar.gz")
+sha512sums=('8867ad77313de38b73a08cae2fadda8802660d7391baa36aead57e1e5abb2ea9a505ba9f55566c244f9bd3f8d07341374a7b4ca03f15a66c3a28e9b724c6f906')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  depends=('python' 'python-typing')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

@@ -1,0 +1,49 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+# Old Maintainer : Chris Elston chris.elston@blueyonder.co.uk
+# Old Contributor : Artem Klevtsov a.a.klevtsov@gmail.com
+
+pkgname=python-exiv2
+_pkgname=python3-exiv2
+pkgver=0.8.0
+pkgrel=1
+pkgdesc='A Python3 binding to exiv2, the C++ library for manipulation of EXIF, IPTC and XMP image metadata.'
+url='https://launchpad.net/py3exiv2'
+arch=('x86_64' 'aarch64')
+depends=('python' 'boost-libs' 'exiv2')
+makedepends=('boost')
+license=('GPL3')
+source=("http://www.py3exiv2.tuxfamily.org/releases/$_pkgname-$pkgver.tar.gz")
+sha512sums=('1f3862cd009ef95d537b100ce29a455353200133150299f383958f23a496043baec0ce21ccb3eed8b8f972b599567a69a7f596cdc59d7e7c2a06fd6d90a2f484')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  mkdir -p build
+
+  g++ -O2 -o build/exiv2wrapper.os -c -fPIC \
+    -I/usr/include/python3.9 src/exiv2wrapper.cpp
+  g++ -O2 -o build/exiv2wrapper_python.os -c -fPIC \
+    -I/usr/include/python3.9 src/exiv2wrapper_python.cpp
+  g++ -O2 -o build/libexiv2python.so -shared \
+    build/exiv2wrapper.os build/exiv2wrapper_python.os -lboost_python3 -lexiv2
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  site_packages="$pkgdir/$(python -c 'from distutils.sysconfig import get_python_lib; print(get_python_lib())')"
+
+  mkdir -p "$site_packages/pyexiv2"
+
+  install -Dm 755 build/libexiv2python.so "$site_packages/libexiv2python.so"
+  install -Dm 644 src/pyexiv2/__init__.py "$site_packages/pyexiv2/__init__.py"
+  install -Dm 644 src/pyexiv2/exif.py "$site_packages/pyexiv2/exif.py"
+  install -Dm 644 src/pyexiv2/iptc.py "$site_packages/pyexiv2/iptc.py"
+  install -Dm 644 src/pyexiv2/metadata.py "$site_packages/pyexiv2/metadata.py"
+  install -Dm 644 src/pyexiv2/preview.py "$site_packages/pyexiv2/preview.py"
+  install -Dm 644 src/pyexiv2/utils.py "$site_packages/pyexiv2/utils.py"
+  install -Dm 644 src/pyexiv2/xmp.py "$site_packages/pyexiv2/xmp.py"
+}
+

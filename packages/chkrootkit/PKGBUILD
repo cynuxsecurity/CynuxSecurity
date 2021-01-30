@@ -1,0 +1,26 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=chkrootkit
+pkgver=0.54
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-defensive' 'cynuxsecurity-forensic')
+pkgdesc='Checks for rootkits on a system.'
+url='http://www.chkrootkit.org/'
+arch=('any')
+license=('GPL2')
+source=("ftp://ftp.pangeia.com.br/pub/seg/pac/$pkgname-$pkgver.tar.gz")
+sha512sums=('fe8955ac33abaabf304f5580b6f12929f8bf02329ab442380eaa6298440cf1cb0eee2db8e5667ea7d78b89ee2bceb82c10ebb732a71d6bcdda9400569cd587fd')
+
+build(){
+  cd "$pkgname-$pkgver"
+
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -Dm 755 $pkgname "$pkgdir/usr/bin/$pkgname"
+}
+

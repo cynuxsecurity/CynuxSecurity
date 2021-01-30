@@ -1,0 +1,30 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-libtaxii
+_pkgname=libtaxii
+pkgver=1.1.118
+pkgrel=2
+pkgdesc='TAXII Library.'
+url='https://github.com/TAXIIProject/libtaxii'
+license=('BSD')
+arch=('any')
+depends=('python' 'python-lxml' 'python-requests' 'python-dateutil'
+         'python-six')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/09/fa/caf75bca01bc6277f2a30c35a508fb027e440366443e9b2ef5fe2cb1e726/$_pkgname-$pkgver.tar.gz")
+sha512sums=('2ea7552e482a968c4ad9a661f4b6f77a29fa40521c49834aecd3060d7ab8f7e0f65f0357837cbbcec4af29e47d9c96bea11d0a7e883de84ac1661fc4b647698f')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

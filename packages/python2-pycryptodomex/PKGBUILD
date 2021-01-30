@@ -1,0 +1,30 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python2-pycryptodomex
+_pkgname=pycryptodomex
+pkgver=3.9.3
+pkgrel=1
+pkgdesc='A self-contained Python package of low-level cryptographic primitives'
+url='http://www.pycryptodome.org/'
+arch=('x86_64' 'aarch64')
+license=('BSD')
+depends=('python2')
+makedepends=('python2-setuptools')
+source=("https://files.pythonhosted.org/packages/6b/18/3047bc1f6e41bb09cc365af00b7c7e5ceaa5661b9d9eb5a42f67121eff82/$_pkgname-$pkgver.tar.gz")
+sha512sums=('efe1dffdf970b10d8a7902e6016db63b7b5091cf672f64090f974b934fb422238fc87238bf692d76c946f442ebffe11fbc8d2e8a0af3888abfacb69acbf67ac4')
+
+build() {
+	cd "$_pkgname-$pkgver"
+
+	python2 setup.py build
+}
+
+package() {
+	cd "$_pkgname-$pkgver"
+
+	python2 setup.py install --root="$pkgdir" -O1 --skip-build
+
+	install -Dm 644 LICENSE.rst "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

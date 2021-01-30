@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=ruby-connection_pool
+_gemname=connection_pool
+pkgver=2.2.3
+pkgrel=1
+pkgdesc='Generic connection pool for Ruby.'
+arch=('any')
+license=('custom:unknown')
+depends=('ruby')
+makedepends=('ruby-rdoc')
+url='https://rubygems.org/gems/connection_pool'
+source=("https://rubygems.org/gems/$_gemname-$pkgver.gem")
+sha512sums=('a5e54b11073723d5cf5150a47c38b37ef8e58e9adb056eeedc4427207ed1ae5d1844cab925bbbcc8a2a9dd3fe9373593ab735ce4de588b89db97800fb74757ac')
+noextract=("$_gemname-$pkgver.gem")
+
+package() {
+  _gemdir=$(ruby -rubygems -e 'puts Gem.default_dir')
+
+  if [[ $CARCH == arm* ]] ; then
+    gem install --no-user-install --ignore-dependencies --no-rdoc --no-ri \
+      -n "$pkgdir/usr/bin" -i "$pkgdir${_gemdir}" "$_gemname-$pkgver.gem"
+  else
+    gem install --no-user-install --ignore-dependencies -i "$pkgdir${_gemdir}" \
+      -n "$pkgdir/usr/bin" "$_gemname-$pkgver.gem"
+  fi
+}
+

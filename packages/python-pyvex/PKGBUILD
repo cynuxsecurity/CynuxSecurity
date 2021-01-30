@@ -1,0 +1,30 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-pyvex
+_pkgname=pyvex
+pkgver=9.0.5450
+pkgrel=1
+pkgdesc='A Python interface to libVEX and VEX IR.'
+arch=('x86_64' 'aarch64')
+url='https://pypi.org/project/pyvex/#files'
+license=('BSD')
+depends=('python' 'python-pycparser' 'python-cffi' 'python-archinfo'
+         'python-bitstring' 'python-future' 'python-requests')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/a0/44/e135cd20f30a18601d70469b850fc57ab25ed26c9aa3d1a33a5f2dc83eb6/$_pkgname-$pkgver.tar.gz")
+sha512sums=('f9a5a44bfe5ef601a9b4ab0e93c1fc0eb181f5ba8b5d3d860c69cd7f37e9045b392a07b0c418d6612f9925bf7ece4262436dcef0283e4e1ad8bac49624ac4d05')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

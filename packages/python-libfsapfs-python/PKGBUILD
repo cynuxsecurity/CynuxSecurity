@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-libfsapfs-python
+_pkgname=libfsapfs-python
+pkgver=20201107
+pkgrel=2
+pkgdesc='Library and tools to access the Apple File System (APFS).'
+url='https://github.com/libyal/libfsapfs'
+arch=('x86_64' 'aarch64')
+license=('LGPL3')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/08/a0/4d3af04e12f77694f1996937b49839910bf7a2ba60de5f62d4ee8526ea2b/$_pkgname-$pkgver.tar.gz")
+sha512sums=('3a37242c1a11182dbc8f98f2cfe1d17c413fec0196f845b1f41e7aa5bb4555cb8b00cf62a52a661f185f64483b6b30c5e88afc30cca661303762d9b7d6c3eff6')
+
+build() {
+  cd "libfsapfs-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+
+  cd "libfsapfs-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

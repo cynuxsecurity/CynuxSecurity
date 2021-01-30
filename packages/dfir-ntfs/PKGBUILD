@@ -1,0 +1,35 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=dfir-ntfs
+_pkgname=dfir_ntfs
+pkgver=1.0.8
+pkgrel=1
+pkgdesc='An NTFS parser for digital forensics & incident response.'
+arch=('any')
+groups=('cynuxsecurity' 'cynuxsecurity-forensic')
+url='https://github.com/msuhanov/dfir_ntfs'
+license=('GPL')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://github.com/msuhanov/$_pkgname/archive/$pkgver.zip")
+sha512sums=('a86840cc495e3e9f18c1c8ccc144bb795ef9285c39ab9b1860432a44019795f9ef090774aa80088466fab7bba4f8f259a5d0f2116ff2c568eda482c105f8072e')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" ReadMe ChangeLog License
+
+  for i in "$pkgdir/usr/bin/"*; do
+    mv $i "$(echo $i | tr -s '_' '-')"
+  done
+}
+

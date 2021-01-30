@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=dmitry
+_pkgname=DMitry
+pkgver=1.3a
+pkgrel=5
+groups=('cynuxsecurity' 'cynuxsecurity-scanner')
+pkgdesc='Deepmagic Information Gathering Tool.'
+arch=('x86_64' 'aarch64')
+url='http://www.mor-pah.net/'
+license=('GPL')
+source=("http://dl.packetstormsecurity.net/UNIX/misc/$_pkgname-$pkgver.tar.gz")
+sha512sums=('8818a442db2308c798bb8c57edc11630ec7bc1d633a68fdec2f9333198d3c48037603890770e97364b18ad789a8352ec76c2bba1ecec465080a4bcffd75480eb')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  ./configure --prefix=/usr --sysconfdir=/etc
+
+  make
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  make DESTDIR=$pkgdir install
+}
+

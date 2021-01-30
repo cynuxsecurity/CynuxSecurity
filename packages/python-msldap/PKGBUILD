@@ -1,0 +1,30 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-msldap
+_pkgname=msldap
+pkgver=0.3.24
+pkgrel=1
+pkgdesc='Python library to play with MS LDAP.'
+arch=('any')
+url='https://pypi.org/project/msldap/#files'
+license=('MIT')
+depends=('python' 'python-asn1crypto' 'python-winsspi' 'python-minikerberos'
+         'python-aiocmd' 'python-asciitree' 'python-asysocks' 'python-winacl'
+         'python-prompt_toolkit' 'python-tqdm')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/8e/6c/d9f39fd5fc839cab67e83f735bfeb437daae257e82046e9500600ff45e0e/$_pkgname-$pkgver.tar.gz")
+sha512sums=('8084c21f290a4e4159f32e1c5bbcea0290edd3e6d6bd67cede3ed0b058827f2a4b89dd6b7510395ae3a5737504a66bf36d910d080a0728f493eca6702e2305a7')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

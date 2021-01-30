@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=pyrasite
+pkgver=2.0
+pkgrel=2
+pkgdesc='Code injection and introspection of running Python processes.'
+arch=('any')
+groups=('cynuxsecurity' 'cynuxsecurity-backdoor')
+url='https://pypi.org/project/pyrasite/#files'
+license=('GPL3')
+depends=('python2' 'gdb')
+makedepends=('python2-setuptools')
+source=("https://files.pythonhosted.org/packages/8e/d0/507f2bd9a6f9e9b475e0f62f04eeda72eeb920a79f2cc28a6a8c402e4550/pyrasite-$pkgver.tar.gz")
+sha512sums=('e39163609441d0c14d609f51a8a167b6ce74b6fe73da4fd3cdacc3a8c860536dea20fa99ebf6f0c7a0760b2a138b85d3a3e87c3b8059597f2a663959caf4cc6d')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  python2 ./setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  python2 ./setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

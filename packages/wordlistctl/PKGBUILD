@@ -1,0 +1,39 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=wordlistctl
+pkgver=0.9.0
+pkgrel=2
+groups=('cynuxsecurity' 'cynuxsecurity-misc')
+pkgdesc='Fetch, install and search wordlist archives from websites.'
+arch=('any')
+url='https://github.com/CynuxSecurity/wordlistctl'
+license=('GPL3')
+depends=('python' 'python-requests' 'python-termcolor')
+source=("https://github.com/CynuxSecurity/$pkgname/archive/v$pkgver.tar.gz")
+sha512sums=('45c898d1f087b01d7f10c92b55ddbfe7517a6ddc0da27279ae6cb616d13bd9d5a54b1150866a919a2367f28be7c38462e81e0e9ab99ea0813812e19ee0ea1767')
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm 644 "bash-completion/$pkgname" \
+    "$pkgdir/usr/share/bash-completion/completions/$pkgname"
+  install -Dm 644 "man/$pkgname.1" "$pkgdir/usr/share/man/man1/$pkgname.1"
+
+  rm -r README.md LICENSE bash-completion
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+exec /usr/share/$pkgname/$pkgname.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

@@ -1,0 +1,49 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=haka
+pkgver=0.3.0
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-networking' 'cynuxsecurity-sniffer')
+pkgdesc='A collection of tool that allows capturing TCP/IP packets and filtering them based on Lua policy files.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/haka-security/haka'
+license=('Mozilla2')
+depends=('libpcap' 'wireshark-cli' 'rsync' 'gawk' 'libedit' 'pcre' 'ncurses'
+         'lua')
+makedepends=('cmake' 'swig' 'iniparser')
+source=("http://github.com/haka-security/$pkgname/releases/download/v$pkgver/${pkgname}_${pkgver}_source.tar.gz")
+sha512sums=('8c2c219b8e89710289e300c1fd8ad9b6a95562efc77966bee7ddf343d73b108d6ebf3f7ff73963ca66954bdc0719c08eef127e58ffa42469ae47cf95e817e720')
+
+prepare() {
+  cd "${pkgname}_${pkgver}_source"
+
+  sed -i 's|${CMAKE_INSTALL_PREFIX}/sbin|${CMAKE_INSTALL_PREFIX}/bin|' \
+    CMakeLists.txt
+  sed -i 's|-Wall -Werror|-Wall -Werror -lm|' CMakeLists.txt
+  sed -i 's|-D_FORTIFY_SOURCE=2|-D_FORTIFY_SOURCE=2 -lm|' CMakeLists.txt
+}
+
+build() {
+  cd "${pkgname}_${pkgver}_source"
+
+  mkdir -p make
+
+  cd make
+
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
+
+  make
+}
+
+package() {
+  cd "${pkgname}_${pkgver}_source"
+
+  cd make
+
+  make DESTDIR="$pkgdir" install
+
+  mv "$pkgdir/usr/sbin/"{haka,hakactl} "$pkgdir/usr/bin"
+  rmdir "$pkgdir/usr/sbin"
+}
+

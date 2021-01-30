@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-archinfo
+_pkgname=archinfo
+pkgver=9.0.5450
+pkgrel=1
+pkgdesc='UNKNOWN'
+arch=('any')
+url='https://pypi.org/project/archinfo/#files'
+license=('custom:unknown')
+depends=('python' 'capstone' 'python-pyelftools')
+source=("https://files.pythonhosted.org/packages/10/96/bd03ad2d2fb8b975588ad19503c2995ea5a13c60e90e100e4aedf99ea3d6/$_pkgname-$pkgver.tar.gz")
+sha512sums=('2ed876a32f7c6ab3ad8fcc798360cae709922bc8ca819e3d07aa2310b261dbb2061e5ca906ae19b42aa1d30635e7c11a87e6900a521bd128bde97aa7d30ddcb0')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

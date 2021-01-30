@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=procyon
+pkgver=0.5.36
+pkgrel=1
+pkgdesc='A suite of Java metaprogramming tools focused on code generation and analysis.'
+arch=('any')
+groups=('cynuxsecurity' 'cynuxsecurity-decompiler' 'cynuxsecurity-code-audit')
+url='https://bitbucket.org/mstrobel/procyon/'
+license=('custom:unknown')
+depends=('java-environment')
+source=("https://bitbucket.org/mstrobel/$pkgname/downloads/$pkgname-decompiler-$pkgver.jar")
+sha512sums=('e858c8c14aedb57fce98f4ac912bb290e3078f983560df818a0198af3a6f5074ef29aad012675b4845caa3cf451fd8faef66d1c4a54bae1bb37f4fa9b380d473')
+
+package() {
+  install -dm 755 "$pkgdir/usr/bin"
+
+  install -Dm 755 "procyon-decompiler-$pkgver.jar" \
+    "$pkgdir/usr/share/$pkgname/$pkgname-decompiler-$pkgver.jar"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+exec java -jar /usr/share/$pkgname/$pkgname-decompiler-$pkgver.jar "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

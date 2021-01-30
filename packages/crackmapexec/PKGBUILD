@@ -1,0 +1,39 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=crackmapexec
+pkgver=617.119e5af
+pkgrel=8
+groups=('cynuxsecurity' 'cynuxsecurity-scanner' 'cynuxsecurity-exploitation' 'cynuxsecurity-windows')
+pkgdesc='A swiss army knife for pentesting Windows/Active Directory environments.'
+arch=('any')
+url='https://github.com/byt3bl33d3r/CrackMapExec'
+license=('custom:unknown')
+depends=('python' 'impacket' 'ldapdomaindump' 'python-pipx')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/byt3bl33d3r/CrackMapExec.git")
+sha512sums=('SKIP')
+install="$pkgname.install"
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  cd $pkgname
+
+  git submodule init && git submodule update --recursive
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

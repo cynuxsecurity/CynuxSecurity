@@ -1,0 +1,34 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-pyexcel-io
+_pkgname=pyexcel-io
+pkgver=0.6.4
+pkgrel=2
+pkgdesc='A python library to read and write structured data in csv, zipped csvformat and to/from databases.'
+arch=('any')
+url='https://pypi.org/project/pyexcel-io/#files'
+license=('BSD')
+depends=('python' 'python-lml')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/c5/fe/20d59069fcc2c5703f5984be38f2f63a267ce5328403f77474d56a273b9f/$_pkgname-$pkgver.tar.gz")
+sha512sums=('202187b8559cebd82dff262f8f6fda5f78410f7ce4f31c92c0ef8c4f260ee3cca911a4b73914ffeea136e2b8eafb358d3fb1c6a3835d2672fc3c2b7069505f8b')
+
+prepare() {
+  cd "$_pkgname-$pkgver"
+
+  sed -i 's|lml==0.0.1|lml|g' setup.py
+}
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

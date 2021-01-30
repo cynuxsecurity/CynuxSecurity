@@ -1,0 +1,36 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=ssllabs-scan
+pkgver=249.a7f3d49
+pkgrel=1
+pkgdesc='Command-line client for the SSL Labs APIs'
+groups=('cynuxsecurity' 'cynuxsecurity-scanner' 'cynuxsecurity-crypto')
+arch=('x86_64' 'aarch64')
+url='https://github.com/ssllabs/ssllabs-scan'
+license=('APACHE')
+depends=('glibc')
+makedepends=('git' 'go-pie')
+source=("git+https://github.com/ssllabs/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+	cd $pkgname
+
+  make
+}
+
+package() {
+	cd $pkgname
+
+	install -Dm 755 ssllabs-scan-v3 "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/$pkgname" *.sql
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname" README.md AUTHORS TODO.md
+}
+

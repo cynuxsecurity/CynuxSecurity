@@ -1,0 +1,39 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=gcrypt
+pkgver=12.ee5cded
+pkgrel=1
+epoch=1
+pkgdesc='Simple, secure and performance file encryption tool written in C'
+groups=('cynuxsecurity' 'cynuxsecurity-crypto')
+arch=('x86_64' 'aarch64')
+url='https://github.com/GasparVardanyan/GCrypt'
+license=('MIT')
+depends=('glibc')
+makedepends=('git')
+source=("git+https://github.com/GasparVardanyan/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  gcc -o $pkgname *.c -std=c18 -pedantic -pedantic-errors -Wall -O \
+    -fstack-protector-all -fPIE -fPIC \
+    -D_FORTIFY_SOURCE=2 -Wl,-z,now -Wl,-z,-relro
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm 755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

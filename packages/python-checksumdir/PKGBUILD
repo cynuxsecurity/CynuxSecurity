@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-checksumdir
+_pkgname=checksumdir
+pkgver=1.2.0
+pkgrel=2
+pkgdesc='Compute a single hash of the file contents of a directory.'
+url='https://pypi.org/project/checksumdir/#files'
+arch=('any')
+license=('MIT')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/b5/bc/7446a3877cae4638c93531239736ca3ee7933bd3f775db325bb1a1d5102c/$_pkgname-$pkgver.tar.gz")
+sha512sums=('f4414151ee944329a392d10e5cc48e357b75ee8d244fddb9848ed244c310d6550fd14ebb025866c3a012972e53690a88610906f4fbf3bd34ef2c06213cee50f5')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

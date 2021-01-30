@@ -1,0 +1,43 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+# Old Maintainer  : Christian Rebischke <chris.rebischke@archlinux.org>
+# Old Maintainer  : Levente Polyak <anthraxx[at]archlinux[dot]org>
+# Old Contributor : Daniel Micay <danielmicay@gmail.com>
+
+pkgname=gvmd
+pkgver=20.8.0
+pkgrel=1
+pkgdesc='greenbone-vulnerability-manager'
+groups=('cynuxsecurity' 'cynuxsecurity-scanner' 'cynuxsecurity-recon' 'cynuxsecurity-fuzzer'
+        'cynuxsecurity-exploitation')
+arch=('x86_64' 'aarch64')
+url='https://github.com/greenbone/gvmd/'
+license=('GPL')
+depends=('gvm-libs' 'libical' 'python3' 'sqlite3')
+makedepends=('cmake' 'doxygen' 'xmltoman')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/greenbone/gvmd/archive/v$pkgver.tar.gz"
+        "https://github.com/greenbone/gvmd/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz.asc")
+sha512sums=('5f14dde3f40926a39be87d1866b0b5bd73a3fd8d646ee53395db746b59ffed0e48f4a98ec76f97e13a18becd4e4ec81de8a7425be9575d103fc13a5a4ca82848'
+            'SKIP')
+validpgpkeys=(
+              '8AE4BE429B60A59B311C2E739823FAA60ED1E580' # GVM Transfer Integrity
+)
+replaces=('openvas-manager')
+changelog=CHANGELOG.md
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  cmake -DCMAKE_BUILD_TYPE=Release -DSBINDIR=/usr/bin \
+    -DCMAKE_INSTALL_PREFIX=/usr -DSYSCONFDIR=/etc -DLOCALSTATEDIR=/var .
+
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+}
+

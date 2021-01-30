@@ -1,0 +1,45 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=scoutsuite
+pkgver=5495.89e74256
+pkgrel=1
+pkgdesc='Multi-Cloud Security Auditing Tool.'
+groups=('cynuxsecurity' 'cynuxsecurity-scanner')
+arch=('any')
+url='https://github.com/nccgroup/ScoutSuite'
+license=('GPL3')
+depends=('python' 'python-virtualenv')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/nccgroup/ScoutSuite.git")
+sha512sums=('SKIP')
+install="$pkgname.install"
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" *.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm *.md LICENSE
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+source /usr/share/$pkgname/venv/bin/activate
+exec python /usr/share/$pkgname/scout.py "\$@"
+EOF
+
+  chmod a+x "$pkgdir/usr/bin/$pkgname"
+}
+

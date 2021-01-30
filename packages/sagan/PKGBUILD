@@ -1,0 +1,43 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=sagan
+pkgver=1.2.2
+pkgrel=1
+pkgdesc='A snort-like log analysis engine.'
+arch=('x86_64' 'aarch64')
+groups=('cynuxsecurity' 'cynuxsecurity-ids' 'cynuxsecurity-defensive')
+url='https://quadrantsec.com/sagan_log_analysis_engine/'
+license=('GPL')
+depends=('sagan-rules' 'pcre' 'libdnet' 'libesmtp' 'mysql-clients'
+         'postgresql-libs' 'liblognorm' 'geoip' 'json-c' 'libfastjson'
+         'libyaml' 'geoip2-database' 'geoip-database-extra' 'geoip-database')
+makedepends=('git')
+options=('!makeflags' '!emptydirs')
+conflicts=('sagan' 'sagan-svn')
+replaces=('sagan-svn')
+source=("https://quadrantsec.com/download/$pkgname-$pkgver.tar.gz")
+sha512sums=('0bc5ebfa8be66d17adb79363cda07542627682f1e3709054107c216e6526de1e4026786c6dd17697aa801413c9060ddcb74a9312be8d296640db45158224cbc6')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  ./autogen.sh
+
+  ./configure --enable-esmtp --disable-geoip --prefix=/usr --sysconfdir=/etc \
+    --sbindir=/usr/bin --enable-system-strstr
+
+  make
+
+  sed "s:^var RULE_PATH.*$:var RULE_PATH /usr/share/sagan/rules/:" \
+    etc/sagan.yaml > etc/sagan.yaml.new
+
+  mv etc/sagan.yaml.new etc/sagan.yaml
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+}
+

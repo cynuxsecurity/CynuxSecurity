@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Burp Suite community edition
+Exec=burpsuite
+Icon=burpsuite
+Comment=Burp Suite is an integrated platform for attacking web applications (community edition)
+Categories=X-CynuxSecurity-Fuzzer; X-CynuxSecurity-Proxy; X-CynuxSecurity-Scanner; X-CynuxSecurity-Webapp;
+Terminal=false
+MimeType=application/x-extension-iml;

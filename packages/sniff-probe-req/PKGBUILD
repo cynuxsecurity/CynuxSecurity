@@ -1,0 +1,39 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=sniff-probe-req
+pkgver=334.07a3319
+pkgrel=2
+pkgdesc='Wi-Fi Probe Requests Sniffer.'
+groups=('cynuxsecurity' 'cynuxsecurity-wireless' 'cynuxsecurity-sniffer')
+arch=('any')
+url='https://github.com/SkypLabs/sniff-probe-req'
+license=('GPL3')
+depends=('python' 'python-argparse' 'python-netaddr' 'python-scapy')
+makedepends=('git' 'python-setuptools')
+source=("git+https://github.com/SkypLabs/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  python3 setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  python3 setup.py install --root="$pkgdir" --prefix=/usr --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.rst docs/*.rst
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm -rf "$pkgdir/usr/lib/python3.9/site-packages/tests"
+}
+

@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=ruby-ruby-nmap
+_gemname='ruby-nmap'
+pkgver=0.10.0
+pkgrel=1
+pkgdesc='A Ruby interface to Nmap, the exploration tool and security / port scanner.'
+arch=('any')
+license=('custom:unknown')
+depends=('ruby' 'ruby-nokogiri' 'ruby-rprogram' 'nmap')
+makedepends=('ruby-rdoc')
+url='https://rubygems.org/gems/ruby-nmap'
+source=("https://rubygems.org/gems/ruby-nmap-$pkgver.gem")
+sha512sums=('7feb7e7558f7fb86093622ba148cb22f7145528445ffa1d8b9e735b3d923692918458ee5b80c5f9feadd9f949ade4bcba80d0f437f8f421f055d33df76662b25')
+noextract=("$_gemname-$pkgver.gem")
+
+package() {
+  _gemdir=$(ruby -rubygems -e 'puts Gem.default_dir')
+
+  if [[ $CARCH == arm* ]] ; then
+    gem install --no-user-install --ignore-dependencies --no-rdoc --no-ri \
+      -n "$pkgdir/usr/bin" -i "$pkgdir$_gemdir" "$_gemname-$pkgver.gem"
+  else
+    gem install --no-user-install --ignore-dependencies -i "$pkgdir$_gemdir" \
+      -n "$pkgdir/usr/bin" "$_gemname-$pkgver.gem"
+  fi
+}
+

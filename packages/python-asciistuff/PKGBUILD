@@ -1,0 +1,50 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-asciistuff
+pkgname=('python2-asciistuff' 'python-asciistuff')
+_pkgname=asciistuff
+pkgver=1.0.12
+pkgrel=1
+pkgdesc='Library for producing ASCII arts from a text or an image.'
+arch=('any')
+url='https://pypi.org/project/asciistuff/#files'
+license=('AGPL3')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/b1/de/e0512a1aaf3c07bb827b7ee299a337a44c04df26c244382828c31a850293/$_pkgname-$pkgver.tar.gz")
+sha512sums=('07ceefd8ff4a0b1fb232218c647046d69f0080310be192a2b15d440f6fa7787986bfb75777eee07e45a153f7de6a9310a79e77ac79e3c52195f22837051d829a')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-asciistuff() {
+  depends=('python2' 'python2-terminaltables' 'python2-termcolor'
+           'python2-pyfiglet' 'python2-cowpy')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+
+  mv "$pkgdir/usr/bin/$_pkgname" "$pkgdir/usr/bin/${_pkgname}2"
+}
+
+package_python-asciistuff() {
+  depends=('python' 'python-terminaltables' 'python-termcolor' 'python-cowpy'
+           'python-pyfiglet')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

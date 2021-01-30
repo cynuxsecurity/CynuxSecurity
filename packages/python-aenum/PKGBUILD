@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-aenum
+_pkgname=aenum
+pkgver=2.2.6
+pkgrel=1
+pkgdesc="Advanced Enumerations (compatible with Python's stdlib Enum), NamedTuples, and NamedConstants."
+arch=('any')
+url='https://pypi.org/project/aenum/#files'
+license=('BSD')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/14/e8/2dd5a86a77028b027a3c9ff53ac2956d2c25053272f691542b29758dbf39/$_pkgname-$pkgver.tar.gz")
+sha512sums=('8e4948c4f8c96c5fc7c1cbaf68ba4d100d3467feddc46621a4c812b75936c0d6109080247841a6113b7bed4d3132baf9125db6c0934700e4d62e2c749572da55')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

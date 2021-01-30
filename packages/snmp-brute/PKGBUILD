@@ -1,0 +1,35 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=snmp-brute
+pkgver=15.64ec0ce
+pkgrel=3
+groups=('cynuxsecurity' 'cynuxsecurity-cracker' 'cynuxsecurity-networking')
+pkgdesc='SNMP brute force, enumeration, CISCO config downloader and password cracking script.'
+arch=('any')
+url='https://github.com/SECFORCE/SNMP-Brute'
+license=('custom:unknown')
+depends=('python2' 'python2-scapy' 'metasploit' 'net-snmp' 'john')
+makedepends=('git')
+source=("git+https://github.com/SECFORCE/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  cd $pkgname
+
+  sed -i 's|/usr/bin/env python|/usr/bin/env python2|' snmpbrute.py
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm 755 snmpbrute.py "$pkgdir/usr/bin/snmpbrute"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+}
+

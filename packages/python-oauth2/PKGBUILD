@@ -1,0 +1,32 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-oauth2
+_pkgname=oauth2
+pkgver=1.9.0.post1
+pkgrel=9
+pkgdesc='Library for OAuth.'
+arch=('any')
+url='https://pypi.org/project/oauth2/#files'
+license=('MIT')
+depends=('python' 'python-httplib2')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/64/19/8b9066e94088e8d06d649e10319349bfca961e87768a525aba4a2627c986/$_pkgname-$pkgver.tar.gz")
+sha512sums=('a3b64eef331d4c4f59c275f14efb2dfb48ad60de47a59a88106f60d64428a09b76d8bedf08c98c113493968d83708b1478b4b61b2b5528b5b01fa22777daff4c')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  rm -rf "$pkgdir/usr/lib/python3."*"/site-packages/tests"
+
+  find "$pkgdir/". -type d -name '__pycache__' -exec rm -rf {} +
+}
+

@@ -1,0 +1,36 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=bopscrk
+pkgver=72.34fb3fd
+pkgrel=2
+pkgdesc='Tool to generate smart wordlists, eg. based on lyrics.'
+arch=('any')
+groups=('cynuxsecurity' 'cynuxsecurity-automation' 'cynuxsecurity-cracker')
+url='https://github.com/R3nt0n/bopscrk'
+license=('GPL3')
+depends=('python' 'python-requests' 'python-beautifulsoup4')
+makedepends=('git' 'python-setuptools')
+source=("git+https://github.com/R3nt0n/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  mv "$pkgdir/usr/bin/${pkgname}.py" "$pkgdir/usr/bin/$pkgname"
+}
+

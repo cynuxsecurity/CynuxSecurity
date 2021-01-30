@@ -1,0 +1,30 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-typing
+_pkgname=typing
+pkgver=3.7.4.3
+pkgrel=2
+pkgdesc='Type Hints for Python.'
+arch=('any')
+url='https://pypi.org/project/typing/#files'
+license=('PSF')
+depends=('python')
+makedepends=('python-setuptools')
+options=(!emptydirs)
+source=("https://files.pythonhosted.org/packages/05/d9/6eebe19d46bd05360c9a9aae822e67a80f9242aabbfc58b641b957546607/$_pkgname-$pkgver.tar.gz")
+sha512sums=('01d3d33bf3264a8929242d58ffa3b6a897a9ce23cb84858871146ed516a6ef2fc222d3001bb5197276da1a374ae243f0ceab0325ae8675ef0ffb76df5065ae1e')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

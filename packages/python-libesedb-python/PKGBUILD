@@ -1,0 +1,33 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-libesedb-python
+pkgname=('python2-libesedb-python' 'python-libesedb-python')
+_pkgname=libesedb-python
+pkgver=20200418
+pkgrel=2
+pkgdesc='Library and tools to access the Extensible Storage Engine (ESE) Database File (EDB) format.'
+url='https://github.com/libyal/libesedb'
+arch=('x86_64' 'aarch64')
+license=('LGPLv3+')
+makedepends=('python2-setuptools' 'python-setuptools')
+replaces=('python2-libesedb' 'python-libesedb')
+source=("https://files.pythonhosted.org/packages/44/6a/64239429d40d5aeb4b271e41501bfb6444621de9b137691bc94a5c516c3a/$_pkgname-$pkgver.tar.gz")
+sha512sums=('10d76ce4f90e7de7418bd2191a06d48e9d81b83c67a2ebc0ff437b2f109ea32b37bae9307234156d553ea94f7ac19b0d43f92dd5a4644fe7ab8dc48f720d315d')
+
+package_python2-libesedb-python() {
+  depends=('python2')
+
+  cd "libesedb-$pkgver"
+
+  python2 setup.py install --root="$pkgdir" --optimize=1
+}
+
+package_python-libesedb-python() {
+  depends=('python')
+
+  cd "libesedb-$pkgver"
+
+  python setup.py install --root="$pkgdir" --optimize=1
+}
+

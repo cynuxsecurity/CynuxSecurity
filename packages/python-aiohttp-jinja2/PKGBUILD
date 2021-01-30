@@ -1,0 +1,33 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-aiohttp-jinja2
+_pkgname=aiohttp-jinja2
+pkgver=1.4.2
+pkgrel=2
+pkgdesc='jinja2 template renderer for aiohttp.web (http server for asyncio).'
+arch=('any')
+url='https://pypi.org/project/aiohttp-jinja2/#files'
+license=('APACHE')
+depends=('python' 'python-aiohttp' 'python-jinja')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/da/4f/3b1a0c7177fdb0417308a95bfa8340f19cf84b44f8f2d734cd3052f56644/$_pkgname-$pkgver.tar.gz")
+sha512sums=('7bdaee97efe90a0009cd78a4e46dc80cfeb661c2d5561fdb1b1a1ff098abba8667260bb908e3227edd6601c2412812d0311461942568a8aabf07a164ea2f290e')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

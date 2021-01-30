@@ -1,0 +1,44 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=junkie
+pkgver=1365.70a83d6
+pkgrel=2
+groups=('cynuxsecurity' 'cynuxsecurity-sniffer' 'cynuxsecurity-networking')
+pkgdesc='A modular packet sniffer and analyzer.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/securactive/junkie'
+license=('GPL3')
+depends=('rlwrap' 'doxygen' 'openssl' 'libpcap' 'guile' 'p0f')
+makedepends=('git')
+source=("git+https://github.com/securactive/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  export LIBS="-ldl"
+
+  sh autogen.sh
+
+  ./configure --prefix=/usr --sbindir=/usr/bin
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/etc"
+
+  make install DESTDIR="$pkgdir"
+
+  mv "$pkgdir/usr/etc/$pkgname" "$pkgdir/etc/$pkgname"
+}
+

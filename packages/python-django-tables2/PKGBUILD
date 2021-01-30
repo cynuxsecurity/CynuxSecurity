@@ -1,0 +1,26 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details
+
+pkgname=python-django-tables2
+_pkgname=django-tables2
+pkgver=2.3.4
+pkgrel=1
+pkgdesc='A module for rendering Django data sets as HTML tables.'
+arch=('any')
+url='https://pypi.org/project/django-tables2/'
+license=('MIT')
+options=(!emptydirs)
+depends=('python-django')
+makedepends=('python-setuptools')
+optdepends=('python-tablib: to export table data as CSV, XLS, etc.')
+source=("https://files.pythonhosted.org/packages/4b/89/e3a4dae972a4194f7ab83aa412fe56bf56c122eafe0fc7e6e34eb2749dc2/$_pkgname-$pkgver.tar.gz")
+sha512sums=('d10144b79850847d2787e4a97f450eb3709a419a5dcd330667e3746c16f3be7472c6c26dbf7d765356130b79b8c915c46fd3201c83e66806753f1bb95911895f')
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

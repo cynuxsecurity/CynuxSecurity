@@ -1,0 +1,48 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-config
+pkgname=('python2-config' 'python-config')
+_pkgname=config
+pkgver=0.5.0.post0
+pkgrel=2
+pkgdesc='A hierarchical, easy-to-use, powerful configuration module for Python.'
+arch=('any')
+license=('MIT')
+url='https://pypi.python.org/pypi/config/'
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/c4/78/cc06ff0655a42846e71336e6ee70c94671b98b34bfdb716e8fda091cd92c/$_pkgname-$pkgver.zip")
+sha512sums=('80b4df56a3711d815194f5e5bb66d14d8dd0d650a0fdb328a6f8b1cfc3b9761ea5a5fe823ffcd58af039e0b5583317dbee4598887884d6ebfca223f9297345ee')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-config() {
+  depends=('python2')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+
+package_python-config() {
+  depends=('python')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

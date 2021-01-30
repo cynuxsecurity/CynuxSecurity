@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-jwcrypto
+_pkgname=jwcrypto
+pkgver=0.8
+pkgrel=2
+pkgdesc='Implementation of JOSE Web standards.'
+url='https://pypi.org/project/jwcrypto/#files'
+arch=('any')
+license=('LGPL3')
+depends=('python' 'python-cryptography')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/00/bb/ee916ab08e0510eb79cb3bfb561de2cd965ee60f0c3046c112e6e03c674a/$_pkgname-$pkgver.tar.gz")
+sha512sums=('e8dc62d6159e5722a572e049c41edc8e31fe0d022aa47987ab6720c7057cbac2f98cec5d35af1ea02f6bc6efde769810fde4b868e019956b138cfac529cc027d')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

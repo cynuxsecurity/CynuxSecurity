@@ -1,0 +1,46 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-libsmdev-python
+pkgname=('python2-libsmdev-python' 'python-libsmdev-python')
+_pkgname=libsmdev
+pkgver=20201204
+pkgrel=1
+pkgdesc='Python bindings module for libsmdev.'
+arch=('x86_64' 'aarch64')
+url='https://pypi.python.org/pypi/libsmdev-python/'
+license=('LGPL3')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/a9/75/00dca8bec2e7957bc4db94d901d06cef4342dc80ae45ddc62a3c52fa1f5b/$_pkgname-$pkgver.tar.gz")
+sha512sums=('d2df4215101df19763ba040a638d86f77957ea6a46cfac564603d05fe4df3f728cbcfc4f9cfd0d17b54f62daae7a8cc7f405da3b88cad6780364d7b10b65dc7d')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-libsmdev-python() {
+  depends=('python2')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+
+package_python-libsmdev-python() {
+  depends=('python')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

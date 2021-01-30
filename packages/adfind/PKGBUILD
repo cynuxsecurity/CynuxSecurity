@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=adfind
+pkgver=29.179602f
+pkgrel=1
+pkgdesc='Simple admin panel finder for php,js,cgi,asp and aspx admin panels.'
+groups=('cynuxsecurity' 'cynuxsecurity-webapp' 'cynuxsecurity-recon')
+arch=('any')
+url='https://github.com/sahakkhotsanyan/adfind'
+license=('custom:unknown')
+depends=('php' 'curl' 'git')
+makedepends=('git')
+source=("git+https://github.com/sahakkhotsanyan/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm 755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+}
+

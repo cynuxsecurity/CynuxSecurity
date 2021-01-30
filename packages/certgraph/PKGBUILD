@@ -1,0 +1,42 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=certgraph
+pkgver=146.2e0c18b
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-recon')
+pkgdesc='Crawl the graph of certificate Alternate Names.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/lanrat/certgraph'
+license=('GPL3')
+depends=('glibc')
+makedepends=('git' 'go-pie')
+source=("git+https://github.com/lanrat/$pkgname.git")
+sha512sums=('SKIP')
+_url="github.com/lanrat/$pkgname"
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  mkdir -p "src/$_url" && mv $pkgname "src/$_url" && cd "src/$_url/$pkgname"
+
+  GOPATH="$srcdir" go get -d -t $_url
+}
+
+package() {
+  install -dm 755 "$pkgdir/usr/bin"
+
+  cd "src/$_url/$pkgname"
+  GOPATH="$srcdir" go build -v .
+
+  cd "$srcdir/src/$_url/$pkgname"
+  install -Dm 755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 docs/index.html "$pkgdir/usr/share/$pkgname/index.html"
+  install -Dm 644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

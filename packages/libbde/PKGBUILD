@@ -1,0 +1,46 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=libbde
+pkgver=290.f7dac26
+pkgrel=1
+pkgdesc='A library to access the BitLocker Drive Encryption (BDE) format.'
+groups=('cynuxsecurity' 'cynuxsecurity-crypto')
+arch=('x86_64' 'aarch64')
+url='https://github.com/libyal/libbde'
+license=('LGPL3')
+provides=('libbde')
+depends=('python' 'python2')
+makedepends=('git' 'autoconf' 'automake' 'libtool' 'gettext' 'pkg-config'
+             'bison' 'flex')
+source=("git+https://github.com/libyal/$pkgname.git")
+sha512sums=('SKIP')
+
+_gitname='libbde'
+
+pkgver() {
+  cd $_gitname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $_gitname
+
+  ./synclibs.sh
+  ./autogen.sh
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --enable-python2 \
+    --enable-python
+
+  make
+}
+
+package() {
+  cd $_gitname
+
+  make DESTDIR="$pkgdir" install
+}
+

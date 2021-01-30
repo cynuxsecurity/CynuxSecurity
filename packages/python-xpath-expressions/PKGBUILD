@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-xpath-expressions
+_pkgname=xpath-expressions
+pkgver=1.0.2
+pkgrel=2
+pkgdesc='Treat XPath expressions as Python objects.'
+url='https://pypi.org/project/xpath-expressions/#files'
+arch=('any')
+license=('MIT')
+depends=('python' 'python-lxml')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/2d/c8/46e6efccaef9ed5b76077ec6ee0e97163b11a4b87d8c2a85b23294dc76a3/$_pkgname-$pkgver.tar.gz")
+sha512sums=('e3d12a72c6d5cd5147aa5de19bf41cc0611701e6a69919ee6c0af9b3cf41188534fabf1f3b5120febf32dda60859c051d451ea518ad25f38d755c8518c933146')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

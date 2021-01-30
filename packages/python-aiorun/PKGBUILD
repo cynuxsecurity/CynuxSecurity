@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-aiorun
+_pkgname=aiorun
+pkgver=2020.12.1
+pkgrel=1
+pkgdesc='Boilerplate for asyncio applications.'
+arch=('any')
+url='https://pypi.org/project/aiorun/#files'
+license=('Apache')
+depends=('python')
+makedepends=('git' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/8c/4d/59d7edec1452fa12fcc8069439156a4bc2e8d01dd1e1e1b652a10a63ff9d/$_pkgname-$pkgver.tar.gz")
+sha512sums=('23f6e2d313b49d6352b1c9aec3b964a798eb0a1de5cb3c9037cce41d40a17f712246db1c6cc54c3dd1f18f3aa2926a6a43837e3c6aca2515d849b89e7be34945')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

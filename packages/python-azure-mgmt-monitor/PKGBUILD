@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-azure-mgmt-monitor
+_pkgname=azure-mgmt-monitor
+pkgver=2.0.0
+pkgrel=1
+pkgdesc='Microsoft Azure Monitor Client Library for Python.'
+arch=('any')
+url='https://pypi.org/project/azure-mgmt-monitor/#files'
+license=('MIT')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/d1/07/6109120151e9bb768a581fccea4adfc1016bcf3cfe7a167431d400b277ac/$_pkgname-$pkgver.zip")
+sha512sums=('e23ba5105e4a506e1d3f76a6d14ca3f53247556229824d468cecfdd36b5f987fdda00d75de342f1b68b319b70c8e5433684c83ce7ce9ba256c2c44ba78248f92')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

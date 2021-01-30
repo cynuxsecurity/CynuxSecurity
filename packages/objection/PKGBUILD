@@ -1,0 +1,40 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=objection
+pkgver=1.9.6
+pkgrel=3
+pkgdesc='Instrumented Mobile Pentest Framework.'
+groups=('cynuxsecurity' 'cynuxsecurity-mobile' 'cynuxsecurity-reversing' 'cynuxsecurity-binary')
+arch=('any')
+url='https://pypi.org/project/objection/#files'
+license=('custom:unknown')
+depends=('python' 'python-frida' 'python-frida-tools' 'python-prompt_toolkit'
+         'python-click' 'python-tabulate' 'python-requests' 'python-flask'
+         'python-delegator.py' 'python-pexpect' 'python-litecli'
+         'python-sqlparse')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/35/eb/825bad2940250b5b472f86e155d0b9fd2d91aa0e1ea52f4cb8d7d4a68d74/$pkgname-$pkgver.tar.gz"
+        'requirements.txt.patch')
+sha512sums=('ba84980e7914060572eb00fb545e8485844ba56d013e890d64f9c68486cd34934740ab57dbc42120f56fa37c0549f6feb7535dfd74b95912c2eadcd4ce03d5d9'
+            'e6e3319ffb67c3e3fb719b70dd99d4971ebb8f9013a83bcec313eb29e3d93d10add2bcbd184a9918f6d9030db0c0ed8c73b31780b3ee582b6a88a3d1fca78b67')
+
+prepare() {
+  echo
+  #patch -p1 < requirements.txt.patch
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  rm -rf "$pkgdir/usr/lib/python3.9/site-packages/tests"
+}
+

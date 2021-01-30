@@ -1,0 +1,60 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=androguard
+pkgver=2118.8d091cbb
+pkgrel=2
+epoch=2
+groups=('cynuxsecurity' 'cynuxsecurity-binary' 'cynuxsecurity-disassembler'
+        'cynuxsecurity-malware')
+pkgdesc='Reverse engineering, Malware and goodware analysis of Android applications and more.'
+arch=('any')
+url='https://github.com/androguard/androguard'
+license=('APACHE')
+depends=('python' 'ipython' 'python-future' 'python-networkx' 'python-pygments'
+         'python-lxml' 'python-colorama' 'python-matplotlib' 'python-asn1crypto'
+         'python-click' 'python-pydot')
+makedepends=('git' 'python-setuptools')
+optdepends=('python-pyperclip: GUI'
+            'python-pyqt5: GUI'
+            'python-magic: magic'
+            'python-filemagic: magic alternative'
+            'python-sphinx: docs'
+            'python-sphinx_rtd_theme: docs'
+            'python-pydot: graphing')
+source=("git+https://github.com/$pkgname/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  python setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+
+  install -Dm 644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+  install -Dm 644 LICENCE-2.0 "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+
+#  for bin in "$pkgdir/usr/bin/"* ; do
+#    pkg="$(echo $bin | awk -F/ '{print $NF}')"
+#    if [[ "$pkg" != "androguard" ]] && [[ "$pkg" != "androapkid" ]] &&
+#      [[ "$pkg" != "androarsc" ]] && [[ "$pkg" != "androaxml" ]] &&
+#      [[ "$pkg" != "androcg" ]] && [[ "$pkg" != "androdd" ]] &&
+#      [[ "$pkg" != "androdis" ]]; then
+#      mv $bin `echo $bin | sed 's/.py//'`
+#    fi
+#  done
+}
+

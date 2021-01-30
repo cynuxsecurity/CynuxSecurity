@@ -1,0 +1,38 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+# Originally from the AUR.
+
+pkgname=perl-io-socket
+pkgver=1.42
+pkgrel=1
+pkgdesc='Object interface to socket communications.'
+arch=('x86_64' 'aarch64')
+license=('PerlArtistic' 'GPL')
+options=('!emptydirs')
+depends=('perl>=0')
+url='http://search.cpan.org/~gbarr/IO-1.25/lib/IO/Socket.pm'
+source=("http://search.cpan.org/CPAN/authors/id/T/TO/TODDR/IO-$pkgver.tar.gz")
+sha512sums=('d17b7ece8b7986355ee6053a763973568b18551e200021d5b436504d2498bda5c41333bbbb2b2d0fb7f950251a394683ea6da5f9be947bda214954efbec12113')
+
+build() {
+  cd "IO-$pkgver"
+
+  ( export PERL_MM_USE_DEFAULT=1 PERL5LIB="" PERL_AUTOINSTALL=--skipdeps \
+    PERL_MM_OPT="INSTALLDIRS=vendor DESTDIR='$pkgdir'" \
+    PERL_MB_OPT="--installdirs vendor --destdir '$pkgdir'" \
+    MODULEBUILDRC=/dev/null
+
+    /usr/bin/perl Makefile.PL
+
+    make
+  )
+}
+
+package() {
+  cd "IO-$pkgver"
+
+  make install
+
+  find "$pkgdir" -name .packlist -o -name perllocal.pod -delete
+}
+

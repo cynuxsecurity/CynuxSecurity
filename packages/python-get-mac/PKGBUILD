@@ -1,0 +1,32 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-get-mac
+pkgname=('python2-get-mac' 'python-get-mac')
+_pkgname=get-mac
+pkgver=0.8.2
+pkgrel=2
+pkgdesc='Get MAC addresses of remote hosts and local interfaces.'
+url='https://pypi.org/project/get-mac/#files'
+arch=('any')
+license=('MIT')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/38/aa/e6a8716ca82fd370920e0ca39c9f6feed2d2ff986a1605909b41cafd6fb8/$_pkgname-$pkgver.tar.gz")
+sha512sums=('79c9c0cb81a035494befcc9a68718d1801a5530d4168aefb3272e765ea9febfc23f27396a5177f2e14d2b58484fcb1a75f4bf8de2908327f37b39e17c9e7e454')
+
+package_python2-get-mac() {
+  depends=('python2')
+
+  cd "$_pkgname-$pkgver"
+
+  python2 setup.py install --root="$pkgdir" --optimize=1
+}
+
+package_python-get-mac() {
+  depends=('python')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --optimize=1
+}
+

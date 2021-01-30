@@ -1,0 +1,43 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=ssh-audit
+pkgver=v2.3.1.r14.gbbb81e2
+pkgrel=1
+epoch=1
+groups=('cynuxsecurity' 'cynuxsecurity-scanner')
+pkgdesc='SSH server auditing (banner, key exchange, encryption, mac, compression, compatbility, etc).'
+arch=('any')
+url='https://github.com/jtesta/ssh-audit'
+license=('MIT')
+depends=('python')
+makedepends=('git' 'python-setuptools')
+source=("git+https://github.com/jtesta/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd $pkgname
+
+  # Symbolic link workaround, https://github.com/jtesta/ssh-audit/issues/46
+  #cp ssh-audit.py pypi/sshaudit/sshaudit.py
+  #cp README.md pypi/sshaudit/README.md
+}
+
+build() {
+  cd $pkgname
+
+  python setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

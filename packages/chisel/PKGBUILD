@@ -1,0 +1,39 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=chisel
+pkgver=157.f322999
+pkgrel=1
+pkgdesc='A fast TCP tunnel over HTTP.'
+groups=('cynuxsecurity' 'cynuxsecurity-tunnel' 'cynuxsecurity-proxy')
+arch=('x86_64' 'aarch64')
+url='https://github.com/jpillora/chisel'
+license=('MIT')
+makedepends=('git' 'go-pie')
+source=("git+https://github.com/jpillora/$pkgname.git")
+sha512sums=('SKIP')
+_url='github.com/jpillora/chisel'
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  export GOPATH="$srcdir"
+
+  go get -d -u $_url
+  go build -ldflags "-X github.com/jpillora/chisel/share.BuildVersion=$(git describe --abbrev=0 --tags)"
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm 755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 example/users.json \
+  "$pkgdir/usr/share/doc/$pkgname/examples/users.json"
+}
+

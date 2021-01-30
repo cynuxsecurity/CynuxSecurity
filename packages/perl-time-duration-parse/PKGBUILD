@@ -1,0 +1,40 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=perl-time-duration-parse
+_pkgname=Time-Duration-Parse
+pkgver=0.15
+pkgrel=2
+pkgdesc='Parse string that represents time duration.'
+arch=('any')
+license=('PerlArtistic' 'GPL')
+options=('!emptydirs')
+depends=('perl-exporter-lite')
+makedepends=('perl' 'perl-time-duration')
+url='http://search.cpan.org/dist/Time-Duration-Parse'
+source=("http://search.cpan.org/CPAN/authors/id/N/NE/NEILB/$_pkgname-$pkgver.tar.gz")
+sha512sums=('1cd4b303cedc58d8513165297369b3705c2fe07db9b626c922829a8a86586bbdf631cd06052924dfaa030a5179e121bbb9c0d8b7159d54e137cb9e70f3086e20')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  ( export PERL_MM_USE_DEFAULT=1 PERL5LIB=""                 \
+      PERL_AUTOINSTALL=--skipdeps                            \
+      PERL_MM_OPT="INSTALLDIRS=vendor DESTDIR='$pkgdir'"     \
+      PERL_MB_OPT="--installdirs vendor --destdir '$pkgdir'" \
+      MODULEBUILDRC=/dev/null
+
+  perl Makefile.PL
+
+  make
+  )
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  make install
+
+  find "$pkgdir" -name .packlist -o -name perllocal.pod -delete
+}
+

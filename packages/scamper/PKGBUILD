@@ -1,0 +1,33 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=scamper
+pkgver=20200717
+pkgrel=1
+pkgdesc='A tool that actively probes the Internet in order to analyze topology and performance.'
+groups=('cynuxsecurity' 'cynuxsecurity-scanner' 'cynuxsecurity-recon'
+        'cynuxsecurity-networking')
+arch=('x86_64' 'aarch64')
+url='http://www.caida.org/tools/measurement/scamper/'
+license=('GPL2')
+depends=('linux-headers' 'openssl')
+makedepends=()
+source=("http://www.caida.org/tools/measurement/$pkgname/code/$pkgname-cvs-$pkgver.tar.gz")
+sha512sums=('d5cd02fa8b0d4ae08c70bb73ae95e24cf1683d9fbcab28c8440dfb3e1a05fe6869c4c3535738a63b99bcbf66d25b59c24490b404da96488deb616354c91a19df')
+
+build() {
+  cd "$pkgname-cvs-$pkgver"
+
+  ./configure --prefix=/usr
+
+  make
+}
+
+package() {
+  cd "$pkgname-cvs-${pkgver}"
+
+  make DESTDIR="$pkgdir" install
+
+  install -Dm 644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}
+

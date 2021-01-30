@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-inflect
+_pkgname=inflect
+pkgver=5.0.2
+pkgrel=2
+pkgdesc='Correctly generate plurals, singular nouns, ordinals, indefinite articles; convert numbers to words.'
+url='https://pypi.org/project/inflect/#files'
+arch=('any')
+license=('GAGPL')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/67/26/fae4b4bc089919e37837776fe3015dc6d60673010e8118ff21c350f63ffb/$_pkgname-$pkgver.tar.gz")
+sha512sums=('ea97ec4a4a1a94a6218e60c20d63e483026beb1901abe2fa69f186a823f8a786b9a82af231fc42bf705146f650fdbfa5ff660cfbe821eceb53891ef2e91eaec3')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

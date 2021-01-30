@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-dnsimple
+_pkgname=dnsimple
+pkgdesc='DNSimple API service for python.'
+pkgver=2.1.0
+pkgrel=1
+arch=('any')
+url='https://pypi.org/project/dnsimple/'
+license=('MIT')
+depends=('python' 'python-requests' 'python-omitempty')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/c1/ff/991eb05d049f0a6dc8624c1ff0809a7324c94243355078e878ee3ae70e0f/$_pkgname-$pkgver.tar.gz")
+sha512sums=('93c470c255381e8d413c7f9d2df2bf68cc184fa4d31f7341bd7e468fb175677801790b2d6d51e9e2aee0b1ff988f3d34f8ca624a7e2cb4ec5775c7a58cc585bc')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

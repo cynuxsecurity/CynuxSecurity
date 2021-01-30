@@ -1,0 +1,37 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=wxhexeditor
+pkgver=722.c22ce20
+pkgrel=2
+pkgdesc='A free hex editor / disk editor for Linux, Windows and MacOSX.'
+arch=('x86_64' 'armv6h' 'arvm7h')
+groups=('cynuxsecurity' 'cynuxsecurity-binary' 'cynuxsecurity-misc')
+url='http://wxhexeditor.sourceforge.net/'
+license=('GPL')
+depends=('wxgtk2' 'mhash' 'python' 'python2')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/EUA/wxHexEditor.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo "$(git rev-list --count HEAD)"."$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd $pkgname
+
+  make CXXFLAGS="${CXXFLAGS/-fno-rtti/}"
+}
+
+package() {
+  cd $pkgname
+
+  make DESTDIR="$pkgdir" PREFIX="/usr" install
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" docs/*
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

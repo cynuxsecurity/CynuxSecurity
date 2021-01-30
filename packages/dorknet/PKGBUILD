@@ -1,0 +1,30 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=dorknet
+pkgver=58.419d6a2
+pkgrel=1
+pkgdesc='Selenium powered Python script to automate searching for vulnerable web apps.'
+groups=('cynuxsecurity' 'cynuxsecurity-webapp' 'cynuxsecurity-automation')
+arch=('any')
+url='https://github.com/NullArray/DorkNet'
+license=('MIT')
+depends=('python2' 'python2-argparse' 'python2-blessings' 'python2-selenium')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/NullArray/DorkNet.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm 755 "$pkgname.py" "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

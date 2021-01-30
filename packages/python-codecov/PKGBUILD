@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-codecov
+_pkgname=codecov
+pkgver=2.1.11
+pkgrel=1
+pkgdesc='Hosted coverage reports for Github, Bitbucket and Gitlab.'
+url='https://pypi.org/project/codecov/#files'
+arch=('any')
+license=('APACHE')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/5a/1e/aff89bf606c8939568b3f5fc388699af37e8e91c35ec10840d8224ebdca0/$_pkgname-$pkgver.tar.gz")
+sha512sums=('bfc1bb3f85baca8de5b3058434242709c6bc4e5e5579490b7b88e308467767718e6e11a0464ea682bbbc4ff279c47b5bafb55b537660c0eb3df48bd5ac4e3d6e')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

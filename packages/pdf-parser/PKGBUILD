@@ -1,0 +1,21 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=pdf-parser
+pkgver=0.7.4
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-forensic')
+pkgdesc='Parses a PDF document to identify the fundamental elements used in the analyzed file.'
+arch=('any')
+url='http://blog.didierstevens.com/programs/pdf-tools/'
+license=('custom')
+depends=('python')
+source=("https://didierstevens.com/files/software/pdf-parser_V${pkgver//./_}.zip"
+        'LICENSE')
+sha512sums=('9984cd9792818331224e74c450065a815b8081147541ba911d13913fb62202c3e50a752f3e3d8600d763f1f9ca0f2615afb4761c81520da2046400236f20ce40'
+            '81c04aad50b9a4a702b53cc9a155d5ae87dc35db114e0a11ae1249268adecefbe2f0581fa7147dddf5399ae36e21ff089d0c11037f239be806146bddf4023375')
+
+package() {
+  install -Dm 755 "$pkgname.py" "$pkgdir/usr/bin/$pkgname"
+}
+

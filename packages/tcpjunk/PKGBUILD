@@ -1,0 +1,35 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=tcpjunk
+pkgver=2.9.03
+pkgrel=6
+pkgdesc='A general tcp protocols testing and hacking utility.'
+groups=('cynuxsecurity' 'cynuxsecurity-exploitation' 'cynuxsecurity-fuzzer')
+arch=('x86_64' 'aarch64')
+url='http://code.google.com/p/tcpjunk'
+license=('GPL2')
+source=("http://tcpjunk.googlecode.com/files/$pkgname-$pkgver.tar.gz")
+depends=('gtksourceview2')
+sha512sums=('1bd3f80abe95dfe728f135e3d1a22ef4a08f2a28')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  ./configure --prefix=/usr --docdir=/usr/share/doc
+
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/share/doc"
+
+  make DESTDIR="$pkgdir" install
+
+  mv "$pkgdir/usr/doc/$pkgname" "$pkgdir/usr/share/doc/$pkgname"
+
+  rm -rf "$pkgdir/usr/doc"
+}
+

@@ -1,0 +1,48 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=dns-reverse-proxy
+pkgver=29.c4de780
+pkgrel=2
+groups=('cynuxsecurity' 'cynuxsecurity-proxy' 'cynuxsecurity-networking')
+pkgdesc='A reverse DNS proxy written in Go.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/StalkR/dns-reverse-proxy'
+license=('Apache')
+depends=('glibc' 'go')
+makedepends=('git' 'go-pie')
+source=("git+https://github.com/StalkR/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin/"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  export GOPATH="$pkgdir/usr/share/$pkgname"
+
+  go get github.com/miekg/dns
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm README.md LICENSE
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+export GOPATH=/usr/share/$pkgname/
+exec go run /usr/share/$pkgname/dns_reverse_proxy.go "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

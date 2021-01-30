@@ -1,0 +1,24 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-unfurl
+_pkgname=unfurl
+pkgver=20201102
+pkgrel=2
+pkgdesc='Use Git to record and deploy changes to your DevOps infrastructure.'
+arch=('any')
+url='https://github.com/obsidianforensics/unfurl'
+license=('MIT')
+depends=('python' 'python-requests' 'python-torf' 'python-maclookup'
+         'python-ulid-py' 'python-flask' 'python-flask-cors' 'python-networkx'
+         'python-protobuf' 'python-publicsuffix2' 'python-pycountry')
+makedepends=('python-setuptools')
+source=("https://github.com/obsidianforensics/unfurl/archive/$pkgver.tar.gz")
+sha512sums=('27acf83830c1ab7dd85420927af55f4e8c529ed1b3614eaff9a32c9392177c63ffc2bc70f1e81b42bd57a31aa05954ee5e0bef786a938a66a6238e68c27d5105')
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir"
+}
+

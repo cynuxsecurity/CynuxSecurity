@@ -1,0 +1,35 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=jpexs-decompiler
+pkgver=11.3.0
+pkgrel=1
+pkgdesc='JPEXS Free Flash Decompiler.'
+groups=('cynuxsecurity' 'cynuxsecurity-decompiler')
+arch=('any')
+url='https://github.com/jindrapetrik/jpexs-decompiler'
+license=('GPL3')
+depends=('java-environment')
+source=("https://github.com/jindrapetrik/$pkgname/releases/download/version$pkgver/ffdec_$pkgver.zip")
+sha512sums=('b096253266d4104d189595c8603f42841e8ee59ea0f3b1e30887e902b4b47bd52defa49c17583450c3acd7b65a8fb36a53e32d48e9066ae54fa0d1cee5fbfa79')
+
+package() {
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" CHANGELOG.md
+  install -Dm 644 license.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm *.md license.txt "ffdec_$pkgver.zip"
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec java -jar ffdec.jar "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

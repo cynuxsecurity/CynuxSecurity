@@ -1,0 +1,48 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-branca
+pkgname=('python2-branca' 'python-branca')
+_pkgname=branca
+pkgver=0.4.2
+pkgrel=1
+pkgdesc='Spinoff from folium, that would host the non-map-specific features.'
+arch=('any')
+url='https://pypi.org/project/branca/#files'
+license=('MIT')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/e0/a5/638a55bc7e1eeaf9c4f85e247a1081e9f05894bb440708f5f38798982a88/$_pkgname-$pkgver.tar.gz")
+sha512sums=('ecc09162fbb1d4f19041a136ee798d379d9be4fa39d164b3137f156f69dc397bdbcde270a84f64854a51cfe062a14a575dbed437fa4b58a046e2d394fb3e86b4')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-branca() {
+  depends=('python2-jinja' 'python2-six')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+
+package_python-branca() {
+  depends=('python-jinja' 'python-six')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

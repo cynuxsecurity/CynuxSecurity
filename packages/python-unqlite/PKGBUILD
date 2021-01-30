@@ -1,0 +1,46 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-unqlite
+pkgname=('python2-unqlite' 'python-unqlite')
+_pkgname=unqlite
+pkgver=0.9.2
+pkgrel=2
+pkgdesc='Fast Python bindings for the UnQLite embedded NoSQL database.'
+arch=('x86_64' 'aarch64')
+url='https://pypi.org/project/unqlite/#files'
+license=('MIT')
+makedepends=('python2-setuptools' 'python-setuptools' 'cython2' 'cython')
+source=("https://files.pythonhosted.org/packages/4b/1e/42fe2abfd262f3d636eb0ba34673c3c3af59a1c0397458d76ac4ba9d65a4/$_pkgname-$pkgver.tar.gz")
+sha512sums=('fd913abea2e4d35abce26621bdfe54c43252f46f51c7f886b7f1d56a9e8e8301bd0d167e1988ecb16d6aa879a1485d41ebbeaca0efe5deca5d305e055365745e')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-unqlite() {
+  depends=('python2' 'cython2')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+
+package_python-unqlite() {
+  depends=('python' 'cython')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

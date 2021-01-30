@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-python-openflow
+_pkgname=python-openflow
+pkgver=2020.2
+pkgrel=1
+epoch=1
+pkgdesc='Library to parse and generate OpenFlow messages.'
+url='https://pypi.org/project/python-openflow/#files'
+arch=('any')
+license=('MIT')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/66/60/297ca1657da018dde1e87a22270262e69d5f15abffb0b9741f15cbe242e3/$_pkgname-$pkgver.tar.gz")
+sha512sums=('0faa17eeb9f3e1d1878e3b4bec90c29dd1006a644aba271223de663f6c971b3399acadc72836050c0bd9d9bbcd622c4b74a964147be637115d3a7d3b3865aaae')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

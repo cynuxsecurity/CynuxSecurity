@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-azure-mgmt-network
+_pkgname=azure-mgmt-network
+pkgver=17.0.0
+pkgrel=1
+pkgdesc='Microsoft Azure Network Management Client Library for Python.'
+arch=('any')
+url='https://pypi.org/project/azure-mgmt-network/#files'
+license=('MIT')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/3d/2c/fdfbbf4ef231ae3b1e38885d060fc31efa35af9a8c6305618bffb2274191/$_pkgname-$pkgver.zip")
+sha512sums=('6eed258d5b297efab298e7da47c403da7b8959f8a9b4ecbe4908a2e5d90184dbbd5f50549d73c7253044b7a5c916b38e544bb016db91efd11ec39f6596f85ce7')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

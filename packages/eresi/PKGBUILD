@@ -1,0 +1,49 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=eresi
+pkgver=1291.4769c175
+pkgrel=1
+pkgdesc='The ERESI Reverse Engineering Software Interface.'
+groups=('cynuxsecurity' 'cynuxsecurity-binary' 'cynuxsecurity-reversing'
+        'cynuxsecurity-debugger' 'cynuxsecurity-disassembler')
+arch=('x86_64' 'aarch64')
+url='https://github.com/thorkill/eresi'
+license=('GPL2')
+depends=('openssl' 'linux-headers')
+makedepends=('git')
+source=("git+https://github.com/thorkill/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  export DESTDIR="$pkgdir/usr"
+
+  ./configure --enable-32-64
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/lib"
+
+  make DESTDIR="$pkgdir/usr" install
+
+  install -Dm 644 doc/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm doc/LICENSE
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.FIRST doc/*
+
+  rm "$pkgdir/usr/bin/"{e2dbg,elfsh,eresi-config,etrace,evarista,kedbg}
+}
+

@@ -1,0 +1,46 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-aiosqlite
+pkgname=('python2-aiosqlite' 'python-aiosqlite')
+_pkgname=aiosqlite
+pkgver=0.16.0
+pkgrel=2
+pkgdesc='Asyncio bridge to the standard sqlite3 module.'
+arch=('any')
+url='https://pypi.org/project/aiosqlite/#files'
+license=('APACHE')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/40/fd/02713e9715d5bcb7cac7b95a6703c24dbe4787805535cb8aa892c67fe45b/$_pkgname-$pkgver.tar.gz")
+sha512sums=('f554293663b15303f0aea0d1c10730d15766a30efa0538501a4f08acaccf8807bad78382d5c8a034cdffcfbceb42cbbe4eecdb97e2ef97c5143ab374e9b314b4')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-aiosqlite() {
+  depends=('python2')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+
+package_python-aiosqlite() {
+  depends=('python')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-dlib
+_pkgname=dlib
+pkgver=19.21.1
+pkgrel=1
+pkgdesc='A toolkit for making real world machine learning and data analysis applications.'
+arch=('x86_64' 'aarch64')
+url='https://pypi.org/project/dlib/#files'
+license=('custom:unknown')
+depends=('python')
+makedepends=('python-setuptools' 'cmake')
+source=("https://files.pythonhosted.org/packages/99/2c/ef681c1c717ace11040f9e99fe22dafc843cdd6085eb6120e7ab2a5c662b/$_pkgname-$pkgver.tar.gz")
+sha512sums=('ee0f82797e92012ca47f9411cf36eeb33b1398f1e3823b0b06dab776037943955384f03abb27b45c2ea2bf6c695e611f2b4ce60da1867866d008a257273df76f')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

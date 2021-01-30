@@ -1,0 +1,45 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=brakeman
+pkgver=3625.09b299f03
+pkgrel=1
+pkgdesc='A static analysis security vulnerability scanner for Ruby on Rails applications.'
+groups=('cynuxsecurity' 'cynuxsecurity-code-audit' 'cynuxsecurity-exploitation'
+        'cynuxsecurity-scanner' 'cynuxsecurity-webapp')
+arch=('any')
+url='https://brakemanscanner.org/'
+license=('MIT')
+depends=('ruby' 'ruby-bundler')
+makedepends=('git')
+source=("git+https://github.com/presidentbeef/$pkgname.git")
+install="$pkgname.install"
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+  install -dm 755 "$pkgdir/opt/$pkgname"
+
+  install -Dm 644 MIT-LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+
+  cp -a --no-preserve=ownership * "$pkgdir/opt/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /opt/$pkgname
+exec ./bin/$pkgname "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

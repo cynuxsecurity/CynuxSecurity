@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-enaml
+_pkgname=enaml
+pkgver=0.12.0
+pkgrel=2
+pkgdesc='Declarative DSL for building rich user interfaces in Python.'
+arch=('x86_64' 'aarch64')
+url='https://pypi.org/project/enaml/#files'
+license=('BSD')
+depends=('python' 'python-ply' 'python-kiwisolver' 'python-atom'
+         'python-qtpy')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/d5/d5/b3e88ac554ea36b77d08b612e3259d998ad9868ac60f3c60918377c9999f/$_pkgname-$pkgver.tar.gz")
+sha512sums=('92bfb55b045db39756c15cb4edc3dbc0cdca359751183004c2e48e4097b2f6f9fda73dc78af4521f7396f93a8fe01d6a643ef07f9ecc094475314e3af5d1bea4')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python-enaml() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

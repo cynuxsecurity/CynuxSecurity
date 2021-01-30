@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-dtfabric
+_pkgname=dtfabric
+pkgver=20200621
+pkgrel=3
+pkgdesc='Tooling for data type and structure management.'
+arch=('any')
+url='https://pypi.org/project/dtfabric/#files'
+license=('Apache')
+depends=('python' 'python-pyaml')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/47/93/736855c30f22b65b20494a8b683ee921f5abf35df4f9c0c2151ee5f74baa/$_pkgname-$pkgver.tar.gz")
+sha512sums=('5c06297779c16a457908bb7382b476c0e385f074398f2ec171f1928fd2bbd92d015515e984ab25b28a553bb3409034e5a5945acf0ef02a544cc3c36b3ead19a5')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

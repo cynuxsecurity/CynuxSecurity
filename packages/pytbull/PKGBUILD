@@ -1,0 +1,42 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=pytbull
+pkgver=2.1
+pkgrel=2
+groups=('cynuxsecurity' 'cynuxsecurity-scanner' 'cynuxsecurity-fuzzer')
+pkgdesc='A python based flexible IDS/IPS testing framework shipped with more than 300 tests.'
+arch=('any')
+url='http://pytbull.sourceforge.net/'
+license=('GPL2')
+depends=('python2' 'python2-scapy' 'python2-feedparser' 'python2-cherrypy')
+source=("https://downloads.sourceforge.net/project/$pkgname/$pkgname-$pkgver.tar.bz2")
+sha512sums=('5ac642ded4f772299966950d7255bc67562f95fa92c7b58321623aae6efc3655abddbc94211f11098a53d5544ef3e172fb73634df3a449e97c1d7f6dd5789430')
+
+prepare() {
+  cd $pkgname
+
+  sed -i 's/self.checkNewVersionAvailable()/False/' $pkgname
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+  install -dm 755 "$pkgdir/usr/share/doc"
+
+  install -Dm 644 docs/COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+
+  cp -a docs "$pkgdir/usr/share/doc/$pkgname/"
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+python2 $pkgname "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

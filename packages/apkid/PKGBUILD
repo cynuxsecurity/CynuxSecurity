@@ -1,0 +1,39 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=apkid
+pkgver=2.1.1
+pkgrel=1
+epoch=2
+pkgdesc='Android Application Identifier for Packers, Protectors, Obfuscators and Oddities.'
+groups=('cynuxsecurity' 'cynuxsecurity-mobile')
+arch=('any')
+url='https://github.com/rednaga/APKiD'
+license=('GPL3')
+depends=('python' 'python-argparse' 'python-yara-rednaga')
+makedepends=('python-setuptools' 'python-yara-rednaga')
+source=("https://github.com/rednaga/APKiD/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz")
+sha512sums=('02355685e7f169219ef7e5a1dda91eeff4641d81c0fe6cdfc1c3dc5cf155d1e70d42fd55428935a77e2c9ee73c5159d6f4fedca44edb7e9cb5a340f66ba6293c')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+
+  sed -i 's|yara-python==3.11.0|yara-python|' setup.py
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.*
+  install -Dm 644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.GPL \
+    LICENSE.COMMERCIAL
+}
+

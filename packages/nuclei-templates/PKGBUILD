@@ -1,0 +1,35 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=nuclei-templates
+pkgver=2193.41a7be7
+pkgrel=1
+pkgdesc='Community curated list of template files for the nuclei engine.'
+groups=('cynuxsecurity-scanner')
+arch=('any')
+url='https://github.com/projectdiscovery/nuclei-templates.git'
+license=('MIT')
+depends=('nuclei')
+makedepends=('git')
+source=("git+https://github.com/projectdiscovery/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm -r *.md
+
+  find -maxdepth 1 | grep -v \\.git |
+  xargs -I{} cp -r {} "$pkgdir/usr/share/$pkgname"
+}
+

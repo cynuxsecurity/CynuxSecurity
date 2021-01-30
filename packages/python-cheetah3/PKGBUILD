@@ -1,0 +1,32 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-cheetah3
+_pkgname=Cheetah3
+pkgver=3.2.6
+pkgrel=2
+pkgdesc='A template engine and code generation tool.'
+arch=('x86_64' 'aarch64')
+url='https://pypi.org/project/cheetah3/#files'
+license=('MIT')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/ee/6f/29c6d74d8536dede06815eeaebfad53699e3f3df0fb22b7a9801a893b426/Cheetah3-$pkgver.tar.gz")
+sha512sums=('e3422147b3d476676ecfd4ed0bba77c80b008869055748ea50fe83a79b462bb15a20239e6803403e90ea6a0a090697a7fe6ecaae8bfd8e4832f3f0c8da69200d')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  for i in "$pkgdir/usr/bin/"*; do
+    mv $i "${i}3"
+  done
+}
+

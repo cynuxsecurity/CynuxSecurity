@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=auto-xor-decryptor
+pkgver=7.2eb176d
+pkgrel=3
+groups=('cynuxsecurity' 'cynuxsecurity-crypto')
+pkgdesc='Automatic XOR decryptor tool.'
+arch=('any')
+url='https://github.com/MRGEffitas/scripts'
+license=('GPL')
+makedepends=('git')
+depends=('python')
+source=("git+https://github.com/MRGEffitas/scripts")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd scripts
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd scripts
+
+  install -Dm 755 auto_xor_decryptor.py "$pkgdir/usr/bin/$pkgname"
+}
+

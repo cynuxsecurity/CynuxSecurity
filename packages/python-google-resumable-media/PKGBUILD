@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-google-resumable-media
+_pkgname=google-resumable-media
+pkgver=1.2.0
+pkgrel=1
+pkgdesc='Utilities for Google Media Downloads and Resumable Uploads.'
+arch=('any')
+url='https://pypi.org/project/google-resumable-media/#files'
+license=('Apache')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/e9/31/40e70eb2a484995d80cf5dadad1257fb7cebacd1252f4850d284ec2ccf80/$_pkgname-$pkgver.tar.gz")
+sha512sums=('c5b33f3af57afa358ec6e02699475f9fb4724c0d35627766561b016c2711ab4fa2b7dde9d0b2554f9577ca01c886610bfdb258fa5a4ac8940d700858ae5b824e')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

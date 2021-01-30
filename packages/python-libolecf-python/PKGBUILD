@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-libolecf-python
+_pkgname=libolecf
+pkgver=20201004
+pkgrel=2
+pkgdesc='Library and tools to access the OLE 2 Compound File (OLECF) format.'
+url='https://github.com/libyal/libolecf'
+arch=('x86_64' 'aarch64')
+license=('LGPL3')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/f5/67/c2084556fc5e18d8117eb1610481a84f21252e1cc1238ac494957fad9939/$_pkgname-python-$pkgver.tar.gz")
+sha512sums=('e79cc76707bd6a09837199016e0ef1a9e8c574a090efcff781f40cdf2a83e20c4baa9a52031a25c8bd3bd48d50e6ba5fc0659bf16bff4c1d4378c634c1833d88')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

@@ -1,0 +1,32 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=bytecode-viewer
+pkgver=2.9.22
+pkgrel=1
+epoch=1
+groups=('cynuxsecurity' 'cynuxsecurity-binary' 'cynuxsecurity-reversing')
+pkgdesc='A Java 8/Android APK Reverse Engineering Suite.'
+arch=('any')
+url='https://github.com/Konloch/bytecode-viewer'
+license=('custom:unknown')
+depends=('java-environment')
+makedepends=('git')
+source=("https://github.com/Konloch/bytecode-viewer/releases/download/v$pkgver/Bytecode-Viewer-$pkgver.jar")
+noextract=("Bytecode-Viewer-$pkgver.jar")
+sha512sums=('fdb8c942f01bbb3077d49bb0b08d395f0fbf2d0961f968f67c2e1d68718bb6ab9fa37eeb10db4979c7bf333d47ab8ea7b56a14d282d4f5ae8d78e987da153b8c')
+
+package() {
+  install -dm 755 "$pkgdir/usr/bin"
+
+  install -Dm 644 "Bytecode-Viewer-$pkgver.jar" \
+    "$pkgdir/usr/share/$pkgname/Bytecode-Viewer-$pkgver.jar"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+exec java -jar "/usr/share/$pkgname/Bytecode-Viewer-$pkgver.jar" "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

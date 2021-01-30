@@ -1,0 +1,23 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=antiransom
+pkgver=3.02
+pkgrel=3
+pkgdesc='A tool capable of detect and stop attacks of Ransomware using honeypots.'
+url='http://www.security-projects.com/?Anti_Ransom___Download'
+groups=('cynuxsecurity' 'cynuxsecurity-windows' 'cynuxsecurity-defensive'
+        'cynuxsecurity-honeypot')
+license=('custom:unknown')
+arch=('any')
+source=("https://github.com/YJesus/AntiRansom/releases/download/V$pkgver/AntiRansomV$pkgver.zip")
+sha512sums=('97b87cb624934b7e2ced76c1b26a76230e451420b7790a8fc2b9d956efe5f255f04cafeb79a6cc4609a82ca853ad199805857cc1953995aca154f243a6bd21e9')
+
+package() {
+  install -dm 755 "$pkgdir/usr/share/windows/$pkgname"
+
+  rm "AntiRansomV$pkgver.zip"
+
+  cp -a * "$pkgdir/usr/share/windows/$pkgname"
+}
+

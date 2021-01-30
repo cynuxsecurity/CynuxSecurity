@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=pcredz
+pkgver=54.b27f774
+pkgrel=3
+groups=('cynuxsecurity' 'cynuxsecurity-scanner')
+pkgdesc='A tool that extracts credit card numbers, NTLM(DCE-RPC, HTTP, SQL, LDAP, etc), Kerberos (AS-REQ Pre-Auth etype 23), HTTP Basic, SNMP, POP, SMTP, FTP, IMAP, and more from a pcap file or from a live interface.'
+arch=('any')
+url='https://github.com/lgandx/PCredz'
+license=('GPL2')
+depends=('python' 'python-python-libpcap')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/lgandx/PCredz.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm 755 Pcredz "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/$pkgname/" Readme.md
+}
+

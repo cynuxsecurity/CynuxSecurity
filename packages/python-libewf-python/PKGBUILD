@@ -1,0 +1,32 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-libewf-python
+pkgname=('python2-libewf-python' 'python-libewf-python')
+_pkgname=libewf-python
+pkgver=20201230
+pkgrel=1
+pkgdesc='A library to access the Expert Witness Compression Format (EWF).'
+arch=('x86_64' 'aarch64')
+url='https://pypi.org/project/libewf-python/#files'
+license=('LGPLv3+')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/c8/87/9320139a9e4ff3ecc8572dd406268c15ccf3f1fb3d54e75ded000fb15f87/$_pkgname-$pkgver.tar.gz")
+sha512sums=('30d3731d2daf1852da4818187c4a7597ab512ca6a1a39580951b9b76cd068800fc00d7eaddb48faa8dd525f7dab912704aa9aeadb059afbb4dff4808f8de1d16')
+
+package_python2-libewf-python() {
+  depends=('python2')
+
+  cd "libewf-$pkgver"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+}
+
+package_python-libewf-python() {
+  depends=('python')
+
+  cd "libewf-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+}
+

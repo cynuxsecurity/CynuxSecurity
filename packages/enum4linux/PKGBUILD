@@ -1,0 +1,32 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=enum4linux
+pkgver=0.8.9
+pkgrel=4
+groups=('cynuxsecurity' 'cynuxsecurity-recon' 'cynuxsecurity-scanner')
+pkgdesc='A tool for enumerating information from Windows and Samba systems.'
+arch=('any')
+url='http://labs.portcullis.co.uk/application/enum4linux/'
+license=('GPL')
+depends=('perl' 'polenum' 'smbclient' 'openldap')
+source=("http://labs.portcullis.co.uk/download/$pkgname-$pkgver.tar.gz")
+install='enum4linux.install'
+sha512sums=('3c3973ed85cbd585f5534a6871c4c07111d112d0be4e776780974e06ad4f0e47132a7d22e6c68658af5903811e9b87ef77e0b48e3dad848e2ebef5058b46ac83')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+
+  sed -i 's|polenum.py|polenum|g' "$pkgname.pl"
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -Dm 755 "$pkgname.pl" "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 share-list.txt "$pkgdir/usr/share/$pkgname/share-list.txt"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname" CHANGELOG
+  install -Dm 644 -t "$pkgdir/usr/share/licenses/$pkgname" COPYING.ENUM4LINUX \
+    COPYING.GPL
+}
+

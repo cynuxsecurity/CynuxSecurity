@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-exifread
+_pkgname=exif-py
+pkgver=2.3.2
+pkgrel=2
+pkgdesc='Python library to extract EXIF data from tiff and jpeg files.'
+arch=('any')
+url='https://github.com/ianare/exif-py/'
+license=('BSD')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://github.com/ianare/$_pkgname/archive/$pkgver.tar.gz")
+sha512sums=('d37cc6a70793aa894947b1b24f973ff2f9c15ba3dfe99674c5ea61e5a469b259035fc48a1d2c4d4d7021289bad431e57a4e137e2d4feb0c5352b0b162e61376a')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

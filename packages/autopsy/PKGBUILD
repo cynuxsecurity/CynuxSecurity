@@ -1,0 +1,41 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=autopsy
+pkgver=4.17.0
+_skver=4.10.1
+pkgrel=2
+epoch=1
+pkgdesc='The forensic browser. A GUI for the Sleuth Kit.'
+groups=('cynuxsecurity' 'cynuxsecurity-forensic')
+arch=('x86_64')
+url='http://www.sleuthkit.org/autopsy/'
+license=('MIT' 'Apache')
+depends=('java-runtime=8' 'testdisk' 'sleuthkit' 'sleuthkit-java'
+         'java8-openjfx' 'python2-pytsk3' 'python-pytsk3')
+source=("https://github.com/sleuthkit/$pkgname/releases/download/$pkgname-$pkgver/$pkgname-$pkgver.zip"
+        "$pkgname.desktop")
+sha512sums=('2a720a351755bd44ba71f08e1422800663fe2805faee53279fe30dedb0221c61107c0ac7c90e1bde92949dd71a6fccfcbd89e23db14867bc107ec29679c86f68'
+            '08f98e0b4cc2f0791a4543ce77ec1a40214f9358973e2431e6b253d32e9954ee1998d61d234168699802a091de901b0661dffe1243ccb35fd299648d65b1907b')
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/opt/$pkgname"
+
+  cp -r * "$pkgdir/opt/$pkgname/"
+
+  rm -f \
+    "$pkgdir/opt/$pkgname/$pkgname/modules/ext/sleuthkit-postgresql-$_skver.jar"
+  ln -sf "/usr/share/java/sleuthkit-$_skver.jar" \
+    "$pkgdir/opt/$pkgname/$pkgname/modules/ext/sleuthkit-postgresql-$_skver.jar"
+
+  install -m 755 "bin/$pkgname" "$pkgdir/opt/$pkgname/bin/$pkgname"
+  install -Dm 644 icon.ico "$pkgdir/usr/share/pixmaps/$pkgname.ico"
+  install -Dm 644 "$srcdir/$pkgname.desktop" \
+    "$pkgdir/usr/share/applications/$pkgname.desktop"
+
+  ln -sf "/opt/$pkgname/bin/$pkgname" "$pkgdir/usr/bin/$pkgname"
+}
+

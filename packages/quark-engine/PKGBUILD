@@ -1,0 +1,35 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+# Contributor: peeweep <peeweep at 0x0 dot ee>
+
+pkgname=quark-engine
+pkgver=21.01.4
+pkgrel=1
+pkgdesc='An Obfuscation-Neglect Android Malware Scoring System.'
+groups=('cynuxsecurity' 'cynuxsecurity-mobile' 'cynuxsecurity-malware')
+arch=('any')
+license=('GPL')
+url='https://github.com/quark-engine/quark-engine'
+depends=('python' 'python-prettytable' 'androguard' 'python-tqdm'
+         'python-colorama' 'python-click' 'python-graphviz' 'python-gitpython')
+makedepends=('python-setuptools')
+source=("$pkgname.tar.gz::https://github.com/quark-engine/$pkgname/archive/v$pkgver.tar.gz")
+sha512sums=('a4fd1241aa2f99dff5e325c64b42f42045ef40d87d85655ed53c2bbce35b608ad0eb0dcb17979cc2f3ecde810a28bcb83f3b4a25158a6b91c382116f7a8754b7')
+
+build () {
+  cd "$pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm -rf "$pkgdir/usr/lib/python3.9/site-packages/tests"
+}
+

@@ -1,0 +1,12 @@
+--- src/mdk4/Makefile	2020-06-16 11:10:24.243331967 +0200
++++ Makefile	2020-06-16 11:13:01.986665302 +0200
+@@ -1,6 +1,6 @@
+-DESTDIR		= 
+-PREFIX		= /usr/local
+-SBINDIR		= $(PREFIX)/sbin
++DESTDIR		=
++PREFIX		= /usr
++SBINDIR		= $(PREFIX)/bin
+ MANDIR		= $(PREFIX)/share/man
+ 
+ SRC		= src

@@ -1,0 +1,60 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=hercules-payload
+pkgver=222.2607a3a
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-binary' 'cynuxsecurity-windows' 'cynuxsecurity-backdoor')
+pkgdesc='A special payload generator that can bypass all antivirus software.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/EgeBalci/HERCULES'
+license=('MIT')
+depends=('glibc')
+makedepends=('git' 'go-pie')
+source=("$pkgname::git+https://github.com/EgeBalci/HERCULES.git"
+        'hercules.patch')
+sha512sums=('SKIP'
+            'f44544865d813b1d778d8863bd4a995ca9866e52c7e88e7462f6b8829b8a6dc2b2b08c444298bf336812e379466731021a6ea57296387e244385259563fc1dde')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  patch -p1 < hercules.patch
+}
+
+build() {
+  cd $pkgname
+
+  export GOPATH="$srcdir"
+
+  go get -d -t github.com/fatih/color
+
+  go run Setup.go
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm LICENSE README.md
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname/SOURCE
+exec ./HERCULES "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

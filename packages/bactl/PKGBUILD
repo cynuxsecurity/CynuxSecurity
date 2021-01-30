@@ -1,0 +1,31 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=bactl
+pkgver=15.6062356
+pkgrel=1
+groups=('cynuxsecurity-config')
+pkgdesc='Script to control CynuxSecurity Linux related environments and setups.'
+arch=('any')
+url='https://github.com/CynuxSecurity/bactl'
+license=('custom:unknown')
+depends=('bash')
+makedepends=('git')
+source=("git+https://github.com/CynuxSecurity/$pkgname.git")
+sha512sums=('SKIP')
+install="$pkgname.install"
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm 755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 "$pkgname.service" \
+    "$pkgdir/etc/systemd/system/$pkgname.service"
+}
+

@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=batman-alfred
+_pkgname=alfred
+pkgver=2020.4
+pkgrel=1
+pkgdesc='Almighty Lightweight Fact Remote Exchange Daemon'
+groups=('cynuxsecurity' 'cynuxsecurity-wireless')
+arch=('x86_64' 'aarch64')
+url='http://www.open-mesh.org/'
+license=('GPL')
+depends=('gpsd' 'libnl' 'dbus')
+source=("https://downloads.open-mesh.org/batman/releases/batman-adv-$pkgver/$_pkgname-$pkgver.tar.gz")
+sha512sums=('76a13b84f2b2f155e594a4282570aafa0167ee9e34c1a1ff869508858c1093475b0b8e174cfa97e4cb8cc17085314dcfe94ffc34d4c9e3e178f5872006f347b4')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  make
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" PREFIX=/usr SBINDIR=/usr/bin install
+}
+

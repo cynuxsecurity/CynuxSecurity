@@ -1,0 +1,43 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=sucrack
+pkgver=1.2.3
+pkgrel=7
+groups=('cynuxsecurity' 'cynuxsecurity-cracker')
+pkgdesc='A multi-threaded Linux/UNIX tool for brute-force cracking local user accounts via su.'
+url='http://labs.portcullis.co.uk/application/sucrack'
+license=('custom')
+arch=('x86_64' 'aarch64')
+source=("http://labs.portcullis.co.uk/download/$pkgname-$pkgver.tar.gz")
+sha512sums=('6ea47a542a652ce416af9f8dece569eec6662a361860a150291e1f6c23ff0cc8288b573aee047624c4c2c32f51aa01c6ce88177a0f41353b17c891d905085a41')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  unset LDFLAGS
+
+  if [[ "$CARCH" == "i686" || "$CARCH" == "x86_64" ]];
+  then
+    ./configure --prefix=/usr --with-static-buffer
+  else
+    ./configure --build=arm --prefix=/usr --with-static-buffer
+  fi
+
+  make
+}
+
+check() {
+  cd "$pkgname-$pkgver"
+
+  make -k check
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+
+  install -Dm 644 COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

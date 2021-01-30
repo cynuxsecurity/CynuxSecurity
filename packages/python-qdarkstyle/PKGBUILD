@@ -1,0 +1,36 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+# Original Submitter: Colin Duquesnoy <colin.duquesnoy@gmail.com>
+# Original Maintainer: Colin Duquesnoy <colin.duquesnoy@gmail.com>
+
+pkgbase=python-qdarkstyle
+pkgname=('python2-qdarkstyle' 'python-qdarkstyle')
+pkgver=2.8.1
+pkgrel=2
+pkgdesc='Dark stylesheet for pyside/pyqt applications.'
+url='https://github.com/ColinDuquesnoy/QDarkStyleSheet'
+arch=('any')
+license=('MIT')
+makedepends=('python-setuptools' 'python2-setuptools')
+source=("https://files.pythonhosted.org/packages/83/52/40111409358173b1013231638f58793a4f43f935b8419919b47846d5e0a6/QDarkStyle-$pkgver.tar.gz")
+sha512sums=('405b7dde85ea92f9a940930a2fef0f515239bcdf5b8bf2469642bc67617195e9ff3a2aa14c31d74307dbade3d65b2072c58c0752dcdf84997797690745da72be')
+
+package_python2-qdarkstyle() {
+  depends=('python2')
+
+  cd "QDarkStyle-$pkgver"
+
+  python2 setup.py install --root="$pkgdir" --optimize=1
+
+  mv "$pkgdir/usr/bin/qdarkstyle" "$pkgdir/usr/bin/qdarkstyle2"
+}
+
+package_python-qdarkstyle() {
+  depends=('python')
+
+  cd "QDarkStyle-$pkgver"
+
+  python setup.py install --root="$pkgdir" --optimize=1
+}
+

@@ -1,0 +1,37 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=radare2-yara
+pkgver=4.4.0
+pkgrel=1
+pkgdesc='Yara plugin for radare2'
+url='http://radare.org/'
+arch=('x86_64' 'aarch64')
+depends=('radare2' 'yara')
+makedepends=('git')
+license=('custom:unknown')
+source=("$pkgname::git+https://github.com/radare/radare2-extras")
+sha512sums=('SKIP')
+install="$pkgname.install"
+
+build() {
+  cd $pkgname
+
+  ./configure --prefix=/usr
+
+  cd yara/yara
+
+  ./configure --prefix=/usr
+
+  make
+}
+
+package() {
+  cd "$pkgname/yara/yara"
+
+  install -dm 755 "$pkgdir/usr/share/radare2-extras/plugins/yara"
+
+  make DESTDIR="$pkgdir" \
+    R2PM_USRPLUGIN_DIR="$pkgdir/usr/share/radare2-extras/plugins/yara" install
+}
+

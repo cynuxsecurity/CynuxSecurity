@@ -1,0 +1,48 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+_pkgname=gOSINT
+pkgname=gosint
+pkgver=196.9c86ed2
+pkgrel=2
+pkgdesc='OSINT framework in Go.'
+groups=('cynuxsecurity' 'cynuxsecurity-recon')
+arch=('x86_64' 'aarch64')
+url='https://github.com/Nhoya/gOSINT'
+license=('GPL3')
+depends=('glibc' 'tesseract')
+makedepends=('git' 'go-pie' 'dep')
+source=("git+https://github.com/Nhoya/$_pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $_pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  mkdir -p "gopath/src/github.com/Nhoya"
+  ln -rTsf $_pkgname "gopath/src/github.com/Nhoya/$_pkgname"
+
+  export GOPATH="$srcdir/gopath"
+  cd "$GOPATH/src/github.com/Nhoya/$_pkgname"
+
+  dep ensure
+}
+
+build() {
+  export GOPATH="$srcdir/gopath"
+
+  cd "$GOPATH/src/github.com/Nhoya/$_pkgname"
+  go build -o $pkgname -v -ldflags="-s -w" cmd/gosint/main.go
+}
+
+package() {
+  cd "$_pkgname"
+
+  install -Dm 755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

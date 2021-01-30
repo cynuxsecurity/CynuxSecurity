@@ -1,0 +1,43 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=hxd
+pkgver=2.4.0.0
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-misc' 'cynuxsecurity-windows')
+pkgdesc='Freeware Hex Editor and Disk Editor.'
+arch=('x86_64')
+url='https://mh-nexus.de/en/hxd/'
+license=('custom:unknown')
+depends=('wine' 'wine_gecko' 'wine-mono')
+makedepends=('innoextract')
+source=('https://mh-nexus.de/downloads/HxDSetup.zip')
+sha512sums=('33714bf909de383b2df6c7b860634cad0f1c0f6954753076c417feddc1477f506bc887b1b867a9ca2945fe90e6fd0ca70bbf74a63999a818e394d60cff59df99')
+
+prepare() {
+  innoextract ./HxDSetup.exe
+}
+
+package() {
+  cd app
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/windows/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" changelog.txt \
+    readme.txt
+  install -Dm 644 license.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm -rf *.txt
+  cp -a --no-preserve=ownership * \
+    "$pkgdir/usr/share/windows/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/windows/$pkgname
+exec wine HxD64.exe
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

@@ -1,0 +1,56 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=frida-tools
+pkgname=('python2-frida-tools' 'python-frida-tools')
+pkgver=9.1.0
+pkgrel=1
+pkgdesc='Frida CLI tools.'
+groups=('cynuxsecurity' 'cynuxsecurity-mobile' 'cynuxsecurity-binary' 'cynuxsecurity-reversing')
+arch=('any')
+url='https://pypi.org/project/frida-tools/#files'
+license=('custom:unknown')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/bf/f5/a0779f5936bf13dee86d810611dcaa6fe0c2c160c0ce834e7aa0bd7e1b00/$pkgbase-$pkgver.tar.gz"
+        'setup.py.patch')
+sha512sums=('712ae6797ecd24d4bcf2aa2241432641f6d67a3df32c24a0ed2907b2ad83bc2d6ce97c9af311da13f587467d31a377f9d8c1e2d2d27e867350f31f1f5b4ffedc'
+            '670813856b583ca787ee99e2d51b5b53acbd5acad0d63c8d18bb669448830cf75194adb643cd43a6bbac3fdfd117e590fc5c00f03dc4b88dd2ad28097cfe64a7')
+
+prepare() {
+  patch -p1 < setup.py.patch
+
+  cp -a "$pkgbase-$pkgver"{,-2}
+}
+
+build() {
+  cd "$pkgbase-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$pkgbase-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-frida-tools() {
+  depends=('python2' 'python2-frida' 'python2-colorama' 'python2-prompt_toolkit'
+           'python2-pygments' 'libimobiledevice')
+
+  cd "$pkgbase-$pkgver-2"
+
+  python2 setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  for i in "$pkgdir/usr/bin/"* ; do
+    mv $i "${i}2"
+  done
+}
+
+package_python-frida-tools() {
+  depends=('python' 'python-frida' 'python-colorama' 'python-prompt_toolkit'
+           'python-pygments' 'libimobiledevice')
+
+  cd "$pkgbase-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

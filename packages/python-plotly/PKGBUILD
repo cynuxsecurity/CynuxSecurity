@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-plotly
+_pkgname=plotly
+pkgver=4.14.3
+pkgrel=1
+pkgdesc='Make collaborative, interactive, publication-quality graphs from Python.'
+arch=('any')
+url='https://pypi.org/project/plotly/#files'
+license=('MIT')
+depends=('python' 'python-pandas')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/7f/69/2acf801ff56af4cca6a2d0e17108770c42eeb5596919254c5acbcf23efaf/$_pkgname-$pkgver.tar.gz")
+sha512sums=('7d8db7a0f6c1abeda1b222f9bd25e4395dd8d14d246ad986960868a8083e4f1d1f600d84f44416eb1d089640d190192e931b5a5f6ae24e01cf8146c4cf8e80eb')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

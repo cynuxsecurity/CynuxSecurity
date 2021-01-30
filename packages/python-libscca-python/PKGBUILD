@@ -1,0 +1,32 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-libscca-python
+pkgname=('python2-libscca-python' 'python-libscca-python')
+_pkgname=libscca-python
+pkgver=20200717
+pkgrel=2
+pkgdesc='Library and tools to access the Windows Prefetch File (SCCA) format.'
+arch=('x86_64' 'aarch64')
+url='https://pypi.org/project/libscca-python/#files'
+license=('LGPLv3+')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/d8/a7/d251bb2d424e3e8f7b7d379a7653e855a7c5b0b082679f5de6b49e4c62df/$_pkgname-$pkgver.tar.gz")
+sha512sums=('cbd2fddd8d185dca0f94adbf34984ad0a65a63683c6e30a18dc7366e4944650f5b92e0c0057c9638fec12c1b8fcf785f780b6ccd9e3819968658c7986cfaf037')
+
+package_python2-libscca-python() {
+  depends=('python2' 'python2-pyaml')
+
+  cd "libscca-$pkgver"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+}
+
+package_python-libscca-python() {
+  depends=('python' 'python-pyaml')
+
+  cd "libscca-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+}
+

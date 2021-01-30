@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-google-cloud-storage
+_pkgname=google-cloud-storage
+pkgver=1.35.0
+pkgrel=1
+pkgdesc='Google Cloud Storage API client library.'
+arch=('any')
+url='https://pypi.org/project/google-cloud-storage/#files'
+license=('Apache')
+depends=('python' 'python-google-cloud-core' 'python-google-resumable-media'
+         'python-google-auth' 'python-protobuf' 'python-google-api-core')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/7d/12/aa2f48345b0bd1c03c4e483dfa2331b38f587a0eca14f5f861a63d003714/$_pkgname-$pkgver.tar.gz")
+sha512sums=('747c722990979cd1540f922724f509da584739570b719014fddbc26363def429cc28c192085baf0199c5e07d6a74c5f8680f75f429fbd9cab62bf2d7072ca514')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

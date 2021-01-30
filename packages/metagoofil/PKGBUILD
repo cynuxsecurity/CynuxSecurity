@@ -1,0 +1,45 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=metagoofil
+pkgver=12.823b114
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-recon')
+pkgdesc='An information gathering tool designed for extracting metadata of public documents.'
+url='http://www.edge-security.com/metagoofil.php'
+arch=('any')
+license=('GPL2')
+depends=('libextractor' 'python2')
+makedepends=('git')
+#source=("http://www.edge-security.com/soft/$pkgname-$pkgver.tar")
+source=("git+https://github.com/laramies/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/$pkgname/doc/" README
+  install -Dm 644 -t "$pkgdir/usr/share/licenses/$pkgname/" COPYING LICENSES
+
+  rm -rf README COPYING LICENSES
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec python2 $pkgname.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

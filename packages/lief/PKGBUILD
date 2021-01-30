@@ -1,0 +1,44 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=lief
+_pkgname=LIEF
+pkgver=0.10.1
+pkgrel=3
+pkgdesc='Library to Instrument Executable Formats.'
+groups=('cynuxsecurity' 'cynuxsecurity-disassembler' 'cynuxsecurity-reversing')
+arch=('x86_64' 'aarch64')
+url='https://lief.quarkslab.com/'
+license=('Apache')
+depends=('python')
+makedepends=('python-setuptools' 'cmake')
+source=("https://github.com/lief-project/LIEF/archive/$pkgver.tar.gz")
+sha512sums=('08cc6374fa5026099e4d43cb6bcd6401a8eadb6ea9749f5cde09ce80a555eb5ebc05ef6db8f01085ff20d56ba506fa0ab07e8d5f2e12dea723bebeb0f93410e3')
+
+prepare() {
+  cd "$_pkgname-$pkgver"
+
+  # tmp dirty fix! we need to change this asap
+  sed -i 's|version   = "0.0.0"|version   = "0.10.1"|' setup.py
+}
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md AUTHORS \
+    CHANGELOG
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  for i in "$pkgdir/usr/bin/"*; do
+    mv $i $(echo $i | sed 's|_|-|g;s|.py||g')
+  done
+}
+

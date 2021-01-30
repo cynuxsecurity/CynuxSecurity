@@ -1,0 +1,34 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=nfdump
+pkgver=1.6.13
+pkgrel=2
+groups=('cynuxsecurity' 'cynuxsecurity-networking')
+pkgdesc='A set of tools to collect and process netflow data.'
+arch=('x86_64' 'aarch64')
+url='http://sourceforge.net/projects/nfdump/'
+license=('BSD')
+depends=('libpcap')
+makedepends=('flex' 'bison')
+source=("http://downloads.sourceforge.net/project/nfdump/stable/nfdump-$pkgver/nfdump-$pkgver.tar.gz")
+sha512sums=('92c21462cddc69b3551d0ed5c20c7b87e5b4e6438efcbc16aac0e8af45b8ec7e5a361c6e514effcf78c1e78fd892959e8f39bb08915d4daedf4b6e932303688d')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  ./configure --prefix=/usr --sbindir=/usr/bin
+
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname" README INSTALL NEWS \
+    AUTHORS ChangeLog
+  install -Dm 644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}
+

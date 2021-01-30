@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python2-ldap3
+_pkgname=ldap3
+pkgver=2.7
+pkgrel=2
+pkgdesc='A strictly RFC 4510 conforming LDAP V3 pure Python client library.'
+url='https://pypi.org/project/ldap3/#files'
+arch=('any')
+license=('LGPL')
+depends=('python2' 'python2-pyasn1')
+makedepends=('python2-setuptools')
+source=("https://files.pythonhosted.org/packages/c2/49/3bf179229a92ae87ff2dca1609c2ad599c497938f90fd5d66d02aa8e977e/$_pkgname-$pkgver.tar.gz")
+sha512sums=('097565db900e7afe9e233c5991e76736afb1851feca6fe75edd0e5c86dc17c624cdaa3c61506831a132e4cf636057afd51b798aff94983bc399ec5a3851607da')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python2 setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python2 setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

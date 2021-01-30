@@ -1,0 +1,34 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=dmde
+pkgver=3.8.0.790
+pkgrel=1
+pkgdesc='Disk Editor and Data Recovery Software.'
+arch=('x86_64')
+groups=('cynuxsecurity' 'cynuxsecurity-forensic')
+arch=('any')
+url='https://dmde.com/download.html'
+license=('custom:unknown')
+source=("https://dmde.com/download/$pkgname-$pkgver-lin64-gui.zip")
+sha512sums=('bcf1681aa6923b77c600c7febee6a600486e641834a9ba818d28c908f91e86ab5d40c51b9ac24b3e58d2b23772fd7045678d10de9b4f0585e6d31d0970c785d4')
+
+package() {
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 eula_en.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm "$pkgname-$pkgver-lin64-gui.zip"
+
+  cp -a --no-preserve=ownership * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec ./$pkgname "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

@@ -1,0 +1,36 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=graudit
+pkgver=505.f8aab44
+pkgrel=1
+pkgdesc='Grep rough source code auditing tool.'
+arch=('any')
+groups=('cynuxsecurity' 'cynuxsecurity-code-audit')
+makedepends=('git')
+url='https://github.com/wireghoul/graudit'
+license=('GPL')
+source=("git+https://github.com/wireghoul/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  #./configure --prefix "$pkgdir/usr/bin" --dbdir "$pkgdir/usr/share/graudit"
+  #make
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  make prefix="$pkgdir/usr" dataroot="$pkgdir/usr/share/" install
+}
+

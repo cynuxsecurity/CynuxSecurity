@@ -1,0 +1,38 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=ilo4-toolbox
+pkgver=33.a08e718
+pkgrel=3
+pkgdesc='Toolbox for HPE iLO4 analysis.'
+groups=('cynuxsecurity' 'cynuxsecurity-scanner' 'cynuxsecurity-automation'
+        'cynuxsecurity-backdoor')
+arch=('x86_64' 'aarch64')
+url='https://github.com/airbus-seclab/ilo4_toolbox'
+license=('GPL2')
+depends=('python2' 'python2-requests' 'python2-keystone' 'python2-capstone'
+         'ruby' 'go')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/airbus-seclab/ilo4_toolbox.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.rst
+  install -Dm 644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+
+  rm README.rst COPYING
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+}
+

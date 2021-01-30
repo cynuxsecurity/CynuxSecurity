@@ -1,0 +1,30 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=inurlbr
+pkgver=33.30a3abc
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-scanner' 'cynuxsecurity-webapp'
+        'cynuxsecurity-automation')
+pkgdesc='Advanced search in the search engines - Inurl scanner, dorker, exploiter.'
+arch=('any')
+url='https://code.google.com/p/inurlbr/'
+license=('custom:unknown')
+depends=('php')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/googleinurl/SCANNER-INURLBR.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm 755 "$pkgname.php" "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+}
+

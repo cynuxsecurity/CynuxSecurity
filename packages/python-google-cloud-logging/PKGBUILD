@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-google-cloud-logging
+_pkgname=google-cloud-logging
+pkgver=2.1.1
+pkgrel=1
+pkgdesc='Stackdriver Logging API client library.'
+arch=('any')
+url='https://pypi.org/project/google-cloud-logging/#files'
+license=('Apache')
+depends=('python' 'python-google-api-core' 'python-google-cloud-core')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/25/a2/3b6a4692c4840d3f5a1878a986d0f63d7dbe7e53b0589d1322b9133da942/$_pkgname-$pkgver.tar.gz")
+sha512sums=('384d5f8aee97b2eb2ef50d6ed606a675a46326c5adeafc50bbc6c97f92d6f2161ffec6d4784c6ff6eb4e1ccbb76bd1017bf815b7c2eecaed76c0bb579f78d814')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

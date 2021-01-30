@@ -1,0 +1,50 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=merlin-server
+pkgver=0.9.0
+pkgrel=1
+pkgdesc='Merlin is a cross-platform post-exploitation HTTP/2 Command & Control server and agent written in golang.'
+groups=('cynuxsecurity' 'cynuxsecurity-automation' 'cynuxsecurity-exploitation')
+arch=('x86_64')
+url='https://github.com/Ne0nd0g/merlin'
+license=('GPL3')
+makedepends=('p7zip' 'wget')
+source=("$pkgname.7z::https://github.com/Ne0nd0g/merlin/releases/download/v$pkgver-beta/merlinServer-Linux-x64.7z")
+sha512sums=('a1c3016808b881edc6157ba0db272e153b1ec3e5beb8a909c8cc307225eee80c978475688443ac5b1964f9e93e6cdd3ec4211374275e977db3a5c1e227e65182')
+
+prepare() {
+  install -dm 755 $pkgname
+
+  cd $pkgname
+
+  7z -y x -o"$srcdir/$pkgname" -p'merlin' \
+   "$srcdir/$pkgname.7z"
+
+  rm -rf "$srcdir/$pkgname.7z"
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.MD
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/merlin-server/LICENSE"
+
+  cp -a docs/* "$pkgdir/usr/share/doc/$pkgname/"
+
+  rm -rf docs LICENSE README.MD
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+./merlinServer-Linux-x64 "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

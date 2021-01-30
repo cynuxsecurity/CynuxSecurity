@@ -1,0 +1,33 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=droopescan
+pkgver=1.44.1
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-webapp' 'cynuxsecurity-scanner')
+pkgdesc='A plugin-based scanner that aids security researchers in identifying issues with several CMSs, mainly Drupal & Silverstripe.'
+arch=('any')
+url='https://github.com/droope/droopescan'
+license=('AGPL')
+depends=('python' 'python-cement' 'python-requests' 'python-pystache'
+         'python-mock' 'python-lxml' 'python-nose' 'python-beautifulsoup4'
+         'python-simplejson' 'python-twisted' 'python-dateutil')
+makedepends=('git')
+source=("https://github.com/droope/$pkgname/archive/$pkgver.tar.gz")
+sha512sums=('49ed25a4c0db17715293bda051d90344ef68c7f859b64c50c9dfa29d72275fa9fb48f46328a581081b9b6d37434ed6698d445676694033b95aeb916e82242d70')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md CHANGELOG
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

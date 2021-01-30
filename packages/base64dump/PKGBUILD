@@ -1,0 +1,23 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=base64dump
+pkgver=0.0.12
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-misc')
+pkgdesc='Extract and decode base64 strings from files.'
+arch=('any')
+url='https://blog.didierstevens.com/my-software/#base64dump'
+license=('custom:unknown')
+depends=('python2')
+source=("http://didierstevens.com/files/software/base64dump_V${pkgver//./_}.zip")
+sha512sums=('f9960dee35b6cfb5878d23e67e19e9b82bcaf4dded6388bcf03b3c8eb4b69917af60b6296179304b04822895ee1832253192edd93ca8c7518216930cffcaa97d')
+
+prepare() {
+  sed -i 's|/usr/bin/env python|/usr/bin/env python2|' "$pkgname.py"
+}
+
+package() {
+  install -Dm 755 "$pkgname.py" "$pkgdir/usr/bin/$pkgname"
+}
+

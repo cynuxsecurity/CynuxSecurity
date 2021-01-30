@@ -1,0 +1,55 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=commix
+pkgver=1528.6966f1cb
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-webapp' 'cynuxsecurity-automation'
+        'cynuxsecurity-exploitation')
+pkgdesc='Automated All-in-One OS Command Injection and Exploitation Tool.'
+arch=('any')
+url='https://github.com/commixproject/commix'
+license=('custom:unknown' 'AGPL')
+depends=('python2' 'python2-scapy')
+makedepends=('git')
+source=("git+https://github.com/commixproject/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  sed -i '20 i\from os.path import expanduser' commix/src/utils/settings.py
+  sed -i \
+    's|OUTPUT_DIR = ".output/"|OUTPUT_DIR = expanduser("~") + "/commix-output/"|' \
+    commix/src/utils/settings.py
+
+  #patch -p1 < settings.py.patch
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md readme/AUTHOR \
+    readme/CHANGELOG.md COMMITMENT.txt
+  install -Dm 644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm -rf README.md readme/ LICENSE.txt
+
+  cp -a --no-preserve=ownership * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec python2 $pkgname.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

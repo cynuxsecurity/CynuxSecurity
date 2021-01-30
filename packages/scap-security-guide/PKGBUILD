@@ -1,0 +1,32 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=scap-security-guide
+pkgver=0.1.51
+pkgrel=1
+pkgdesc='Security compliance content in SCAP, Bash, Ansible, and other formats.'
+arch=('any')
+groups=('cynuxsecurity' 'cynuxsecurity-automation' 'cynuxsecurity-defensive'
+        'cynuxsecurity-scanner')
+url='https://www.open-scap.org/security-policies/scap-security-guide/'
+license=('BSD')
+depends=()
+makedepends=('git')
+optdepends=('openscap' 'scap-workbench')
+source=("https://github.com/ComplianceAsCode/content/releases/download/v$pkgver/$pkgname-$pkgver.zip")
+sha512sums=('b8cd46f25dccfb7816d43160cb3fbc1014a5916c360e7e229d7ed737e5f6129d99cce036e7e9982209825171ee184825586b8eec50ec0b5263e66140e18f8cbe')
+
+pkgver() {
+  git ls-remote --sort=v:refname -t --refs \
+    'https://github.com/ComplianceAsCode/content' 'v*' |
+    grep -v 'InitialDraft' | sed -e 's/.*v//' -e '$!d'
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/share/$pkgname/"
+
+  cp -a ./* "$pkgdir/usr/share/$pkgname/"
+}
+

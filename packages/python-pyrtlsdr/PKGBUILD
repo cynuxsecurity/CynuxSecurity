@@ -1,0 +1,49 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-pyrtlsdr
+pkgname=('python2-pyrtlsdr' 'python-pyrtlsdr')
+_pkgname=pyrtlsdr
+pkgver=0.2.92
+pkgrel=2
+epoch=1
+pkgdesc="A Python wrapper for librtlsdr (a driver for Realtek RTL2832U based SDR's)."
+arch=('any')
+url='https://pypi.org/project/pyrtlsdr/#files'
+license=('APACHE')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/2f/c4/c977ef62ba6880b1a8cf14cad141eb514216f5617eae3fc25fe830494a06/$_pkgname-$pkgver.tar.gz")
+sha512sums=('a15b91e323914c0c54588dd16f9496f0e3e576e510e5dff6a9d5a656ee0147b8d7996e19804f94feeb3c6c1e79a2016d5c2323207566404c8816f7e023f8044e')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-pyrtlsdr() {
+  depends=('python2' 'python2-m2r')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+
+package_python-pyrtlsdr() {
+  depends=('python')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

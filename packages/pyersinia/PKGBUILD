@@ -1,0 +1,41 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=pyersinia
+pkgver=49.73f4056
+pkgrel=7
+groups=('cynuxsecurity' 'cynuxsecurity-networking' 'cynuxsecurity-fuzzer'
+        'cynuxsecurity-dos' 'cynuxsecurity-voip' 'cynuxsecurity-scanner'
+        'cynuxsecurity-exploitation')
+pkgdesc='Network attack tool like yersinia but written in Python.'
+arch=('any')
+url='https://github.com/nottinghamprisateam/pyersinia'
+license=('MIT')
+depends=('python2' 'python2-scapy' 'python2-sphinx' 'python2-termcolor'
+         'python2-netaddr' 'python2-ipy' 'python2-pcapy' 'python2-netifaces'
+         'python2-sphinx_rtd_theme' 'libdnet')
+makedepends=('git')
+source=("git+https://github.com/nottinghamprisateam/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  python2 setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md CHANGELOG
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  python2 setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

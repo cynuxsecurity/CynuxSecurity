@@ -1,0 +1,37 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=dnstwist
+pkgver=392.cb86269
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-scanner' 'cynuxsecurity-recon')
+pkgdesc='Domain name permutation engine for detecting typo squatting, phishing and corporate espionage.'
+arch=('any')
+url='https://github.com/elceef/dnstwist'
+license=('custom:unknown')
+makedepends=('git')
+depends=('python' 'python-geoip' 'python-dnspython' 'python-requests'
+         'python-ppdeep' 'python-python-whois' 'python-tld')
+source=("git+https://github.com/elceef/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  python setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+}
+

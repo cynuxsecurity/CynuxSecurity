@@ -1,0 +1,43 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+#
+# This PKGBUILD was extracted from AUR.
+# Creator: Jakob Nixdorf <flocke@shadowice.org>
+# Changes by: petruknisme
+
+pkgname=perl-io-async
+_pkgname=IO-Async
+pkgver=0.77
+pkgrel=1
+pkgdesc='Asynchronous event-driven programming.'
+arch=('any')
+url='https://metacpan.org/release/IO-Async'
+license=('GPL' 'PerlArtistic')
+depends=('perl>=5.10.0' 'perl-future' 'perl-struct-dumb')
+makedepends=('perl-test-fatal' 'perl-test-identity' 'perl-test-refcount')
+options=('!emptydirs' 'purge')
+source=("https://cpan.metacpan.org/authors/id/P/PE/PEVANS/$_pkgname-$pkgver.tar.gz")
+sha512sums=('cdecd1efeae5f925df175a8045552c30d0d59c52aa806786c532e7b00de238829f4bae9afaec2f5c4d2a261074bdfe6d93cf271dde780370d4b5378a8582ed04')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  ( export PERL_MM_USE_DEFAULT=1 PERL5LIB="" PERL_AUTOINSTALL=--skipdeps \
+    PERL_MM_OPT="INSTALLDIRS=vendor DESTDIR='$pkgdir'" \
+    PERL_MB_OPT="--installdirs vendor --destdir '$pkgdir'" \
+    MODULEBUILDRC=/dev/null
+
+    #/usr/bin/perl Makefile.PL
+
+    #make
+    /usr/bin/perl Build.PL INSTALLDIRS=vendor && ./Build && ./Build
+  )
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  ./Build install
+
+  find "$pkgdir" -name .packlist -o -name perllocal.pod -delete
+}
+

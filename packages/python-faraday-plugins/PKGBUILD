@@ -1,0 +1,30 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-faraday-plugins
+_pkgname=faraday-plugins
+pkgver=1.4.0
+pkgrel=1
+pkgdesc='Faraday plugins package.'
+arch=('any')
+url='https://pypi.org/project/faraday-plugins/#files'
+license=('GPL3')
+depends=('python' 'python-html2text' 'python-click' 'python-simplejson'
+         'python-requests' 'python-lxml' 'python-beautifulsoup4' 'python-dateutil'
+         'python-pytz')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/28/74/84b984cafe94ffe8d1ec58d31e275e4c18434c558fffe04ba61741ca6b05/$_pkgname-$pkgver.tar.gz")
+sha512sums=('00b3c678f2b98f342ec4e20255e17d473e6e0ee45be89c35d3f39b60718adcad05c4ed947da83a04179daf939035f7a6e21135b61d2aea895b6c07973274b23b')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

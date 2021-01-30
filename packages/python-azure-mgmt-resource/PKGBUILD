@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-azure-mgmt-resource
+_pkgname=azure-mgmt-resource
+pkgver=15.0.0
+pkgrel=2
+pkgdesc='Microsoft Azure Resource Management Client Library for Python.'
+arch=('any')
+url='https://pypi.org/project/azure-mgmt-resource/#files'
+license=('MIT')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/9b/a9/4430d728c8b1db0ff2eac5b7a2b210c5ba70a7590613664e4c8e8fb10c11/$_pkgname-$pkgver.zip")
+sha512sums=('d4a7522a181abdb395d8c91af4f7cc736b0e5c8e0460fb236260d994f6f2cc9cf415d3317527b1ad1038fcc9a3614c8953a6318e8fc3d0c7083e7458723f70f8')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

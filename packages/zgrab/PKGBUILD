@@ -1,0 +1,39 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=zgrab
+pkgver=803.031475e
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-recon')
+pkgdesc='Grab banners (optionally over TLS).'
+url='https://github.com/zmap/zgrab'
+license=('Apache')
+arch=('x86_64' 'aarch64')
+depends=('glibc')
+makedepends=('git' 'go-pie')
+source=("git+https://github.com/zmap/$pkgname.git")
+sha512sums=('SKIP')
+_url="github.com/zmap/$pkgname"
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  mkdir -p "src/$_url" && rm -rf "src/$_url" && mv $pkgname "src/$_url" &&
+    cd "src/$_url"
+
+  GOPATH="$srcdir" go get -d -t $_url
+  GOPATH="$srcdir" go build -v $_url
+}
+
+package() {
+  cd "src/$_url"
+
+  install -Dm 755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

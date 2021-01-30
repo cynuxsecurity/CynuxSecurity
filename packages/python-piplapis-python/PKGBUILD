@@ -1,0 +1,48 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-piplapis-python
+_pkgname=piplapis-python
+pkgname=('python2-piplapis-python' 'python-piplapis-python')
+pkgver=5.2.2
+pkgrel=2
+pkgdesc='Client library for use with the Pipl search API.'
+arch=('any')
+url='https://pypi.org/project/piplapis-python/#files'
+license=('Apache')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/cf/09/b8e0bd097c732e39191eecfeb714d0a9470e3c8cb14f2088df81aa6fd174/$_pkgname-$pkgver.tar.gz")
+sha512sums=('975b5b81ca006b6f247c967257de53b5a271e689473faabe41f0b8d020aab09a1066b2a1c1d8acfc985722b71b550696213a43db5abc671086766b1aace738ef')
+
+prepare() {
+  cp -a "piplapis-python-$pkgver" "piplapis-python2-$pkgver"
+}
+
+build() {
+  cd "piplapis-python2-$pkgver"
+
+  python2 setup.py build
+
+  cd "$srcdir/piplapis-python-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-piplapis-python() {
+  depends=('python2-six' 'python2-pytz')
+
+  cd "piplapis-python2-$pkgver"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+
+package_python-piplapis-python() {
+  depends=('python-six' 'python-pytz')
+
+  cd "piplapis-python-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

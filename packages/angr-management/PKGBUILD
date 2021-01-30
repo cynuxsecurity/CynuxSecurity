@@ -1,0 +1,36 @@
+# This file is part of CynuxSecurity Linux ( http://cynuxsecurity.org ).
+# See COPYING for license details.
+
+pkgname=angr-management
+pkgver=8.20.7.27
+pkgrel=2
+groups=('cynuxsecurity' 'cynuxsecurity-binary' 'cynuxsecurity-disassembler'
+        'cynuxsecurity-reversing')
+pkgdesc='This is the GUI for angr.'
+arch=('any')
+url='https://pypi.org/project/angr-management/#files'
+license=('custom:unknown')
+depends=('angr' 'python' 'python-websocket-client' 'python-pyzmq' 'ipython'
+         'python-pyside' 'python-pygraphviz' 'python-enaml' 'python-simuvex'
+         'python-grandalf' 'python-qtconsole' 'python-atom' 'python-pygments'
+         'python-qtconsole' 'pyside2')
+makedepends=('git' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/e2/e9/fd8830d8ff7a9b7264382c42d1396b1c94cc6464669de67182bf9c08f8f9/$pkgname-$pkgver.tar.gz")
+sha512sums=('84038010eb1261c3a314f4e27f470981a6e5bdbe0ad5fb1a483b41866ea26ee1e6f586b655db2039ad535327c15f4ddc2c64958a4c18c7e3b6206b723258bb43')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+}
+

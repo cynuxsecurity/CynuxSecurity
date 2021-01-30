@@ -1,0 +1,50 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=urlview
+pkgver=0.9
+pkgrel=14
+_patchlevel=21
+pkgdesc='A curses URL parser for text files.'
+arch=('x86_64' 'aarch64')
+groups=('cynuxsecurity' 'cynuxsecurity-misc')
+url="http://packages.qa.debian.org/u/urlview.html"
+license=('GPL')
+depends=('bash' 'ncurses')
+makedepends=('patch' 'automake-1.11' 'autoconf')
+source=("http://ftp.debian.org/debian/pool/main/u/$pkgname/${pkgname}_$pkgver.orig.tar.gz"
+        "http://ftp.debian.org/debian/pool/main/u/$pkgname/${pkgname}_$pkgver-$_patchlevel.diff.gz")
+sha512sums=('68eb2140d93f60974fb6094131d48b6b2bf116ea904d53c6cba54a172933789849c3226cbf5d5565ae10a7717eb0c539390d4474f0617e9b85c3008be767c4fa'
+            '2d54e60610067d51cafb2c660d53720859145eff9a2024ea97ca0b5edd3a0d6407311d906687b700eee8653695134ab8fba4503f37eab183b453d017deaa33be')
+
+prepare() {
+  cd "$pkgname-$pkgver.orig"
+
+  patch -Np1 -i "$srcdir/urlview_$pkgver-$_patchlevel.diff"
+
+  aclocal-1.11
+}
+
+build() {
+  cd "$pkgname-$pkgver.orig"
+
+  ./configure --prefix=/usr
+
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver.orig"
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/etc/$pkgname"
+  install -dm 755 "$pkgdir/usr/share/man/man1"
+
+  make prefix="$pkgdir/usr" mandir="$pkgdir/usr/share/man" install
+
+  install -Dm 755 url_handler.sh "$pkgdir/etc/$pkgname/url_handler.sh"
+  install -Dm 644 sample.urlview "$pkgdir/etc/$pkgname/system.urlview"
+
+  ln -fs /etc/urlview/url_handler.sh "$pkgdir/usr/bin/url_handler.sh"
+}
+

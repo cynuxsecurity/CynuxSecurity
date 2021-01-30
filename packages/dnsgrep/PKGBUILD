@@ -1,0 +1,64 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=dnsgrep
+pkgver=14.3f4fa7c
+pkgrel=2
+pkgdesc='A utility for quickly searching presorted DNS names.'
+groups=('cynuxsecurity' 'cynuxsecurity-recon')
+arch=('x86_64' 'aarch64')
+url='https://github.com/erbbysam/DNSGrep'
+license=('MIT')
+depends=('glibc' 'go')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/erbbysam/DNSGrep.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  GOPATH="$srcdir" go get -d -t github.com/jessevdk/go-flags
+  GOPATH="$srcdir" go get -d -t github.com/gorilla/mux
+  GOPATH="$srcdir" go get -d -t github.com/golang/example/stringutil
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname/src/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm README.md LICENSE
+
+  cp -a * "$pkgdir/usr/share/$pkgname/src/$pkgname/"
+
+  mv "$srcdir/src/github.com"* "$pkgdir/usr/share/$pkgname/src/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname/src
+export GOPATH="/usr/share/$pkgname/."
+exec go run $pkgname/$pkgname.go "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+
+  cat > "$pkgdir/usr/bin/$pkgname-server" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname/src
+export GOPATH="/usr/share/$pkgname/."
+exec go run $pkgname/experimentalServer/experimentalServer.go "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname-server"
+}
+

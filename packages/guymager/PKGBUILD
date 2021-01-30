@@ -1,0 +1,21 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=guymager
+pkgver=0.8.12
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-forensic')
+pkgdesc='A forensic imager for media acquisition.'
+arch=('x86_64' 'aarch64')
+url='http://guymager.sourceforge.net/'
+license=('GPL')
+depends=('qt5-base')
+options=('!strip')
+_ar=amd64
+sha512sums=('90e65c7739c40a739530ffdd1817171f18442826d2c7bf47fca1ddc45a6a207f278f7b8caa69f798c7af17b1891dff7f5bb7a4f5da3ae6348e474995889c4136')
+source=("http://deb.pinguin.lu/$_ar/$pkgname-beta_$pkgver-1_$_ar.deb")
+
+package() {
+  tar xfJ data.tar.xz -C $pkgdir
+}
+

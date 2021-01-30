@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python2-yara
+_pkgname=yara-python
+pkgver=4.0.1
+pkgrel=1
+pkgdesc='Python interface for YARA.'
+url='https://pypi.org/project/yara-python/#files'
+arch=('x86_64' 'aarch64')
+license=('Apache')
+depends=('python2' 'yara')
+makedepends=('python2-setuptools')
+source=("https://files.pythonhosted.org/packages/c6/a3/f21aeebe85bbe3f2e089324663ea206fa1fc3f4196815b30b752f2e93e67/$_pkgname-$pkgver.tar.gz")
+sha512sums=('4fcafef084caac61483ca9904dc4c0af6a8f8eb73b4420a2275a8e05246342cce9d7842e39fa1c8ecc764a256f57e236694263b7826b9785a9ae549f844061d8')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python2 setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python2 setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

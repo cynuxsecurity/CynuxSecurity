@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-pyngrok
+_pkgname=pyngrok
+pkgver=5.0.1
+pkgrel=1
+pkgdesc='A Python wrapper for Ngrok.'
+arch=('any')
+url='https://pypi.org/project/pyngrok/#files'
+license=('MIT')
+depends=('python' 'ngrok')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/e2/19/af0fc6c11cc13f8a31e9dbec21af745337be8a40b5738cd30f08a483eac3/$_pkgname-$pkgver.tar.gz")
+sha512sums=('c9476777b4cb526e14ad6de6b69cd0e079dd95c8642d1582936d118267849f4ada0210adc771551f858629989d219344fca939d65337fad542a0303301e79922')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+  mv "$pkgdir/usr/bin/ngrok" "$pkgdir/usr/bin/pyngrok"
+}
+

@@ -1,0 +1,36 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=dynamorio
+pkgver=8.0.18508
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-binary' 'cynuxsecurity-reversing')
+pkgdesc='A dynamic binary instrumentation framework.'
+url='https://github.com/DynamoRIO/dynamorio'
+arch=('x86_64')
+license=('BSD')
+source=("https://github.com/DynamoRIO/dynamorio/releases/download/cronbuild-$pkgver/DynamoRIO-Linux-$pkgver.tar.gz")
+sha512sums=('c99e5c63491c9aeac200ecdc93722620968c90f982b6bbd7625fa909721338ede4035895d562a01472e46bc232023c75a70cb97370ffd69e895332e42df511bb')
+
+prepare() {
+  cd "$srcdir/DynamoRIO-Linux-$pkgver"
+
+  rm -rf bin32/ lib32/ bin64/*.debug cmake/
+}
+
+package() {
+  cd "$srcdir/DynamoRIO-Linux-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 License.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  cp -a --no-preserve=ownership * "$pkgdir/usr/share/$pkgname"
+
+  _TO_LINK='drconfig drinject drloader drrun nudgeunix'
+
+  for executable in $_TO_LINK; do
+    ln -sf /usr/share/$pkgname/bin64/$executable "$pkgdir/usr/bin/$executable"
+  done
+}
+

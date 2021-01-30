@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=albatar
+pkgver=33.2719131
+pkgrel=1
+pkgdesc='A SQLi exploitation framework in Python.'
+groups=('cynuxsecurity' 'cynuxsecurity-webapp' 'cynuxsecurity-exploitation')
+arch=('any')
+url='https://github.com/lanjelot/albatar'
+license=('custom:unknown')
+depends=('python2' 'python2-pycurl')
+makedepends=('git')
+source=("git+https://github.com/lanjelot/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+	cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+	cd $pkgname
+
+  install -Dm 644 -t "$pkgdir/usr/share/$pkgname/" *.py
+}
+

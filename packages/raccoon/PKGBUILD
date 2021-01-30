@@ -1,0 +1,38 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=raccoon
+pkgver=183.985797f
+pkgrel=6
+pkgdesc='A high performance offensive security tool for reconnaissance and vulnerability scanning.'
+groups=('cynuxsecurity' 'cynuxsecurity-recon' 'cynuxsecurity-scanner')
+arch=('any')
+url='https://github.com/evyatarmeged/Raccoon'
+license=('MIT')
+depends=('python' 'python-xmltodict' 'python-dnspython' 'python-requests'
+         'python-lxml' 'python-beautifulsoup4' 'python-click' 'python-pysocks'
+         'python-fake-useragent')
+makedepends=('git' 'python-setuptools')
+source=("$pkgname::git+https://github.com/evyatarmeged/Raccoon.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  python setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  rm -rf "$pkgdir/usr/lib/python3.9/site-packages/tests"
+}
+

@@ -1,0 +1,41 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=xsrfprobe
+pkgver=523.ce04111
+pkgrel=2
+pkgdesc='The Prime Cross Site Request Forgery Audit and Exploitation Toolkit.'
+groups=('cynuxsecurity' 'cynuxsecurity-webapp' 'cynuxsecurity-scanner')
+arch=('any')
+url='https://github.com/0xInfection/XSRFProbe'
+license=('GPL3')
+depends=('python' 'python-requests' 'python-beautifulsoup4' 'python-request'
+         'python-stringdist' 'python-tld' 'python-yattag' 'python-httplib2'
+         'python-urllib3')
+makedepends=('git' 'dos2unix')
+source=("$pkgname::git+https://github.com/0xInfection/XSRFProbe.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  python setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" *.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  find "$pkgdir/" -type f -exec dos2unix {} \;
+}
+

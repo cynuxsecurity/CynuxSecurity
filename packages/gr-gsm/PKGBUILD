@@ -1,0 +1,45 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=gr-gsm
+pkgver=1151.2efaa49
+pkgrel=2
+pkgdesc='Gnuradio blocks and tools for receiving GSM transmissions.'
+arch=('x86_64' 'aarch64')
+groups=('cynuxsecurity' 'cynuxsecurity-radio')
+url='https://github.com/ptrkrysik/gr-gsm'
+license=('GPL3')
+depends=('gnuradio' 'libosmocore' 'boost' 'swig' 'log4cpp' 'python-scipy'
+         'qwt5' 'gnuradio-companion' 'python-docutils' 'talloc' 'pygtk'
+         'gnuradio-osmosdr' 'libosmosdr' 'cppunit' 'doxygen' 'lksctp-tools')
+makedepends=('git' 'cmake')
+source=("git+https://github.com/velichkov/gr-gsm.git#branch=maint-3.8")
+# temporary, move to master later, as it will support gnuradio 3.8 version
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  cd $pkgname
+
+  mkdir -p build
+  cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+}
+
+build() {
+  cd "$pkgname/build"
+
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  make DESTDIR="$pkgdir" install
+}
+

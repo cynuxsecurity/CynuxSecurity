@@ -1,0 +1,46 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-click-shell
+pkgname=('python2-click-shell' 'python-click-shell')
+_pkgname=click-shell
+pkgver=2.0
+pkgrel=2
+pkgdesc='An extension to click that easily turns your click app into a shell utility.'
+arch=('any')
+url='https://pypi.org/project/click-shell/#files'
+license=('BSD')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/fe/ad/c7516ffec8780b25db043813648a2854f84562c2522218ffdbd57b35f302/$_pkgname-$pkgver.tar.gz")
+sha512sums=('131a243d6cc152fa294acee7020543452cec75fccf7f9311a2890531b9ef62302e77d36f81d92ac68f8182e98e32d571123cef4e8c7df7ac62390fa1e6b037c1')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-click-shell() {
+  depends=('python2' 'python2-click')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+
+package_python-click-shell() {
+  depends=('python' 'python-click')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

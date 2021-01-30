@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-pyspnego
+_pkgname=pyspnego
+pkgver=0.1.5
+pkgrel=1
+pkgdesc='Windows Negotiate Authentication Client and Server.'
+arch=('any')
+url='https://pypi.org/project/pyspnego/#files'
+license=('MIT')
+depends=('python' 'python-cryptography')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/0c/fd/a7be2120e559597a5f58d269d87dcc6492aa0a01c24d1a2f20c0e1607666/$_pkgname-$pkgver.tar.gz")
+sha512sums=('fe9c5b012e8f0a1fcf1bfba84a40ca94cf45e444fe00f2ac34544a25330f81679f7e4477bbcb13c7c8d826f626e850641d3846e829245ec17262376d0d63fcba')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

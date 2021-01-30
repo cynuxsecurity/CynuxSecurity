@@ -1,0 +1,35 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=sysinternals-suite
+pkgver=4.5
+pkgrel=1
+epoch=1
+groups=('cynuxsecurity' 'cynuxsecurity-windows')
+pkgdesc='Sysinternals tools suite.'
+url='http://sysinternals.com/'
+license=('custom:unknown')
+arch=('any')
+source=('http://download.sysinternals.com/files/SysinternalsSuite.zip')
+sha512sums=('1d648d1caad431d038c2c25bbfef740ac4b9108478e73550123edbe47de4561434f43ce758c4c31bf252061138ed2262443527c1c580c483c3086fea20815ff2')
+
+package() {
+  install -dm 755 "$pkgdir/usr/share/windows/$pkgname"
+
+  find . -type l -exec rm {} \;
+
+  # Transform all files to lowercase
+  for f in * ; do
+    lc=$(echo $f | tr '[A-Z]' '[a-z]')
+
+    if [ ! -f $f -o -f $lc ]; then
+      continue
+    fi
+
+    mv -i $f $lc
+  done
+
+  install -m 755 *.exe *.sys "$pkgdir/usr/share/windows/$pkgname"
+  install -m 644 *.chm *.hlp *.txt "$pkgdir/usr/share/windows/$pkgname"
+}
+

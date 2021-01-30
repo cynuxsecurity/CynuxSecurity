@@ -1,0 +1,45 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=ndpi
+_name=nDPI
+pkgver=3.2
+pkgrel=1
+epoch=1
+pkgdesc='Open and Extensible GPLv3 Deep Packet Inspection Library.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/ntop/nDPI'
+depends=('libpcap')
+makedepends=('autogen' 'automake' 'autoconf' 'clang' 'gcc' 'libtool')
+license=('GPL3')
+source=("https://github.com/ntop/$_name/archive/$pkgver.tar.gz")
+sha512sums=('bf3a6e66479110b8e1a51a3b66cc0a85aef98af455f2895a75fe2a8b06a9fb72a4dca3d4bbfa6f44959c5043c038927a1a8acb312e881d4e2bb544dc84b6eea8')
+
+build() {
+  cd "$_name-$pkgver"
+
+  ./autogen.sh
+
+  ./configure --prefix=/usr --with-pic --includedir=/usr/include \
+    --libdir=/usr/lib --sbindir=/usr/bin
+
+  make
+}
+
+package() {
+  cd "$_name-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+
+  # dirt temp hack to circumvent the error from xplico search for header files
+  # in /usr/include/libndpi ...
+  mkdir -p "$pkgdir/usr/include/libndpi"
+  cp -a src/include/*.h "$pkgdir/usr/include/libndpi"
+
+  # fix symlinks
+  ln -fs /usr/lib/libndpi.so.2.8.0 "$pkgdir/usr/lib/libndpi.so"
+  ln -fs /usr/lib/libndpi.so.2.8.0 "$pkgdir/usr/lib/libndpi.so.2"
+
+  rm -rf "$pkgdir/usr/sbin"
+}
+

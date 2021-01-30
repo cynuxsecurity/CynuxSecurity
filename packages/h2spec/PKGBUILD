@@ -1,0 +1,19 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=h2spec
+pkgver=2.4.0
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-misc')
+pkgdesc='A conformance testing tool for HTTP/2 implementation.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/summerwind/h2spec'
+license=('MIT')
+depends=('glibc')
+source=("https://github.com/summerwind/$pkgname/releases/download/v$pkgver/${pkgname}_linux_amd64.tar.gz")
+sha512sums=('7d9fb6bb1468876e33e3a73e6bdce9b1446fdd05f95dcb67697e0de1d43ac9cb7e3df6e5dfcb7f2baec5c4799d57b95661c9c4592d3875f9c6ba0cdade047d0b')
+
+package() {
+  install -Dm 755 $pkgname "$pkgdir/usr/bin/$pkgname"
+}
+

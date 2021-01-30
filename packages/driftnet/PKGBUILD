@@ -1,0 +1,39 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=driftnet
+pkgver=v1.3.0.r5.g9ad8da4
+pkgrel=2
+epoch=1
+groups=('cynuxsecurity' 'cynuxsecurity-scanner' 'cynuxsecurity-sniffer')
+pkgdesc='Listens to network traffic and picks out images from TCP streams it observes.'
+arch=('x86_64' 'aarch64')
+url='http://www.ex-parrot.com/~chris/driftnet/'
+license=('GPL2')
+depends=('libjpeg' 'libpcap' 'gtk2' 'giflib' 'libwebsockets')
+makedepends=('git' 'imake')
+source=("git+https://github.com/deiv/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd $pkgname
+
+  autoreconf -fi
+
+  ./configure --prefix=/usr
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  make DESTDIR="$pkgdir" install
+}
+

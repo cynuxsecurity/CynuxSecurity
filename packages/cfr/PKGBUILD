@@ -1,0 +1,31 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=cfr
+pkgver=150
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-decompiler')
+pkgdesc='Another Java decompiler.'
+arch=('any')
+url='http://www.benf.org/other/cfr/'
+license=('MIT')
+depends=('java-runtime' 'java-environment' 'bash')
+source=("https://www.benf.org/other/$pkgname/$pkgname-0.${pkgver}.jar")
+noextract=("${pkgname}_0_${pkgver}.jar")
+sha512sums=('f22a4591b695fe297242ef4eb5f27efac880024d8d382de52903a1445183e61620b48481eebdca2c37ba601c679b38305e8484c69b19b9aa4f44d136ca87f039')
+
+package() {
+
+  install -dm 755 "$pkgdir/usr/bin"
+
+  install -Dm 644 "$pkgname-0.${pkgver}.jar" \
+    "$pkgdir/usr/share/$pkgname/$pkgname.jar"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+exec java -jar /usr/share/$pkgname/$pkgname.jar "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

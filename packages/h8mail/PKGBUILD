@@ -1,0 +1,39 @@
+# This file is part of CynuxSecurity Linux ( http://cynuxsecurity.org ).
+# See COPYING for license details.
+
+pkgname=h8mail
+pkgver=321.9f75390
+pkgrel=2
+pkgdesc='Email OSINT and password breach hunting.'
+arch=('any')
+groups=('cynuxsecurity' 'cynuxsecurity-recon' 'cynuxsecurity-social')
+url='https://github.com/khast3x/h8mail'
+license=('custom:unknown')
+depends=('python' 'python-requests' 'python-python-cli-ui' 'python-cfscrape'
+         'nodejs')
+makedepends=('git')
+source=("git+https://github.com/khast3x/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  python setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  python setup.py install --root="$pkgdir" --prefix=/usr --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+
+  rm -rf "$pkgdir/usr/lib/python3.9/site-packages/tests"
+}
+

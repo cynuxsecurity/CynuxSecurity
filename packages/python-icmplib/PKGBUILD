@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-icmplib
+_pkgname=icmplib
+pkgver=2.0.1
+pkgrel=1
+pkgdesc='Easily forge ICMP packets and make your own ping and traceroute.'
+arch=('any')
+url='https://pypi.org/project/icmplib/#files'
+license=('LGPL3')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/53/76/0532d5fddbea0bbed1753426f4e148bdb3c4808e4b7b285661dba46ff370/$_pkgname-$pkgver.tar.gz")
+sha512sums=('9c887d93820e4e4550c133dbf6fd726f5d8bb2ce1a5d7a86638c4401815e4f3be1f214952e976843ff67181812967846e78576218f546f9edabd7110da6641e9')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

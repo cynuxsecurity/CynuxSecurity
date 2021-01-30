@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-google-cloud-core
+_pkgname=google-cloud-core
+pkgver=1.5.0
+pkgrel=1
+pkgdesc='Google Cloud API client core library.'
+arch=('any')
+url='https://pypi.org/project/google-cloud-core/#files'
+license=('Apache')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/ae/9e/91c5af8ce7a55bf359d3bd3e31507a091c769c8b59d2951fe4fc14bd9409/$_pkgname-$pkgver.tar.gz")
+sha512sums=('12af330c4305abeab35f35f302710f74e6315f22b9767e99fc9279c1d5aecea723ba15c2c1c15d89a86b8ac7736198b1eb9ebf836dfbb1fed3ef18b06ccabaf2')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

@@ -1,0 +1,38 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=spiderpig-pdffuzzer
+pkgver=0.1
+pkgrel=7
+groups=('cynuxsecurity' 'cynuxsecurity-fuzzer')
+pkgdesc='A javascript pdf fuzzer.'
+url='https://code.google.com/p/spiderpig-pdffuzzer/'
+arch=('any')
+license=('MIT')
+makedepends=('dos2unix')
+depends=('python2')
+source=("https://spiderpig-pdffuzzer.googlecode.com/files/$pkgname.tar.gz")
+sha512sums=('9b21d7c9c962e15c5d8301c617f0fdbcd376ccff')
+
+prepare() {
+  cd spiderpig
+
+  sed -i 's|bin/python|bin/python2|' *.py
+
+  dos2unix *.py
+}
+
+package() {
+  cd spiderpig
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README
+  install -m 755 sp.py "$pkgdir/usr/share/$pkgname/"
+  install -m 755 makepdf.py "$pkgdir/usr/share/$pkgname/"
+  install -m 755 spig.py "$pkgdir/usr/share/$pkgname/"
+
+  ln -s "/usr/share/$pkgname/sp.py" "$pkgdir/usr/bin/$pkgname"
+}
+

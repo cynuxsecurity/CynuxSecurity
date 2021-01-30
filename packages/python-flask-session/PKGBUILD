@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-flask-session
+_pkgname=Flask-Session
+pkgver=0.3.2
+pkgrel=2
+pkgdesc='Adds server-side session support to your Flask application.'
+arch=('any')
+url='https://pypi.org/project/Flask-Session/#files'
+license=('BSD')
+depends=('python' 'python-flask')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/6f/46/31d3822898f4767159363a23ce4d84923c0cf3b8a93dcef3b4065676094f/Flask-Session-$pkgver.tar.gz")
+sha512sums=('8993dfc53bde73f597b083b06d1a50fa94ec501139bbc0a9afbbcca5672d091f7b6947aa0288961eaab69f036056c31f8b610000b17c7cd8b559ab743a6355c5')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

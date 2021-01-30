@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-dataset
+_pkgname=dataset
+pkgver=1.4.4
+pkgrel=1
+pkgdesc='Toolkit for Python-based data processing.'
+arch=('any')
+url='https://pypi.org/project/dataset/'
+license=('MIT')
+depends=('python' 'python-six' 'python-sqlalchemy' 'python-alembic'
+         'python-normality')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/b8/fb/8c9975b9c726ebf678f210ac6bef8de99518df93e2dfb678f1de5f4f4a80/$_pkgname-$pkgver.tar.gz")
+sha512sums=('fcd219974ed4ec5176cd83e305aab0a615fce2b6bc7ca7adda9a91f41ac16464e37d806eb28682e3ec9a08d1526cf5f17c3dd14529337a2f450a1b6dd2671fdf')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

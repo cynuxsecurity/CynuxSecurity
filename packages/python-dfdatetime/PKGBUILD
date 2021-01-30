@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-dfdatetime
+_pkgname=dfdatetime
+pkgver=20200824
+pkgrel=2
+pkgdesc='Digital Forensics Date and Time.'
+arch=('any')
+url='https://pypi.org/project/dfdatetime/'
+license=('Apache')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/26/0e/2dd87441425ae78efda2413435e71d93ca23b911fbcec6d369708cad8592/$_pkgname-$pkgver.tar.gz")
+sha512sums=('ef2241c252d16be748b05d3dd3876e615f482add034b3b66ad9f42a9674f4064f69dd54bdcafed5acabf1efcf57ec2ebb4b391ae1340f28b36fa74690cf962a6')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

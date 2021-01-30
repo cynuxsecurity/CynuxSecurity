@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-pyshark
+_pkgname=pyshark
+pkgver=0.4.2.11
+pkgrel=2
+pkgdesc='Python wrapper for tshark, allowing python packet parsing using wireshark dissectors.'
+arch=('any')
+url='https://pypi.org/project/pyshark/#files'
+license=('MIT')
+depends=('python' 'python-lxml' 'python-logbook')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/dd/25/05a24ed0d5076c922c515b7c4c644a491e3138f51746245f1132c361db49/$_pkgname-$pkgver.tar.gz")
+sha512sums=('1b29c5299e556fe048e3c2be9211013836c1915dec195f4aa6a5e2936430f6f288cfae4f524c1ad96dbe7cb63b277383b422690200f21df543fd79b5921bbead')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

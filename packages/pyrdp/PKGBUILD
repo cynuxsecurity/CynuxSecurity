@@ -1,0 +1,41 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=pyrdp
+pkgver=1618.340d2b1
+pkgrel=1
+pkgdesc='Python 3 RDP MITM and library.'
+groups=('cynuxsecurity' 'cynuxsecurity-sniffer' 'cynuxsecurity-networking')
+arch=('x86_64' 'aarch64')
+url='https://github.com/GoSecure/pyrdp'
+license=('GPL3')
+depends=('python' 'python-appdirs' 'python-cryptography' 'python-names'
+         'python-pyasn1' 'python-pycryptodome' 'python-pyopenssl' 'python-pytz'
+         'python-rsa' 'python-service-identity' 'python-twisted' 'python-dbus'
+         'python-notify2')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/GoSecure/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  python setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+
+  for i in "$pkgdir/usr/bin/"*.py ; do
+    mv $i "$(echo $i | sed 's/\.py//')"
+  done
+}
+

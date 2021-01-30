@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-markovify
+_pkgname=markovify
+pkgver=0.8.3
+pkgrel=2
+pkgdesc='A simple, extensible Markov chain generator. Uses include generating random semi-plausible sentences based on an existing text.'
+arch=('any')
+url='https://pypi.org/project/markovify/#files'
+license=('MIT')
+depends=('python' 'python-unidecode')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/33/92/4036691c7ea53e545e98e0ffffcef357ca19aa2405df366ae5b8b7da391a/$_pkgname-$pkgver.tar.gz")
+sha512sums=('38dc286fe05a08fee94c19c632833736bc3b99c8ef8588c88d8616b0ecceee6c1a965d192d63ec3f4ebf15f6dd381418d0f0df1f582d011e003c8b24399cab5a')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

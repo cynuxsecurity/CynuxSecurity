@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-shelljob
+_pkgname=shelljob
+pkgver=0.5.8
+pkgrel=2
+pkgdesc='Run multiple subprocesses asynchronous/in parallel with streamed output/non-blocking reading. Also various tools to replace shell scripts.'
+arch=('any')
+url='https://pypi.org/project/shelljob/#files'
+license=('GPL3')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/e9/3e/0ac0490df850c4096fa048313a21edf730fe337da8e1cf860eca19e0fb61/$_pkgname-$pkgver.tar.gz")
+sha512sums=('3bf16be6bca44354cfd5d47cba261d9298ce4ae95ab1780dd624e699710134e34b8059998e23d7be47894f988c518478fe81b05cc9c80b988442aa529163fe4b')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

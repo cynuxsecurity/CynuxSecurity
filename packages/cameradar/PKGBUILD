@@ -1,0 +1,65 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=cameradar
+pkgver=139.0984607
+pkgrel=1
+pkgdesc='Hacks its way into RTSP videosurveillance cameras.'
+arch=('x86_64')
+groups=('cynuxsecurity' 'cynuxsecurity-scanner')
+url='https://github.com/Ullaakut/cameradar'
+license=('MIT')
+makedepends=('go-pie' 'dep' 'git')
+source=("git+https://github.com/Ullaakut/$pkgname.git")
+sha512sums=('SKIP')
+_src='src/github.com/Ullaakut'
+_gopath="gopath/$_src"
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  mkdir -p $_gopath
+  ln -rTsf $pkgname "$_gopath/$pkgname"
+
+  export GOPATH="$srcdir/gopath"
+  cd "$GOPATH/$_src/$pkgname"
+
+  dep ensure
+}
+
+build() {
+  export GOPATH="$srcdir/gopath"
+  cd "$GOPATH/$_src/$pkgname/$pkgname"
+
+  go install
+}
+
+package() {
+  export GOPATH="$srcdir/gopath"
+  cd "$GOPATH/bin"
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname/$_src/$pkgname"
+
+  install -Dm 755 $pkgname "$pkgdir/usr/share/$pkgname/$pkgname"
+  install -Dm 755 "$GOPATH/$_src/$pkgname/LICENSE" \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" \
+    "$GOPATH/$_src/$pkgname/"*.md \
+
+  cd "$srcdir/$_gopath/$pkgname"
+  cp -a dictionaries examples images "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+export GOPATH="/usr/share/$pkgname/"
+exec /usr/share/$pkgname/$pkgname "\$@"
+EOF
+
+  chmod a+x "$pkgdir/usr/bin/$pkgname"
+}
+

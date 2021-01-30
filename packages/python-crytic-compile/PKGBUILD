@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-crytic-compile
+_pkgname=crytic-compile
+pkgver=0.1.12
+pkgrel=1
+pkgdesc='Library to help smart contract compilation.'
+arch=('any')
+url='https://github.com/crytic/crytic-compile'
+license=('GPL3')
+depends=('python' 'python-pysha3')
+makedepends=('python-setuptools')
+options=(!emptydirs)
+source=("https://github.com/crytic/crytic-compile/archive/$pkgver.tar.gz")
+sha512sums=('2f2fdc3304f240a5b40ffd60544261dc4edd1e3bc3ef9f32831d9fe943e6041797640911e98c5c78c4e0bede161fc521e15a8e0e7e8a986bbc6014c9a928bc20')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

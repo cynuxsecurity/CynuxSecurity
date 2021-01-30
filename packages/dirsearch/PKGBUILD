@@ -1,0 +1,49 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=dirsearch
+pkgver=1533.d2bebff
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-webapp' 'cynuxsecurity-scanner')
+pkgdesc='HTTP(S) directory/file brute forcer.'
+arch=('any')
+url='https://github.com/maurosoria/dirsearch'
+license=('GPL2')
+depends=('python' 'python-simplejson' 'python-beautifulsoup4' 'python-pyasn1'
+         'python-pyopenssl' 'python-urllib3')
+makedepends=('git')
+source=("git+https://github.com/maurosoria/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  cd $pkgname
+
+  sed -i '/save-logs-home/s/^# //g' default.conf
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+
+  rm README.md
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+exec python /usr/share/$pkgname/$pkgname.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

@@ -1,0 +1,34 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=bluepot
+pkgver=0.1
+pkgrel=4
+groups=('cynuxsecurity' 'cynuxsecurity-bluetooth' 'cynuxsecurity-honeypot')
+pkgdesc="A Bluetooth Honeypot written in Java, it runs on Linux"
+arch=('any')
+url="https://code.google.com/p/$pkgname/"
+license=('GPL3')
+depends=('java-environment' 'gksu')
+source=("https://github.com/andrewmichaelsmith/bluepot/raw/master/bin/$pkgname-$pkgver.tar.gz")
+#source=("https://bluepot.googlecode.com/files/$pkgname-$pkgver.tar.gz")
+sha512sums=('40109c7cd1c8612bce6d60dc8a1feb05a4f0520f58fa50b68d92ca2ec117c29f495e524a56e1e0e6e31cfe04796589792161faa5bd9ac081c6116b8b741cbad5')
+
+prepare() {
+  cd $pkgname
+
+  sed -i 's|BluePot.jar|/usr/share/bluepot/BluePot-0.1.jar|' run.sh
+
+  find . -name '.svn' -type d -exec rm -rf {} +
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 755 run.sh "$pkgdir/usr/bin/$pkgname"
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+}
+

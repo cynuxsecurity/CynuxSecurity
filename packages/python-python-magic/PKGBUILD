@@ -1,0 +1,58 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-python-magic
+pkgname=('python2-python-magic' 'python-python-magic')
+_pkgname=python-magic
+pkgver=0.4.20
+pkgrel=1
+pkgdesc='File type identification using libmagic.'
+arch=('any')
+url='https://pypi.org/project/python-magic/#files'
+license=('MIT')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/2a/d5/2ad6bba29e8f6911d0b1719370e11d5961f4ba6f71845f6421c0ba2badb3/$_pkgname-$pkgver.tar.gz")
+sha512sums=('62fcc9b8498a95648b633233514e44c058e9c13bca615103ba970564166c7f531bab5ae0346900a332b40da566beee4fbfda946d8b5fe936bc14f063aeb81e85')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-python-magic() {
+  depends=('python2' 'python2-libmagic')
+
+  cd "$_pkgname-$pkgver"
+
+  python2 setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  mkdir -p "$pkgdir/usr/lib/python2.7/site-packages/"{python-magic,python_magic}
+  cp -a magic.py* "$pkgdir/usr/lib/python2.7/site-packages/python-magic/"
+  cp -a magic.py* "$pkgdir/usr/lib/python2.7/site-packages/python_magic/"
+  find $pkgdir -type d -name '__pycache__' -exec rm -rf {} +
+  rm -f "$pkgdir/usr/lib/python2.7/site-packages/magic."{py,pyc,pyo}
+}
+
+package_python-python-magic() {
+  depends=('python' 'python-libmagic')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  mkdir -p "$pkgdir/usr/lib/python3.9/site-packages/"{python-magic,python_magic}
+  cp -a magic.py* "$pkgdir/usr/lib/python3.9/site-packages/python-magic/"
+  cp -a magic.py* "$pkgdir/usr/lib/python3.9/site-packages/python_magic/"
+  find $pkgdir -type d -name '__pycache__' -exec rm -rf {} +
+  rm -f "$pkgdir/usr/lib/python3.9/site-packages/magic.py"
+}
+

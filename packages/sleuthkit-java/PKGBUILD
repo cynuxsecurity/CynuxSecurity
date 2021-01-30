@@ -1,0 +1,41 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=sleuthkit-java
+_pkgname=sleuthkit
+pkgver=4.10.1
+pkgrel=1
+pkgdesc='Java dependencies for The Sleuth Kit.'
+arch=('x86_64')
+url='http://www.sleuthkit.org/sleuthkit'
+license=('CPL, custom:"IBM Public Licence", GPL2')
+provides=('sleuthkit')
+depends=('jre8-openjdk' 'sleuthkit')
+makedepends=('ant' 'jdk8-openjdk')
+source=("https://github.com/sleuthkit/sleuthkit/releases/download/sleuthkit-$pkgver/sleuthkit-$pkgver.tar.gz")
+sha512sums=('3ee335ba98bbb16985207ad50bc15a607ea2bcf550bba392be1cace8982c893a29e9de64e6598d02f41f9f745dc720f829317ed31f068e6cb1f6c230699e47bf')
+
+prepare() {
+  cd "$_pkgname-$pkgver"
+
+  sed -i 's|value="${user.home}/.ant"/>|value="/tmp/ant"/>|g' \
+    bindings/java/build.xml
+}
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  ./configure
+  make
+
+  cd bindings/java
+  ant
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  install -Dm 644 "bindings/java/dist/$_pkgname-$pkgver.jar" \
+    "$pkgdir/usr/share/java/$_pkgname-$pkgver.jar"
+}
+

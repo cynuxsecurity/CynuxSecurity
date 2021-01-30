@@ -1,0 +1,43 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+# taken from AUR
+# Old Maintainer: Manifest0
+# Old Contributor: John D Jones III AKA jnbek <jnbek1972 -_AT_- g m a i l -_Dot_- com>
+# Generator  : CPANPLUS::Dist::Arch 1.32
+
+pkgname=perl-net-ssh2
+_pkgname=Net-SSH2
+pkgver=0.71
+pkgrel=2
+pkgdesc='Support for the SSH 2 protocol via libssh2.'
+arch=('x86_64' 'aarch64')
+url='https://metacpan.org/release/Net-SSH2'
+license=('PerlArtistic' 'GPL')
+options=('!emptydirs')
+depends=('perl' 'libssh2' 'openssl' 'openssl' 'zlib')
+source=("https://cpan.metacpan.org/authors/id/R/RK/RKITOVER/$_pkgname-$pkgver.tar.gz")
+sha512sums=('3bd9f965786711a47c9a2f7c1288c0c444571dea2fd7ed1e26d60b476b55bb6d0aeb4c3a7c9387c1d2a200734cb62328ea90ef5f89f3e0451f06affc9a13c14a')
+_distdir="$_pkgname-$pkgver"
+
+build() {
+  ( export PERL_MM_USE_DEFAULT=1 PERL5LIB=""                 \
+      PERL_AUTOINSTALL=--skipdeps                            \
+      PERL_MM_OPT="INSTALLDIRS=vendor DESTDIR='$pkgdir'"     \
+      PERL_MB_OPT="--installdirs vendor --destdir '$pkgdir'" \
+      MODULEBUILDRC=/dev/null
+
+    cd $_distdir
+    /usr/bin/perl Makefile.PL
+    make
+  )
+}
+
+package() {
+  cd $_distdir
+
+  make install
+
+  find "$pkgdir" -name .packlist -o -name perllocal.pod -delete
+}
+

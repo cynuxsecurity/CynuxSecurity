@@ -1,0 +1,45 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=gobuster
+pkgver=341.f278731
+pkgrel=1
+epoch=1
+pkgdesc='Directory/file & DNS busting tool written in Go.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/OJ/gobuster'
+groups=('cynuxsecurity' 'cynuxsecurity-webapp' 'cynuxsecurity-scanner')
+license=('APACHE')
+depends=('glibc')
+makedepends=('git' 'go-pie')
+source=("git+https://github.com/OJ/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  cd $pkgname
+
+  git switch v3.1-working
+}
+
+build() {
+  cd $pkgname
+
+  GOPATH="$srcdir" go get -d -t .
+}
+
+package() {
+  cd $pkgname
+
+  GOPATH="$srcdir" go build -v .
+
+  install -Dm 755 gobuster "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md THANKS
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

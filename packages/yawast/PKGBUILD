@@ -1,0 +1,49 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=yawast
+pkgver=1072.5e9e7a3
+pkgrel=4
+pkgdesc='The YAWAST Antecedent Web Application Security Toolkit.'
+groups=('cynuxsecurity' 'cynuxsecurity-webapp' 'cynuxsecurity-scanner' 'cynuxsecurity-fuzzer')
+arch=('any')
+url='https://github.com/adamcaudill/yawast'
+license=('BSD')
+depends=('python' 'python-asn1crypto' 'python-attrs' 'python-beautifulsoup4'
+         'python-certifi' 'python-cffi' 'python-chardet' 'python-colorama'
+         'python-cryptography' 'python-dnspython' 'python-idna'
+         'python-jsonschema' 'python-nassl' 'python-packaging' 'python-psutil'
+         'python-publicsuffixlist' 'python-pycparser' 'python-pyparsing'
+         'python-requests-mock' 'python-requests' 'python-selenium' 'python-six'
+         'python-soupsieve' 'sslyze' 'python-tls-parser' 'python-urllib3'
+         'python-validator-collection' 'python-wheel' 'python-vistir'
+         'python-toml' 'python-dateutil' 'python-appdirs' 'python-distlib'
+         'python-cached-property' 'python-cerberus' 'python-first'
+         'python-importlib-metadata' 'python-more-itertools' 'python-pep517'
+         'python-ordered-set' 'python-orderedmultidict' 'python-pip-shims'
+         'python-plette' 'python-tomlkit' 'python-zipp')
+makedepends=('git' 'python-setuptools' 'python-requirementslib')
+source=("git+https://github.com/adamcaudill/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  python setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  python setup.py install --root="$pkgdir" --prefix=/usr --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" *.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

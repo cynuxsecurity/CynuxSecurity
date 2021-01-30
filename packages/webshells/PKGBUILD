@@ -1,0 +1,31 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=webshells
+pkgver=36.ea3a60d
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-backdoor' 'cynuxsecurity-webapp')
+pkgdesc='Web Backdoors.'
+url='https://github.com/CynuxSecurity/webshells'
+arch=('any')
+license=('custom:unknown')
+makedepends=('git')
+source=("git+https://github.com/CynuxSecurity/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  rm README.md
+
+  cp -a --no-preserve=ownership * "$pkgdir/usr/share/$pkgname/"
+}
+

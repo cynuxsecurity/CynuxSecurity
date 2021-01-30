@@ -1,0 +1,43 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=stenographer
+pkgver=486.355604b
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-sniffer' 'cynuxsecurity-networking'
+        'cynuxsecurity-forensic')
+pkgdesc='A packet capture solution which aims to quickly spool all packets to disk, then provide simple, fast access to subsets of those packets.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/google/stenographer'
+license=('APACHE')
+depends=('glibc')
+makedepends=('git' 'mercurial' 'go-pie')
+source=("git+https://github.com/google/$pkgname.git")
+sha512sums=('SKIP')
+_url='github.com/google/stenographer'
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  mkdir -p "src/$_url" && rm -rf "src/$_url" && mv $pkgname "src/$_url" &&
+    cd "src/$_url"
+
+  GOPATH="$srcdir" go get -v -d -t $_url
+}
+
+package() {
+  install -dm 755 "$pkgdir/usr/bin"
+
+  GOPATH="$srcdir" go build -v $_url
+
+  install -Dm 755 "$srcdir/$pkgname" "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 "src/$_url/README.md" \
+    "$pkgdir/usr/share/doc/$pkgname/README.md"
+  install -Dm 644 "src/$_url/LICENSE" \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

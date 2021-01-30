@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-msrest
+_pkgname=msrest
+pkgver=0.6.19
+pkgrel=2
+pkgdesc='AutoRest swagger generator Python client runtime.'
+arch=('any')
+url='https://pypi.org/project/msrest/#files'
+license=('MIT')
+depends=('python' 'python-isodate' 'python-requests-oauthlib')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/6f/ad/fc4dc6c53ec8db010e9acbb1cb6c2626bed9a6646fc5a3383d171affb375/$_pkgname-$pkgver.tar.gz")
+sha512sums=('e211e3466fc45d746ac5e49cc8f12d04592f47f949601385154af6e80af9c9f7128dc269b77af3d1e1e3520f9ea7c178619116c11e01a29899f2d0dffd8ffacd')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

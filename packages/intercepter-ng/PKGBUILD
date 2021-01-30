@@ -1,0 +1,23 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=intercepter-ng
+pkgver=1.0
+pkgrel=4
+groups=('cynuxsecurity' 'cynuxsecurity-windows' 'cynuxsecurity-wireless'
+        'cynuxsecurity-sniffer' 'cynuxsecurity-networking' 'cynuxsecurity-cracker')
+pkgdesc='A next generation sniffer including a lot of features: capturing passwords/hashes, sniffing chat messages, performing man-in-the-middle attacks, etc.'
+arch=('any')
+url='http://sniff.su/download.html'
+license=('custom:unknown')
+source=("http://sniff.su/Intercepter-NG.v$pkgver.zip")
+sha512sums=('c464a2a89dce10d4783d6c5e3fb97146880205bb26429557a67e63596f697b4d43230ed0570048d1aea9cb93cfdc52b5242c7dad7df61dbdaf3a0e0f3307189e')
+
+package() {
+  install -dm 755 "$pkgdir/usr/share/windows/$pkgname"
+
+  rm "Intercepter-NG.v$pkgver.zip"
+
+  cp -a * "$pkgdir/usr/share/windows/$pkgname"
+}
+

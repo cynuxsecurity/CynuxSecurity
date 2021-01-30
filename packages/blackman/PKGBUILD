@@ -1,0 +1,21 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=blackman
+pkgver=0.5.13
+pkgrel=1
+pkgdesc='Emerge for CynuxSecurity Linux - Download and compile packages as emerge does.'
+arch=('any')
+url='https://github.com/CynuxSecurity/blackman'
+license=('GPL')
+depends=('git' 'subversion')
+source=("https://github.com/CynuxSecurity/blackman/archive/v$pkgver.tar.gz")
+sha512sums=('56d93fe95fda6f1e1ea9020fcff9b74bb0d5132962fbdeb2ce7fd91bee165c84573d3ab0bdc3e2ec31483a293568316b00a918b920016077bba78289dc12cfda')
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -Dm 755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md TODO
+}
+

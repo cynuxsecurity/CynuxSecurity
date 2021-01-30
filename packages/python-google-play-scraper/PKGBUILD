@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-google-play-scraper
+_pkgname=google-play-scraper
+pkgver=0.1.2
+pkgrel=1
+pkgdesc='Provides APIs to easily crawl the Google Play Store for Python without no external dependencies.'
+arch=('any')
+url='https://pypi.org/project/google-play-scraper/#files'
+license=('MIT')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/ac/de/87c97ba42c156e53f0eb67a2b68a13d6f77da98d24f6d52f70c631c8e526/$_pkgname-$pkgver.tar.gz")
+sha512sums=('647e5396ed38daa0ef82ee05c88f3e9bd0458d29a974b8862da621800749780441b01e70982c1949c24fbbe80735b302c6b5b23a8a86075414f1e9def7d36921')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

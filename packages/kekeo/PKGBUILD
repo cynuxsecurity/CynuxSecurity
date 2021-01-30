@@ -1,0 +1,21 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=kekeo
+pkgver=2.2.0_20200718
+pkgrel=1
+pkgdesc='A little toolbox to play with Microsoft Kerberos in C.'
+url='https://github.com/gentilkiwi/kekeo'
+groups=('cynuxsecurity' 'cynuxsecurity-windows' 'cynuxsecurity-cracker')
+license=('custom:unknown')
+arch=('any')
+source=("https://github.com/gentilkiwi/$pkgname/releases/download/${pkgver//_/-}/kekeo.zip")
+sha512sums=('67f476692166c34bf56d355500ea91fd506b1702fd5fc7278a0de10132318f68fc6826fd7f0830ba26b1bfef7f242f7ebaf920e26ae2390398efe3b269a56009')
+
+package() {
+  install -dm 755 "$pkgdir/usr/share/windows/$pkgname"
+
+  rm "$pkgname.zip"
+  cp -a * "$pkgdir/usr/share/windows/$pkgname/"
+}
+

@@ -1,0 +1,56 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=frida
+pkgname=('python2-frida' 'python-frida')
+_pkgname=frida
+pkgver=14.2.8
+pkgrel=1
+pkgdesc='Dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers.'
+groups=('cynuxsecurity' 'cynuxsecurity-reversing' 'cynuxsecurity-binary')
+arch=('x86_64' 'aarch64')
+url='https://pypi.org/project/frida/#files'
+makedepends=('python-setuptools' 'python2-setuptools')
+license=('custom:unknown')
+source=("https://files.pythonhosted.org/packages/7f/70/6bb3c6cd79ba0cd9de7e7460aa9bc0f5a44ee59bbaaaa72eed2901915544/$pkgbase-$pkgver.tar.gz"
+        'https://raw.githubusercontent.com/frida/frida/master/COPYING')
+sha512sums=('11e9fe19fcb59c2629aad40c1ada529cbf311a904facd55ecbadf06c9cacd0500dd97b28d428dac00c1f344ec096a7837153843c06aa0fb48ecc4c9f8102863f'
+            'e36c8d5a0538fa4bb3575a60322057f7a687aab04c13deed25399462ba0be74ce6071cc41d967e23b9a96e552462d210280427a945c6cc956919b062878efc9a')
+
+prepare() {
+  cp -a "$pkgbase-$pkgver"{,-2}
+}
+
+build() {
+  cd "$pkgbase-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$pkgbase-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-frida() {
+  depends=('python2' 'python2-colorama' 'python2-pygments'
+           'python2-prompt_toolkit')
+
+  cd "$pkgbase-$pkgver-2"
+
+  python2 setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 "$srcdir/COPYING" \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_python-frida() {
+  depends=('python' 'python-colorama' 'python-pygments' 'python-prompt_toolkit')
+
+  cd "$pkgbase-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 "$srcdir/COPYING" \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

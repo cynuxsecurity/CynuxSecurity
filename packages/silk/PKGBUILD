@@ -1,0 +1,39 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=silk
+pkgver=3.19.1
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-networking' 'cynuxsecurity-scanner')
+pkgdesc='A collection of traffic analysis tools developed by the CERT NetSA to facilitate security analysis of large networks.'
+arch=('x86_64' 'aarch64')
+url='https://tools.netsa.cert.org/silk/download.html'
+license=('GPL2')
+depends=('python' 'libfixbuf' 'lzo' 'libpcap' 'gnutls' 'c-ares' 'adns' 'snappy')
+source=("https://tools.netsa.cert.org/releases/$pkgname-$pkgver.tar.gz")
+sha512sums=('6496421921e70d42289f29eb518ef1f09806a6a1c0eec67c413744df43c2ba6b54e02751c71256b878f4bdb88438b1ae2148f0e5dba0ba27f2a9a0c5fd735e7b')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  export LIBS="-lpthread"
+
+  ./configure --prefix=/usr --enable-ipv6 --sbindir=/usr/bin --with-gnutls \
+    --with-pic --with-pcap -with-libfixbuf --enable-output-compression \
+    --enable-localtime --enable-data-rootdir="/usr/share/$pkgname"
+
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -Dm 644 -t "$pkgdir/usr/share/licenses/$pkgname" doc/GPL.txt
+
+  rm doc/{Makefile*,GPL.txt}
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" doc/*
+
+  make DESTDIR="$pkgdir" install
+}
+

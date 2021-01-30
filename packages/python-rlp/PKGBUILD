@@ -1,0 +1,28 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-rlp
+_pkgname=rlp
+pkgver=2.0.1
+pkgrel=2
+pkgdesc='A package for Recursive Length Prefix encoding and decoding.'
+url='https://pypi.org/project/rlp/#files'
+arch=('any')
+license=('MIT')
+depends=('python' 'python-eth-utils')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/c4/15/2ada388c9432e842b7381bf4f05485d077725daa476fddd81b8daece2d1a/$_pkgname-$pkgver.tar.gz")
+sha512sums=('5082cb8458964a458d039da8ca565fc1bb9e9f2926afe63af47417622f86d392b64ed68a884909a9008d59dfc27b4d606c7e7a6c0e0abd5494370de05a3e9212')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

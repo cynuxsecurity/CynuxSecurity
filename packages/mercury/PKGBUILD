@@ -1,0 +1,40 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=mercury
+pkgver=1082.8296840
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-fingerprint' 'cynuxsecurity-networking')
+pkgdesc='This package contains two programs for fingerprinting network traffic and capturing and analyzing packet metadata: mercury, a Linux application that leverages the modern Linux kernel high-performance networking capabilities (AF_PACKET and TPACKETv3).'
+url='https://github.com/cisco/mercury'
+license=('2019 Cisco Systems')
+arch=('x86_64' 'aarch64')
+depends=('glibc' 'python' 'python-jsonschema')
+makedepends=('git')
+source=("git+https://github.com/cisco/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  ./configure --prefix=/usr --sbindir=/usr/bin
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  make DESTDIR="$pkgdir" install
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md VERSION \
+    "doc/$pkgname.pdf"
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

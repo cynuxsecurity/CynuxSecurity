@@ -1,0 +1,51 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-humanfriendly
+pkgname=('python2-humanfriendly' 'python-humanfriendly')
+_pkgname=humanfriendly
+pkgver=9.1
+pkgrel=1
+pkgdesc='Human friendly output for text interfaces using Python.'
+arch=('any')
+url='https://pypi.org/project/humanfriendly/#files'
+license=('MIT')
+options=(!emptydirs)
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/31/0e/a2e882aaaa0a378aa6643f4bbb571399aede7dbb5402d3a1ee27a201f5f3/$_pkgname-$pkgver.tar.gz")
+sha512sums=('859a9ff01abe0671a23a63e73c9c09c0f92151e96ec38dd5695c75f99fa436e186835cb8a16f59b82d5216b9c427ea0abd419b470b067f8032fe984776f02a8f')
+
+prepare() {
+  cp -a "$_pkgname-$pkgver"{,-2}
+}
+
+build() {
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py build
+
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python2-humanfriendly() {
+  depends=('python2' 'python2-monotonic')
+
+  cd "$_pkgname-$pkgver-2"
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+
+  mv "$pkgdir/usr/bin/humanfriendly" "$pkgdir/usr/bin/humanfriendly2"
+}
+
+package_python-humanfriendly() {
+  depends=('python')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

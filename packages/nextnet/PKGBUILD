@@ -1,0 +1,40 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=nextnet
+pkgver=3.c8dc7a6
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-networking' 'cynuxsecurity-scanner')
+pkgdesc='Pivot point discovery tool.'
+arch=('any')
+url='https://github.com/hdm/nextnet'
+license=('BSD')
+depends=('glibc')
+makedepends=('git' 'go-pie')
+source=("git+https://github.com/hdm/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  mkdir -p "src/$url" && rm -rf "src/$url" && mv $pkgname "src/$url" &&
+    cd "src/$url"
+
+  GOPATH="$srcdir" go get -d -t $url
+}
+
+package() {
+  install -dm 755 "$pkgdir/usr/bin"
+
+  GOPATH="$srcdir" go build -v $url
+
+  install -Dm 755 "$srcdir/nextnet" "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" "src/$url/README.md"
+  install -Dm 644 "src/$url/LICENSE" \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

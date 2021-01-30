@@ -1,0 +1,27 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=udptunnel
+pkgver=19
+pkgrel=4
+epoch=2
+groups=('cynuxsecurity' 'cynuxsecurity-networking' 'cynuxsecurity-tunnel')
+pkgdesc="Tunnels TCP over UDP packets."
+arch=('x86_64' 'aarch64')
+url='http://code.google.com/p/udptunnel/'
+license=('GPL3')
+source=("https://udptunnel.googlecode.com/files/$pkgname-r$pkgver.tar.gz")
+sha512sums=('51edec3b63b659229bcf92f6157568d3b074ede0')
+
+build() {
+  cd $pkgname
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm 755 udptunnel "$pkgdir/usr/bin/$pkgname"
+}
+

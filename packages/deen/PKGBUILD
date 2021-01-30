@@ -1,0 +1,39 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=deen
+pkgver=595.b1a5e25
+pkgrel=2
+groups=('cynuxsecurity' 'cynuxsecurity-crypto' 'cynuxsecurity-misc')
+arch=('any')
+pkgdesc='Generic data encoding/decoding application built with PyQt5.'
+url='https://github.com/takeshixx/deen'
+license=('Apache')
+depends=('python' 'python-lxml' 'python-pyqt5' 'python-jsbeautifier'
+         'python-pyopenssl' 'python-jose' 'python-bcrypt' 'python-xmltodict'
+         'python-dicttoxml')
+makedepends=('git' 'python-setuptools')
+source=("git+https://github.com/takeshixx/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  python setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

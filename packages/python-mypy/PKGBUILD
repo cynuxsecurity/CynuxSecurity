@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-mypy
+_pkgname=mypy
+pkgver=0.800
+pkgrel=1
+pkgdesc='Optional static typing for Python.'
+arch=('any')
+url='https://pypi.org/project/mypy/#files'
+license=('MIT')
+depends=('python' 'python-typed-ast' 'python-typing-extensions'
+         'python-mypy_extensions')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/80/5b/8b3ed91920fe20ffa4b6473966b4a98e9759f7245e2232faf29c6c56d150/$_pkgname-$pkgver.tar.gz")
+sha512sums=('d01af8f8518eb699351f572d10de9ab4af300da0f7132b8c4400f0fcf3e032af2f159b663635d92c6e51a26ae3d6106632fc5ef306c49e915db15f990a0d4e39')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" -O1 --skip-build
+}
+

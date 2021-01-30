@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-folium
+_pkgname=folium
+pkgver=0.12.1
+pkgrel=1
+pkgdesc='Make beautiful maps with Leaflet.js & Python.'
+arch=('any')
+url='https://pypi.org/project/folium/#files'
+license=('MIT')
+depends=('python' 'python-branca' 'python-jinja' 'python-numpy'
+         'python-requests')
+makedepends=('python-setuptools')
+source=("https://github.com/python-visualization/folium/archive/v$pkgver.tar.gz")
+sha512sums=('b19d2180c36160a370e6ab5ccfacf74ba7b735610d43e69a5200529c776e9c11ee42f4f7fa1ee54621f52b0f2e1fc1f86bc9a146c4a924831b12578643a69616')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

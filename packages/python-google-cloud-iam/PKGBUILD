@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-google-cloud-iam
+_pkgname=google-cloud-iam
+pkgver=2.0.0
+pkgrel=2
+pkgdesc='IAM Service Account Credentials API client library.'
+arch=('any')
+url='https://pypi.org/project/google-cloud-iam/#files'
+license=('Apache')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/e7/5c/24595e54332a4ef53c8bdbef789784fe480b2107c9c8ec973fc954f72818/$_pkgname-$pkgver.tar.gz")
+sha512sums=('3ab411dd35a44111608c5384dce233699d5614bfa8ddc603f7a81b7e4fac5edc75d1812f8ca1f7c54f8554c7235deb829328afbbba53f66ec58b9c1cde093408')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

@@ -1,0 +1,37 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=pybozocrack
+pkgver=87.ceb0cd9
+pkgrel=1
+pkgdesc='A silly & effective MD5 cracker in Python.'
+groups=('cynuxsecurity' 'cynuxsecurity-cracker' 'cynuxsecurity-crypto')
+arch=('any')
+url='https://github.com/ikkebr/PyBozoCrack'
+license=('custom:unknown')
+depends=('python2' 'python2-wheel')
+makedepends=('git' 'python2-setuptools')
+source=("$pkgname::git+https://github.com/ikkebr/PyBozoCrack.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  python2 setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  python2 setup.py install --root="$pkgdir" --prefix=/usr --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" *.rst
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

@@ -1,0 +1,21 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=dotpeek
+pkgver=2020.2.1
+pkgrel=1
+pkgdesc='Free .NET Decompiler and Assembly Browser.'
+url='https://www.jetbrains.com/decompiler/'
+groups=('cynuxsecurity' 'cynuxsecurity-windows' 'cynuxsecurity-decompiler'
+        'cynuxsecurity-binary' 'cynuxsecurity-reversing')
+license=('custom:unknown')
+arch=('any')
+source=("$pkgname-$pkgver.exe::https://download-cf.jetbrains.com/resharper/dotUltimate.$pkgver/JetBrains.dotPeek.$pkgver.web.exe")
+#source=("$pkgname-$pkgver.exe::https://download.jetbrains.com/resharper/ReSharperUltimate.$pkgver/dotPeek64.$pkgver.exe")
+sha512sums=('1c30495bb0a824a1e52044d1b94b0436661d7f805a375bc4761755f24b7c2a661132ff953149defce50c18299c6eb9ad3585207c753999c19eb45e1401426ab3')
+
+package() {
+  install -Dm 644 "$pkgname-$pkgver.exe" \
+    "$pkgdir/usr/share/windows/$pkgname/$pkgname-$pkgver.exe"
+}
+

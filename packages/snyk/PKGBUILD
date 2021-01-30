@@ -1,0 +1,20 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=snyk
+pkgver=1.393.0
+pkgrel=1
+pkgdesc='CLI and build-time tool to find and fix known vulnerabilities in open-source dependencies.'
+arch=('any')
+groups=('cynuxsecurity' 'cynuxsecurity-code-audit' 'cynuxsecurity-scanner')
+url='https://github.com/snyk/snyk'
+license=('Apache')
+source=("https://github.com/$pkgname/$pkgname/releases/download/v$pkgver/$pkgname-linux")
+sha512sums=('c00f3bd9f392e54ac82031f078abbb27fb0d8c6f70fb37389290dc318eae16a4bac613f160b7ae8c8c3b96d8b156dfda19983eac50d26f3439685b2fa39429db')
+noextract=('snyk-linux')
+options=('!strip')
+
+package() {
+  install -Dm 755 "$pkgname-linux" "$pkgdir/usr/bin/$pkgname"
+}
+

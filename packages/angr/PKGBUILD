@@ -1,0 +1,37 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=angr
+pkgver=8.20.7.27
+pkgrel=2
+epoch=1
+groups=('cynuxsecurity' 'cynuxsecurity-binary' 'cynuxsecurity-disassembler'
+        'cynuxsecurity-reversing')
+pkgdesc='The next-generation binary analysis platform from UC Santa Barbaras Seclab.'
+arch=('x86_64' 'aarch64')
+url='https://pypi.org/project/angr/#files'
+license=('BSD')
+depends=('python' 'python-capstone' 'python-networkx' 'python-rpyc'
+         'python-progressbar' 'python-mulpyplexer' 'python-unicorn'
+         'python-cooldict' 'python-archinfo' 'python-pyvex' 'python-ana'
+         'python-claripy' 'python-simuvex' 'python-cle' 'libffi'
+         'python-cachetools' 'python-pyelftools' 'python-cffi' 'python-psutil'
+         'python-bintrees' 'python-dpkt' 'python-z3' 'python-gitpython'
+         'python-sortedcontainers' 'python-pycparser' 'python-ailment'
+         'python-protobuf' 'python-itanium-demangler')
+makedepends=('git' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/0e/6d/74b3ce6379835dbb2f3713a8e9a6b66b3a01f503d78731f372087656ea41/$pkgname-$pkgver.tar.gz")
+sha512sums=('07fadd2afacd5454c33e271fe59f0eb32a956954d641c6b5e01ae2796e5a33cdbe0ad3cca52b9d1a448bd2070ae8e7851e1e8b3f243abffe88ff8b8c3f9d63a1')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

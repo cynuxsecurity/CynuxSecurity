@@ -1,0 +1,48 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=harpoon
+pkgver=284.ab607b9
+pkgrel=2
+pkgdesc='CLI tool for open source and threat intelligence.'
+groups=('cynuxsecurity' 'cynuxsecurity-automation' 'cynuxsecurity-recon')
+arch=('any')
+url='https://github.com/Te-k/harpoon'
+license=('GPL3')
+depends=('python' 'python-virtualenv')
+makedepends=('git' 'libxml2' 'libxslt')
+source=("git+https://github.com/Te-k/$pkgname.git"
+        'harpoon.install')
+sha512sums=('SKIP'
+            'abb35ec4732568961b660e919b3c4a554ecc0797c28a1b479712f6f9ccab7d39c03745b746b32d256d838d73f9c83a5b7a0cba434af46925541e5102435df88f')
+install="$pkgname.install"
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm -r LICENSE tests
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+source venv/bin/activate
+exec python $pkgname/main.py "\$@"
+EOF
+
+  chmod a+x "$pkgdir/usr/bin/$pkgname"
+}
+

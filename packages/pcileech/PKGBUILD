@@ -1,0 +1,34 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=pcileech
+pkgver=4.8
+_pkgver=20201221
+pkgrel=1
+pkgdesc='Tool, which uses PCIe hardware devices to read and write from the target system memory.'
+arch=('x86_64')
+groups=('cynuxsecurity' 'cynuxsecurity-hardware' 'cynuxsecurity-reversing')
+url='https://github.com/ufrisk/pcileech/releases'
+license=('GPL3')
+depends=('libusb' 'leechcore' 'linux-headers')
+options=('!strip')
+source=("https://github.com/ufrisk/$pkgname/releases/download/v$pkgver/PCILeech_files_and_binaries_v$pkgver-$_pkgver.zip")
+sha512sums=('a9994fbf05edba0f8aa4be60922786dfbdad72580a649b405cd03cf69519b3355c04486a1d8290e451d543165945626db525d11110fbd5d083c28727a611daee')
+
+package() {
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  cp -a --no-preserve=ownership * "$pkgdir/usr/share/$pkgname/"
+
+  chmod 755 "$pkgdir/usr/share/$pkgname/$pkgname"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec ./$pkgname "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

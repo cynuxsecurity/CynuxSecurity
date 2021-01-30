@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-azure-common
+_pkgname=azure-common
+pkgver=1.1.26
+pkgrel=2
+pkgdesc='Microsoft Azure Client Library for Python (Common).'
+arch=('any')
+url='https://pypi.org/project/azure-common/#files'
+license=('MIT')
+depends=('python')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/af/63/bbdc87fd69c7582130f61523cd9e30b7194eae7609d0d168041edc85479e/$_pkgname-$pkgver.zip")
+sha512sums=('41c8133f91c635d1effdf3a70191f56529674cc066123390f56955a1f53cfa9a97dd7fd3dd9bfad945df5e33d11b92dfafcdcf8cd320839338701e763f1548b3')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

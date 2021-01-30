@@ -1,0 +1,33 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgbase=python-pymisp
+pkgname=('python-pymisp')
+_pkgname=pymisp
+pkgver=2.4.137.1
+pkgrel=1
+pkgdesc='Python API for MISP.'
+arch=('any')
+url='https://pypi.org/project/pymisp/#files'
+license=('BSD')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/72/48/b6eb8cce108000ec812222b91dee64b5af35adb9f0b2cea0a9b1ecd6bb35/$_pkgname-$pkgver.tar.gz")
+sha512sums=('99c8222a312a00dfa1f969b9ce75d29c1f366d1a34cf0637e9dd4709e48e1ffb80f51d8029a5eb445be3d26334094dcb3edaf9515d8bb468a20ae59958bb072f')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package_python-pymisp() {
+  depends=('python' 'python-six' 'python-dateutil' 'python-jsonschema'
+           'python-requests' 'python-deprecated')
+  optdepends=('python-virustotal-api: VirusTotal support')
+
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

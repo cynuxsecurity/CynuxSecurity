@@ -1,0 +1,40 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=perl-moose
+_cpanname=Moose
+pkgver=2.2013
+pkgrel=1
+pkgdesc='A postmodern object system for Perl 5.'
+arch=('x86_64' 'aarch64')
+license=('PerlArtistic' 'GPL')
+options=('!emptydirs')
+depends=('perl-class-load>=0.09' 'perl-class-load-xs>=0.01'
+         'perl-data-optlist>=0.107' 'perl-devel-globaldestruction'
+         'perl-dist-checkconflicts>=0.02' 'perl-eval-closure>=0.04'
+         'perl-list-moreutils>=0.28' 'perl-mro-compat>=0.05'
+         'perl-package-deprecationmanager>=0.11' 'perl-package-stash>=0.32'
+         'perl-package-stash-xs>=0.24' 'perl-params-util>=1.00'
+         'perl-sub-exporter>=0.980' 'perl-sub-name>=0.05' 'perl-task-weaken'
+         'perl-test-checkdeps' 'perl-try-tiny>=0.02')
+makedepends=('perl-dist-checkconflicts>=0.02' 'perl-test-fatal>=0.001' 'perl-test-requires>=0.05' 'perl-test-without-module')
+url='https://metacpan.org/pod/Moose'
+source=("http://cpan.metacpan.org/authors/id/E/ET/ETHER/$_cpanname-$pkgver.tar.gz")
+sha512sums=('9e177019930d6bae4fdd90713e3c95b16e6bc91e229ab2aacc03e14a5efbedf6c944b93fefbbcc4586ffb18cc786f323c4102f76d84af949c8f328acf69a5ec3')
+
+build() {
+  cd "$_cpanname-$pkgver"
+
+  PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
+
+  make
+}
+
+package() {
+  cd "$_cpanname-$pkgver"
+
+  make install DESTDIR="$pkgdir"
+
+  find "$pkgdir" -name '.packlist' -o -name '*.pod' -delete
+}
+

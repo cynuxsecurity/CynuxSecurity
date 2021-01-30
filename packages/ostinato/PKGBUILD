@@ -1,0 +1,31 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=ostinato
+pkgver=1.1
+pkgrel=1
+pkgdesc='An open-source, cross-platform packet/traffic generator and analyzer with a friendly GUI. It aims to be "Wireshark in Reverse" and thus become complementary to Wireshark.'
+groups=('cynuxsecurity' 'cynuxsecurity-sniffer' 'cynuxsecurity-networking')
+url='https://github.com/pstavirs/ostinato/'
+arch=('x86_64' 'aarch64')
+license=('GPL3')
+depends=('qt4' 'libpcap' 'protobuf' 'protobuf-c')
+source=("https://github.com/pstavirs/$pkgname/archive/v$pkgver.tar.gz")
+sha512sums=('a45e157d155d4f2efe9a1594a140647b5cbd7264985b15a9ed47d86198c9df9d763170097dcfd40fae1317206e53c9155f08c48c747cce458e0cae7f3a841449')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  qmake-qt4 PREFIX=/usr ost.pro
+
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -Dm 775 "client/$pkgname" "$pkgdir/usr/bin/$pkgname"
+  install -m 775 server/drone "$pkgdir/usr/bin/drone"
+  install -Dm 644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}
+

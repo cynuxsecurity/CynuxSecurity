@@ -1,0 +1,36 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=openstego
+pkgver=0.7.4
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-crypto' 'cynuxsecurity-stego')
+pkgdesc='A tool implemented in Java for generic steganography, with support for password-based encryption of the data.'
+arch=('any')
+url='https://www.openstego.com/'
+license=('GPL2')
+depends=('java-environment')
+source=("https://github.com/syvaidya/$pkgname/releases/download/$pkgname-$pkgver/$pkgname-$pkgver.zip")
+sha512sums=('282e2fef8d47ffc424788abce0102a5adeeca16c0f5ff53e3a2904605d53c635d0619e643e66a2a75a2c2dc4427217c047f931f2a2c6dd9a65a7b6729abad49e')
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm -rf README
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+exec java -Xmx512m -jar /usr/share/$pkgname/lib/$pkgname.jar "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

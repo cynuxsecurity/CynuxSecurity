@@ -1,0 +1,37 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=soapui
+pkgver=5.6.0
+pkgrel=1
+pkgdesc='The Swiss-Army Knife for SOAP Testing.'
+groups=('cynuxsecurity' 'cynuxsecurity-proxy' 'cynuxsecurity-fuzzer')
+arch=('x86_64')
+url='https://www.soapui.org/downloads/soapui/source-forge.html'
+license=('custom:unknown')
+depends=('java-environment')
+makedepends=('git')
+source=("https://s3.amazonaws.com/downloads.eviware/soapuios/$pkgver/SoapUI-$pkgver-linux-bin.tar.gz")
+sha512sums=('87bacab6d5c847fdadb0ec70e6f37fce236fd02b93a8beecd0e860366d4ef97030472c529b29a6af177fe1fa6594c18ebd171b88a76121d5cc23d298444e6fea')
+
+package() {
+  cd "SoapUI-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md RELEASENOTES.txt
+  install -Dm 644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm README.md RELEASENOTES.txt LICENSE.txt
+
+  cp -a * "$pkgdir/usr/share/$pkgname"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+exec sh /usr/share/$pkgname/bin/$pkgname.sh "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

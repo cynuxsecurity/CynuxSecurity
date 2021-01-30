@@ -1,0 +1,32 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=batman-adv
+pkgver=2020.4
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-wireless')
+pkgdesc='Batman kernel module, (included upstream since .38)'
+arch=('x86_64' 'aarch64')
+url='http://www.open-mesh.net/'
+license=('GPL')
+depends=('libnl')
+makedepends=('linux-headers')
+source=("https://downloads.open-mesh.org/batman/releases/$pkgname-$pkgver/$pkgname-$pkgver.tar.gz")
+sha512sums=('08f1b62c10ba024a29f2e6224810ea43d29a7088584be12e4767eebb7dcdbc6e490c8f531721ba38793dec32c8d4fab8b05f57016d1650613e1082963dc5f74d')
+install="$pkgname.install"
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  make KERNELPATH="/usr/lib/modules/$(uname -r)/build"
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -Dm 644 "net/$pkgname/batman-adv.ko" \
+    "$pkgdir/usr/lib/modules/$(uname -r)/updates/net/$pkgname/batman_adv.ko"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.external.rst \
+    CHANGELOG.rst MAINTAINERS
+}
+

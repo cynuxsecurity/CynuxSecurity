@@ -1,0 +1,35 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-pyexcel
+_pkgname=pyexcel
+pkgver=0.6.6
+pkgrel=2
+pkgdesc='A wrapper library that provides one API to read, manipulate and writedata in different excel formats.'
+arch=('any')
+url='https://pypi.org/project/pyexcel/#files'
+license=('BSD')
+depends=('python' 'python-texttable' 'python-lml' 'python-pyexcel-io'
+         'python-lxml')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/75/7a/d5172667c99cb4c4aece636d20c0decd14503bcfdb00715648971e7d18c5/$_pkgname-$pkgver.tar.gz")
+sha512sums=('be840508a26dc5ce37c8f195b0e123cc1ddcbffec26d69aa142cb3b1e23844de21beed3bf012d589f9b58e25a5d78535e7e0c042405b42d6b1b7a60952539251')
+
+prepare() {
+  cd "$_pkgname-$pkgver"
+
+  sed -i 's|lml==0.0.1|lml|g' setup.py
+}
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

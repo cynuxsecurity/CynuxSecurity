@@ -1,0 +1,48 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=sylkie
+pkgver=0.0.4.r3.g1cf170f
+pkgrel=2
+epoch=1
+pkgdesc='IPv6 address spoofing with the Neighbor Discovery Protocol.'
+groups=('cynuxsecurity' 'cynuxsecurity-spoof' 'cynuxsecurity-networking')
+arch=('x86_64' 'aarch64')
+url='https://github.com/dlrobertson/sylkie'
+license=('MIT')
+depends=('linux-headers' 'json-c' 'libseccomp')
+makedepends=('git' 'cmake')
+source=("git+https://github.com/dlrobertson/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g')
+}
+
+build() {
+  cd $pkgname
+
+  mkdir -p build
+
+  cd build
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_SETUID=ON ..
+
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  make DESTDIR="$pkgdir" install/fast
+
+  cd ..
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm README.md LICENSE
+}
+

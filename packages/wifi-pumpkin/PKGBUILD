@@ -1,0 +1,56 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=wifi-pumpkin
+pkgver=v1.0.8R1.r0.g3b0b530
+pkgrel=2
+epoch=2
+groups=('cynuxsecurity' 'cynuxsecurity-wireless' 'cynuxsecurity-dos' 'cynuxsecurity-spoof'
+        'cynuxsecurity-exploitation' 'cynuxsecurity-sniffer' 'cynuxsecurity-social')
+pkgdesc='Framework for Rogue Wi-Fi Access Point Attack.'
+arch=('any')
+url='https://github.com/P0cL4bs/wifipumpkin3'
+license=('MIT')
+depends=('python' 'python-netifaces' 'python-netaddr' 'python-dhcplib'
+         'python-tabulate' 'python-beautifultable' 'python-urwid'
+         'python-termcolor' 'python-twisted' 'python-pyqt5' 'python-pyqt5-sip'
+         'python-pyopenssl' 'python-asn1crypto' 'python-beautifulsoup4'
+         'python-bs4' 'python-dnslib' 'python-loguru' 'python-isc_dhcp_leases'
+         'python-dnspython' 'python-flask' 'python-coverage' 'python-scapy'
+         'python-scapy-http' 'python-lxml' 'dhcp' 'networkmanager' 'responder'
+         'python-wcwidth' 'python-werkzeug' 'python-flask-restful'
+         'python-pyjwt')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/P0cL4bs/wifipumpkin3.git"
+        'requirements.txt.patch')
+sha512sums=('SKIP'
+            'acccbccfcabd33a83c70f44a595a2fc5521830b5707c457c6233950af4fdf587e6de77d3fbb3e40af2be366fbb66f41e0dc7f1a369978e11096eab5568ebea02')
+
+pkgver() {
+  cd $pkgname
+
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  patch -p1 < requirements.txt.patch
+}
+
+build() {
+  cd $pkgname
+
+  python setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  mv "$pkgdir/usr/bin/wifipumpkin3" "$pkgdir/usr/bin/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" *.md
+  rm "$pkgdir/usr/share/doc/$pkgname/LICENSE.md"
+  install -Dm 644 LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

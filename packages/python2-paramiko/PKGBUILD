@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python2-paramiko
+_pkgname=paramiko
+pkgver=2.7.2
+pkgrel=1
+pkgdesc='SSH2 protocol library.'
+url='https://pypi.org/project/paramiko/#files'
+arch=('any')
+license=('LGPL')
+depends=('python2' 'python2-cryptography' 'python2-bcrypt' 'python2-pyasn1'
+         'python2-pynacl')
+makedepends=('python2-setuptools')
+source=("https://files.pythonhosted.org/packages/cf/a1/20d00ce559a692911f11cadb7f94737aca3ede1c51de16e002c7d3a888e0/$_pkgname-$pkgver.tar.gz")
+sha512sums=('230522734379b9861da5e9fc4baf5b7386ea35990430ba320c6d55d04beebeaefdd7d000a2be23d1178d7fd96ba400702ffe0ab03e8856c604456108876545bd')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python2 setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python2 setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

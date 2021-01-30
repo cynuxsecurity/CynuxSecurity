@@ -1,0 +1,18 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=ba-testpkg
+pkgver=8.9
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-misc')
+pkgdesc='CynuxSecurity Linux Test Package.'
+arch=('x86_64' 'aarch64')
+url='https://www.cynuxsecurity.org/'
+license=('custom:unknown')
+source=('ba-testpkg')
+sha512sums=('cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e')
+
+package() {
+  install -Dm 755 $pkgname "$pkgdir/usr/bin/$pkgname"
+}
+

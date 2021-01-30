@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=python-requests-unixsocket
+_pkgname=requests-unixsocket
+pkgver=0.2.0
+pkgrel=3
+pkgdesc='Use requests to talk HTTP via a UNIX domain socket.'
+url='https://pypi.org/project/requests-unixsocket/#files'
+arch=('any')
+license=('Apache2')
+depends=('python')
+makedepends=('python-setuptools' 'python-requests' 'python-urllib3')
+source=("https://files.pythonhosted.org/packages/4d/ce/78b651fe0adbd4227578fa432d1bde03b4f4945a70c81e252a2b6a2d895f/$_pkgname-$pkgver.tar.gz")
+sha512sums=('a670f136ff1d8fb427cd017d92d388fd48a8a853d50aaa6eed685f3b453e28c6dbf5a710d7394face3eec42f8bdd84f798c7c4c82dab7b53d7a8c229ade52405')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 \
+    --skip-build
+}
+

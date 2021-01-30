@@ -1,0 +1,31 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=yaf
+pkgver=2.11.2
+pkgrel=1
+pkgdesc='Yet Another Flowmeter.'
+groups=('cynuxsecurity' 'cynuxsecurity-networking')
+arch=('x86_64' 'aarch64')
+url='http://tools.netsa.cert.org/yaf/'
+license=('GPL')
+depends=('libltdl' 'libpcap' 'libfixbuf')
+source=("http://tools.netsa.cert.org/releases/$pkgname-$pkgver.tar.gz")
+sha512sums=('53c2c96f0f5c5af02f124dd2a4b7ad831ea7bfa421a8e97565d7f2240d5c81fb596388c6653b604a91146a562e01657efebf713261724d6914f71ea46f24cb2f')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  ./configure --prefix=/usr --enable-applabel --enable-mpls --enable-plugins
+
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+
+  mv "$pkgdir/usr/etc" "$pkgdir/etc"
+}
+

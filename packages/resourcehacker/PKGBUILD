@@ -1,0 +1,19 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=resourcehacker
+pkgver=5.1.7
+pkgrel=1
+pkgdesc='Resource compiler and decompiler for Windows® applications.'
+groups=('cynuxsecurity' 'cynuxsecurity-windows' 'cynuxsecurity-reversing')
+arch=('any')
+url='http://www.angusj.com/resourcehacker/'
+source=("$pkgname-$pkgver.zip::http://www.angusj.com/resourcehacker/resource_hacker.zip")
+sha512sums=('7c46c1e9ef2d2e8d69d9962ed75a1938c62403dd8508e03d48a8daad5dda01bca0afcb4464e546f293c046e1d8bb42e54e393517b23ac16074ad35fa69fbe6a3')
+
+package() {
+  install -dm 755 "$pkgdir/usr/share/windows/$pkgname"
+
+  cp -r --no-preserve=ownership * "$pkgdir/usr/share/windows/$pkgname/"
+}
+

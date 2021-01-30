@@ -1,0 +1,48 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=vuls
+pkgver=1074.b20d2b2
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-scanner')
+pkgdesc='Vulnerability scanner for Linux/FreeBSD, agentless, written in Go.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/future-architect/vuls'
+license=('GPL3')
+depends=('glibc' 'sqlite')
+makedepends=('dep' 'git' 'go-pie')
+source=("git+https://github.com/future-architect/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  export GOROOT=/usr/lib/go
+  export GOPATH="$srcdir/go"
+  export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+
+  mkdir -p "go/src/github.com/future-architect"
+
+  ln -rTsf $pkgname "go/src/github.com/future-architect/$pkgname"
+}
+
+build() {
+  cd "$GOPATH/src/github.com/future-architect/$pkgname"
+
+  make install
+}
+
+package() {
+  install -dm 755 "$pkgdir/usr/bin"
+
+  install -Dm 755 "$GOPATH/bin/$pkgname" "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" \
+    "go/src/github.com/future-architect/$pkgname/"*.md
+  install -Dm 644 "go/src/github.com/future-architect/$pkgname/LICENSE" \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

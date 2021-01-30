@@ -1,0 +1,51 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=v3n0m
+pkgver=338.7f58e21
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-scanner' 'cynuxsecurity-webapp' 'cynuxsecurity-recon')
+pkgdesc='A tool to automate mass SQLi d0rk scans and Metasploit Vulns.'
+arch=('any')
+url='https://github.com/v3n0m-Scanner/V3n0M-Scanner'
+license=('GPL2')
+depends=('python' 'python-httplib2' 'python-aiohttp' 'python-asyncio'
+         'python-pysocks' 'python-dnspython' 'python-multidict'
+         'python-requests' 'python-pysocks' 'python-tqdm' 'python-yarl'
+         'python-argparse')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/v3n0m-Scanner/V3n0M-Scanner.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1
+
+  cp -a src/* "$pkgdir/usr/share/$pkgname/"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm 644 "src/desktop-menu/$pkgname.ico" \
+    "$pkgdir/usr/share/icons/$pkgname.ico"
+  install -Dm 644 "src/desktop-menu/$pkgname.desktop" \
+    "$pkgdir/usr/share/applications/$pkgname.desktop"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec python3 $pkgname.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+
