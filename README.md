@@ -10,6 +10,12 @@ Official repository of Cynux Security
 
 [![Download cynuxsecurity](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/cynuxsecurity/files/latest/download) </br>
 
+Cynux 2021.0.1
+```
+sha256sum: 390b13291f953bbd36ec243ddd6de047a699946086c186d023102c6f9aab188d
+md5sum: fb96fc227e690dccfed89dbb1da6db55
+```
+
 ## Contributing
 
 Contributions are welcome. You can contribute through pull requests (PRs) via our github page
