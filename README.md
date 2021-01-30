@@ -11,7 +11,7 @@ Official repository of Cynux Security
 [![Download cynuxsecurity](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/cynuxsecurity/files/latest/download) </br>
 
 Alternate Download Link </br>
-<http://cynuxmirror.cynuxsecurity.org/iso/cynuxsecurity-2021.01.27-x86_64.iso>
+<http://mirror.cynuxsecurity.org/iso/cynuxsecurity-2021.01.27-x86_64.iso>
 
 Cynux 2021.0.1
 ```
