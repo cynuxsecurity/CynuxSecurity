@@ -2,7 +2,12 @@
 
 ![cynux](https://raw.githubusercontent.com/cynuxsecurity/CynuxSecurity/main/usr/share/backgrounds/cynuxsecwap_4.png)
 
-[![Download cynuxsecurity](https://img.shields.io/sourceforge/dw/cynuxsecurity.svg)](https://sourceforge.net/projects/cynuxsecurity/files/latest/download) </br>
+<p align="center">
+  <img src="https://img.shields.io/sourceforge/dw/cynuxsecurity.svg">
+  <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/cynuxsecurity/CynuxSecurity">
+  <img src="https://img.shields.io/badge/license-GPL%20(%3E%3D%202)-blue" alt="Cynuxsecurity">
+<br>
+
 Official repository of Cynux Security
 
 ## Download 
