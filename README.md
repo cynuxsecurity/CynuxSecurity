@@ -8,6 +8,7 @@
   <img src="https://img.shields.io/github/license/cynuxsecurity/CynuxSecurity?style=flat-square">
   <img src="https://img.shields.io/github/last-commit/cynuxsecurity/CynuxSecurity?style=flat-square">
   <img src="https://img.shields.io/website?label=mirrorurl&style=flat-square&url=http%3A%2F%2Fmirror.cynuxsecurity.org%2F">
+  <img src="https://img.shields.io/website?style=flat-square&url=https%3A%2F%2Fwww.cynuxsecurity.org">
 <br>
 
 Official repository of Cynux Security
