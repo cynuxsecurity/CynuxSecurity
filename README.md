@@ -4,7 +4,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/sourceforge/dw/cynuxsecurity.svg?style=flat-square">
-  <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/cynuxsecurity/CynuxSecurity?style=flat-square">
+  <img src="https://img.shields.io/github/commit-activity/w/cynuxsecurity/CynuxSecurity?style=flat-square">
   <img src="https://img.shields.io/github/license/cynuxsecurity/CynuxSecurity?style=flat-square">
   <img src="https://img.shields.io/github/last-commit/cynuxsecurity/CynuxSecurity?style=flat-square">
   <img src="https://img.shields.io/website?label=mirrorurl&style=flat-square&url=http%3A%2F%2Fmirror.cynuxsecurity.org%2F">
