@@ -7,7 +7,6 @@
   <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/cynuxsecurity/CynuxSecurity?style=flat-square">
   <img src="https://img.shields.io/github/license/cynuxsecurity/CynuxSecurity?style=flat-square">
   <img src="https://img.shields.io/github/last-commit/cynuxsecurity/CynuxSecurity?style=flat-square">
-  <img src="https://img.shields.io/github/license/cynuxsecurity/CynuxSecurity?style=flat-square">
 <br>
 
 Official repository of Cynux Security
