@@ -3,9 +3,11 @@
 ![cynux](https://raw.githubusercontent.com/cynuxsecurity/CynuxSecurity/main/usr/share/backgrounds/cynuxsecwap_4.png)
 
 <p align="center">
-  <img src="https://img.shields.io/sourceforge/dw/cynuxsecurity.svg">
-  <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/cynuxsecurity/CynuxSecurity">
-  <img src="https://img.shields.io/badge/license-GPL%20(%3E%3D%202)-blue" alt="Cynuxsecurity">
+  <img src="https://img.shields.io/sourceforge/dw/cynuxsecurity.svg?style=flat-square">
+  <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/cynuxsecurity/CynuxSecurity?style=flat-square">
+  <img src="https://img.shields.io/github/license/cynuxsecurity/CynuxSecurity?style=flat-square">
+  <img src="https://img.shields.io/github/last-commit/cynuxsecurity/CynuxSecurity?style=flat-square">
+  <img src="https://img.shields.io/github/license/cynuxsecurity/CynuxSecurity?style=flat-square">
 <br>
 
 Official repository of Cynux Security
