@@ -39,4 +39,4 @@ Just clone our repository with git clone ```https://github.com/cynuxsecurity/Cyn
 
 ## Contact Info
 
-Email: cynuxos@gmail.com </br>
+Email: team@cynuxsecurity.org </br>
