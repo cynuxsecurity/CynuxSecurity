@@ -1,0 +1,28 @@
+pkgname=cynuxsecurity-fish-config
+pkgver=
+pkgrel=1
+pkgdesc='Cynuxsecurity Config for fish shell.'
+arch=('any')
+groups=('cynuxsecurity-config')
+url='https://github.com/cynuxsecurity/cynuxsecurity-fish-config'
+license=('GPL-3')
+depends=('zsh')
+makedepends=('git')
+source=("git+https://github.com/cynuxsecurity/$pkgname.git")
+install="$pkgname.install"
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/share/cynuxsecurity/config/zsh"
+
+  cp -ra config local "$pkgdir/usr/share/cynuxsecurity/config/zsh"
+}
+

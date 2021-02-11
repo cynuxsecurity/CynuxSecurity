@@ -1,0 +1,38 @@
+# Maintainer: CynuxSecurity <team@cynuxsecurity.org>
+# Contributor: Prurigro
+
+buildarch=220
+
+pkgname=chkrootkit
+pkgver=0.54
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-defense' 'cynuxsecurity-forensics')
+pkgdesc="Checks for rootkits on a system"
+url="http://www.chkrootkit.org/"
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+license=('BSD')
+depends=('bash' 'procps' 'net-tools')
+source=("ftp://ftp.pangeia.com.br/pub/seg/pac/chkrootkit.tar.gz"
+        "chkrootkit-path.patch")
+sha512sums=('fe8955ac33abaabf304f5580b6f12929f8bf02329ab442380eaa6298440cf1cb0eee2db8e5667ea7d78b89ee2bceb82c10ebb732a71d6bcdda9400569cd587fd'
+            '44d759bf108363212f89e097400cda06e5ee8aaf4ef661d63d2cb3a453902eee99c5690d8c83d2d7813d31a74565d1576e40d04649c0f2247194c0887260d63d')
+
+build(){
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  patch -Np1 -i "${srcdir}/chkrootkit-path.patch"
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  install -Dm644 COPYRIGHT "${pkgdir}/usr/share/licenses/${pkgname}/COPYRIGHT"
+  install -Dm755 chkdirs "${pkgdir}/usr/bin/chkdirs"
+  install -Dm755 chklastlog "${pkgdir}/usr/bin/chklastlog"
+  install -Dm755 chkproc "${pkgdir}/usr/bin/chkproc"
+  install -Dm755 chkrootkit "${pkgdir}/usr/bin/chkrootkit"
+  install -Dm755 chkutmp "${pkgdir}/usr/bin/chkutmp"
+  install -Dm755 chkwtmp "${pkgdir}/usr/bin/chkwtmp"
+  install -Dm755 ifpromisc "${pkgdir}/usr/bin/ifpromisc"
+  install -Dm755 strings-static "${pkgdir}/usr/bin/strings-static"
+}

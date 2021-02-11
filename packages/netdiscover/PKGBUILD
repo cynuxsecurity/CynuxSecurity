@@ -1,0 +1,29 @@
+# Maintainer: CynuxSecurity <team@cynuxsecurity.org>
+
+buildarch=220
+
+pkgname=netdiscover
+pkgver=0.5.1
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-recon' 'cynuxsecurity-wireless')
+pkgdesc="An active/passive address reconnaissance tool, mainly developed for those wireless networks without dhcp server, when you are wardriving. It can be also used on hub/switched networks."
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+url="https://github.com/netdiscover-scanner/netdiscover"
+license=('GPL')
+makedepends=('dos2unix')
+depends=('libpcap' 'libnet')
+source=("${url}/archive/${pkgver}.tar.gz")
+sha512sums=('b8b60b77c55966eb950aafb7d5d924e88b437a96a3d227cd943156d2a1c3ed81df57e90930132e11e13e341f43f475dbb27936ebf2db2c23d66885c71d7a1960')
+
+build() {
+    cd ${pkgname}-${pkgver}
+    sh update-oui-database.sh
+    ./autogen.sh
+    ./configure --prefix=/usr/ --sysconfdir=/etc/ --sbindir=/usr/bin
+    make
+}
+
+package() {
+    cd ${pkgname}-${pkgver}
+    make DESTDIR="$pkgdir" install
+}

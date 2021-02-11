@@ -1,0 +1,45 @@
+# Maintainer: CynuxSecurity <team@cynuxsecurity.org>
+
+buildarch=1
+
+_pkgname="Amass"
+pkgname="amass"
+pkgver=3.11.1
+pkgrel=1
+pkgdesc=" tool to help information security professionals perform network mapping of attack surfaces and perform external asset discovery"
+arch=('any')
+url="https://github.com/OWASP/Amass"
+license=('Apache')
+makedepends=('go' 'git')
+source=("${url}/archive/v${pkgver}.tar.gz")
+sha512sums=('c7f4aa394f9648e2c54b4bb82f2e176dfb7384b836365e0f4812d23440dae8ffa3fbae517d7d5e7898e2bf08522cc8cd4eb678778520017b7feaa2392398dabd')
+
+prepare() {
+  mkdir -vp "${srcdir}/github.com/OWASP"
+  mv "${srcdir}/${_pkgname}-${pkgver}" "${srcdir}/github.com/OWASP/${_pkgname}"
+
+  export GOPATH="${srcdir}"
+  cd "${GOPATH}/github.com/OWASP/${_pkgname}"
+  go get -d ./...
+}
+
+check() {
+  cd "${srcdir}/github.com/OWASP/${_pkgname}"
+  export GOPATH="${srcdir}"
+  go test ./...
+}
+
+build() {
+  cd "${srcdir}/github.com/OWASP/${_pkgname}"
+  export GOPATH="${srcdir}"
+  go install -v ./...
+}
+
+package() {
+  export GOPATH="${srcdir}"
+  cd "${GOPATH}/bin"
+  install -dm 755 "${pkgdir}/usr/share/${pkgname}"
+  install -Dm755 "${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+  cp -a --no-preserve=ownership "${GOPATH}/github.com/OWASP/${_pkgname}/"{wordlist/,examples/} "${pkgdir}/usr/share/${pkgname}"
+  chmod 644 "${pkgdir}/usr/share/${pkgname}/"{wordlist/*,examples/*}
+}

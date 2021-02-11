@@ -1,0 +1,44 @@
+# Maintainer: CynuxSecurity <team@cynuxsecurity.org>
+# Contributor: Lukas Kempf <cynuxsecurity@lukas-kempf.de>
+
+buildarch=1
+
+pkgname=burpsuite
+pkgver=2020.12.1
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-webapps' 'cynuxsecurity-scanners' 'cynuxsecurity-fuzzers' 'cynuxsecurity-proxy')
+pkgdesc="An integrated platform for attacking web applications (free edition)."
+url='http://portswigger.net/burp/'
+depends=('jre11-openjdk' 'bash')
+arch=('any')
+license=('custom')
+noextract=("burpsuite.jar")
+source=("burpsuite.jar::https://portswigger.net/burp/releases/download?product=community&version=${pkgver}&type=Jar"
+        "LICENSE"
+	"burpsuite.desktop"
+	)
+
+sha512sums=('6009727281ae8f273042cb6136fea831ac4adb8c9a51694fee3e4e640ce65735587fcdafff7e534b4229d68ae8bfd2be46f93037ee8b66c7a544bbf4ec1ae886'
+            '3bc6083224e3b6fd777b0fbb2aea73ce6fdd21011d1c6ceb0a5298c6278d04d35f7e5f6fd7e5dd621331fa4060eceb0655ffd63d6a5214833f6fbaa6f14a3681'
+            '076f2f7ca3096a44a3ccf8b9f723384e0c335b3f4391f26b4d8d652716a1e2b7325e4aa1ad7ea3d711073a77292fa19857e2881dbd909d547d28a806fc65e0cf')
+package() {
+  cd "${srcdir}" || exit
+
+  # Make base directories.
+  install -dm755 "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -dm755 "${pkgdir}/usr/share/${pkgname}"
+  install -dm755 "${pkgdir}/usr/bin"
+
+  install -Dm755 burpsuite.jar "${pkgdir}/usr/share/${pkgname}/burpsuite.jar"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}"
+
+  install -Dm644 "$pkgname.desktop" "${pkgdir}/usr/share/applications/$pkgname.desktop"
+
+# Make joint script.
+cat > "${pkgdir}/usr/bin/burpsuite" <<EOF
+#!/usr/bin/env bash
+export PATH=/usr/lib/jvm/java-11-openjdk/bin/:\$PATH
+exec java -jar "/usr/share/${pkgname}/burpsuite.jar" "\$@"
+EOF
+chmod 755 "${pkgdir}/usr/bin/burpsuite"
+}
