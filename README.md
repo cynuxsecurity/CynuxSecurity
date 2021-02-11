@@ -37,6 +37,22 @@ Just clone our repository with git clone ```https://github.com/cynuxsecurity/Cyn
 ## Installation  
 ```sudo install_cynux```
 
+## FAQ
+
+<b>Is Cynuxsecurity the right pentesting distribution for me?</b>
+
+CynuxSecurity is Pentesting Distribution based on Arch Linux. It Certainly don't requires much knowlegde about Arch Linux and build to be beginner Friendly. 
+The motto of cynuxsecurity is to be as friendly and fast as possible.
+
+<b>Is Cynuxsecurity up to date?</b>
+
+Currently it is going on with development phase and build regularly with upcoming versions the updates will come as well.
+
+<b>Since it is in Development phase can i contribute?</b>
+
+Yes Follow the contribution guide
+
 ## Contact Info
 
 Email: team@cynuxsecurity.org </br>
+Twitter: <https://twitter.com/cynuxsecurity>
