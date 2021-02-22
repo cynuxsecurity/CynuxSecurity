@@ -60,5 +60,6 @@ Twitter: <https://twitter.com/cynuxsecurity>
 ## Supported by
 
 <p align="centre">
-
+	<img src="https://raw.githubusercontent.com/cynuxsecurity/CynuxSecurity/main/support/CIINITW.png">
+	<img src="https://raw.githubusercontent.com/cynuxsecurity/CynuxSecurity/main/support/nitw.png">
 </br>
