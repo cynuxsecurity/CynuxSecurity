@@ -56,3 +56,9 @@ Yes Follow the contribution guide
 
 Email: team@cynuxsecurity.org </br>
 Twitter: <https://twitter.com/cynuxsecurity>
+
+## Supported by
+
+<p align="centre">
+
+</br>
