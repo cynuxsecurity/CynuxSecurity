@@ -1,0 +1,37 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=regipy
+pkgver=1.8.0
+pkgrel=1
+pkgdesc='Library for parsing offline registry hives.'
+groups=('cynuxsecurity' 'cynuxsecurity-forensic')
+arch=('any')
+url='https://github.com/mkorman90/regipy'
+license=('MIT')
+depends=('python' 'python-construct' 'python-attrs' 'python-click' 'python-tqdm'
+         'python-inflection' 'python-jsonlines' 'python-pytz' 'python-logbook'
+         'python-tabulate')
+makedepends=('python-setuptools')
+source=("https://github.com/mkorman90/$pkgname/archive/$pkgver.tar.gz")
+sha512sums=('78bbb151682bdfe14cf15ac0679b11d4a35cbcd97190e61d12bb62e24e76f25a056acdac327fd42bbf73b6a595ae82fceed7732370ab23f4de01fc52efdf1230')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+
+  #sed "s|==[0-9].*|\',|g" -i setup.py
+  #sed "31!s|jsonlines',|jsonlines'\],|" -i setup.py
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+

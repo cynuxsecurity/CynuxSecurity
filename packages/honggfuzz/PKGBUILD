@@ -1,0 +1,38 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=honggfuzz
+pkgver=3870.94692b73
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-fuzzer' 'cynuxsecurity-hardware')
+pkgdesc='A general-purpose fuzzer with simple, command-line interface.'
+arch=('x86_64' 'aarch64')
+url='https://code.google.com/p/honggfuzz/'
+license=('Apache')
+depends=('binutils' 'libunwind')
+makedepends=('git')
+source=("git+https://github.com/google/$pkgname.git"
+        'makefile.patch')
+sha512sums=('SKIP'
+            'e9f2a0190d152b3394ffab69e20fc216cb7c0464f20dbe7723574dcd176c73dc32126c638c248ca181b103e147de6027940db80e2781d78fe00f55ca23e1b16c')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm 755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md CHANGELOG
+  install -Dm 644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}
+

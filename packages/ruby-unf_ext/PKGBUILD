@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=ruby-unf_ext
+_gemname='unf_ext'
+pkgver=0.0.7.7
+pkgrel=1
+pkgdesc='Unicode Normalization Form support library for CRuby.'
+arch=('any')
+url='https://github.com/knu/ruby-unf_ext'
+license=('MIT')
+depends=('ruby')
+makedepends=('rubygems' 'ruby-rdoc')
+source=("https://rubygems.org/gems/$_gemname-$pkgver.gem")
+noextract=("$_gemname-$pkgver.gem")
+sha512sums=('7dc75f071be4d4f3cd44f64a26c5f63f01494f79f3585eea3b307c3e8133b17b1007c4b36915f7254e516ae7a62268be8f3e4b250dcec7a9a083b5a66582887d')
+
+package() {
+  _gemdir="$(ruby -e 'puts Gem.default_dir')"
+
+  if [[ $CARCH == arm* ]] ; then
+    gem install --no-user-install --ignore-dependencies --no-rdoc --no-ri \
+      -i "$pkgdir$_gemdir" "$_gemname-$pkgver.gem"
+  else
+    gem install --no-user-install --ignore-dependencies -i "$pkgdir$_gemdir" \
+      "$_gemname-$pkgver.gem"
+  fi
+}
+

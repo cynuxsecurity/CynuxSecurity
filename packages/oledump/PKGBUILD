@@ -1,0 +1,36 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=oledump
+pkgver=0.0.57
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-binary' 'cynuxsecurity-malware')
+pkgdesc='Analyze OLE files (Compound File Binary Format). These files contain streams of data. This tool allows you to analyze these streams.'
+arch=('any')
+url='http://blog.didierstevens.com/programs/oledump-py/'
+license=('custom:unknown')
+depends=('python' 'python-lxml' 'python-yara' 'python-olefile')
+source=("https://didierstevens.com/files/software/${pkgname}_V${pkgver//./_}.zip")
+sha512sums=('66b26b35da3ea41dd17317a5dfea4550f5c3a5b7dcca16680e88ada83f2ec134f9bdb266e7a971ab4faecb1646adefdf0ba259533fb3a283b2bed5d6b6850753')
+
+prepare() {
+  find . -type f -name '*.py' -exec sed -i 's|env python|env python|' {} +
+}
+
+package() {
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  rm "${pkgname}_V${pkgver//./_}.zip"
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec python $pkgname.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

@@ -1,0 +1,39 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=rustbuster
+pkgver=295.18cd96e
+pkgrel=1
+pkgdesc='DirBuster for Rust.'
+arch=('x86_64')
+groups=('cynuxsecurity' 'cynuxsecurity-webapp' 'cynuxsecurity-scanner')
+url='https://github.com/phra/rustbuster'
+license=('GPL3')
+makedepends=('git' 'cargo')
+source=("git+https://github.com/phra/$pkgname.git")
+options=(!strip)
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  cargo build --release
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 755 "target/release/$pkgname" "$pkgdir/usr/bin/$pkgname"
+  cp -a examples benches "$pkgdir/usr/share/$pkgname/"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

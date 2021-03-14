@@ -1,0 +1,39 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=zulucrypt
+_name=zuluCrypt
+pkgver=6.0.0
+pkgrel=1
+pkgdesc='Front end to cryptsetup and tcplay and it allows easy management of encrypted block devices.'
+groups=('cynuxsecurity' 'cynuxsecurity-crypto')
+arch=('x86_64')
+url='https://github.com/mhogomchungu/zuluCrypt'
+license=('GPL')
+depends=('cryptsetup' 'libpwquality' 'libsecret' 'libxkbcommon-x11' 'qt5-base')
+makedepends=('cmake')
+source=("https://github.com/mhogomchungu/zuluCrypt/releases/download/$pkgver/$_name-$pkgver.tar.xz")
+sha512sums=('99a4453150c56413c638fb7a2b6fa9e79542e5e37040f097e2e04329aa3e33a8b6d8fa8634994e2ad8b11267450b730f78c7d89d4a4b356c39ee516d4a6571bf')
+
+build() {
+  cd "$_name-$pkgver"
+
+  mkdir -p build
+  cd build
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr/ -DLIB_SUFFIX=lib -DNOGUI=false -DQT5=true \
+    -DHOMEMOUNTPREFIX=false -DCMAKE_BUILD_TYPE=release . ..
+
+  make
+}
+
+package() {
+  cd "$_name-$pkgver"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" changelog README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  cd build
+  make DESTDIR="$pkgdir" install
+}
+

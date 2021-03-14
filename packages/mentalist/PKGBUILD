@@ -1,0 +1,39 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=mentalist
+pkgver=6.953a07b
+pkgrel=5
+pkgdesc='Graphical tool for custom wordlist generation.'
+arch=('any')
+groups=('cynuxsecurity' 'cynuxsecurity-automation' 'cynuxsecurity-cracker')
+url='https://github.com/sc0tfree/mentalist'
+license=('MIT')
+depends=('python' 'tk')
+makedepends=('python-setuptools' 'git')
+source=("git+https://github.com/sc0tfree/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd "$pkgname"
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname"
+
+  python setup.py install --root="$pkgdir" -O1 --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm -rf "$pkgdir/usr/lib/python3.9/site-packages/tests"
+}
+

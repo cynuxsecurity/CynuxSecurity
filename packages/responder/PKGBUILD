@@ -1,45 +1,155 @@
-# Maintainer: CynuxSecurity <team@cynuxsecurity.org>
-
-buildarch=1
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
 
 pkgname=responder
-pkgver=2.3.4.0
+pkgver=364.8104139
 pkgrel=1
-groups=('cynuxsecurity' 'cynuxsecurity-networking')
-pkgdesc="A LLMNR and NBT-NS poisoner, with built-in HTTP/SMB/MSSQL/FTP/LDAP rogue authentication server supporting NTLMv1/NTLMv2/LMv2, Extended Security NTLMSSP and Basic HTTP authentication."
-url="https://github.com/lgandx/Responder"
-license=('custom')
+epoch=3
+pkgdesc='A LLMNR and NBT-NS poisoner, with built-in HTTP/SMB/MSSQL/FTP/LDAP rogue authentication server supporting NTLMv1/NTLMv2/LMv2 (multirelay version).'
+groups=('cynuxsecurity' 'cynuxsecurity-scanner' 'cynuxsecurity-fuzzer' 'cynuxsecurity-spoof'
+        'cynuxsecurity-networking')
 arch=('any')
-depends=('python2')
-makedepends=('unzip')
-source=("${url}/archive/v$pkgver.zip" 'LICENSE')
-sha512sums=('587f92af79b0a3a3e3d7b2838dd6131227419f4c18d1e02c0d8ebe2e2fc099d74e0a95976f7b62c1f7c6b83a8e6c3215385dc67853f2b69a32e45817e3730ae0'
-            '49254b769f161d19ade5858a4eb4eba7ce791051cb04bdabba4184ee8409e7bb83e3ec0941dfe3fc71d09fe5abff6d6d8b22b4ec8ffaa82f63a3dd91cc979551')
+depends=('python2' 'python2-configparser' 'python2-pycryptodome')
+makedepends=('git')
+url='https://github.com/lgandx/Responder'
+license=('GPL3')
+source=("$pkgname::git+https://github.com/lgandx/Responder.git")
+sha512sums=('SKIP')
 
-prepare() {
-  grep -iRl 'python' "$srcdir" | xargs sed -i 's|#!.*/usr/bin/python|#!/usr/bin/python2|;s|#!.*/usr/bin/env python$|#!/usr/bin/env python2|'
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
 }
 
 package() {
-  cd "$srcdir"/Responder-"$pkgver"
-  install -dm755 "$pkgdir/usr/share/responder"
-  install -dm755 "$pkgdir/usr/bin"
-  cp -r poisoners tools servers certs files "$pkgdir/usr/share/responder"
-  install -m755 odict.py "$pkgdir"/usr/share/responder/odict.py
-  install -m755 fingerprint.py "$pkgdir"/usr/share/responder/fingerprint.py
-  install -m755 packets.py "$pkgdir"/usr/share/responder/packets.py
-  install -m755 settings.py "$pkgdir"/usr/share/responder/settings.py
-  install -m755 utils.py "$pkgdir"/usr/share/responder/utils.py
-  install -m644 README.md "$pkgdir"/usr/share/responder/README.md
-  install -m644 Responder.conf "$pkgdir"/usr/share/responder/Responder.conf
-  install -m755 Responder.py "$pkgdir"/usr/share/responder/Responder.py
-  install -Dm644 "$srcdir"/LICENSE "$pkgdir"/usr/share/licenses/responder/LICENSE
-  sed -i 's|#!.*/usr/bin/python|#!/usr/bin/python2|;s|#!.*/usr/bin/env python|#!/usr/bin/env python2|' $pkgdir/usr/share/responder/servers/HTTP.py
-  cat > "$pkgdir/usr/bin/responder" <<EOF
-#!/usr/bin/env bash
-cd /usr/share/responder
-python2 Responder.py "\$@"
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm README.md LICENSE *.sh
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  # Responder
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec python2 Responder.py "\$@"
 EOF
-  chmod 755 "$pkgdir/usr/bin/responder"
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+
+  # Responder DumpHash
+  cat > "$pkgdir/usr/bin/$pkgname-dumphash" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec python2 DumpHash.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname-dumphash"
+
+  # Responder Report
+  cat > "$pkgdir/usr/bin/$pkgname-report" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec python2 Report.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname-report"
+
+  # Responder DHCP
+  cat > "$pkgdir/usr/bin/$pkgname-dhcp" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname/tools
+exec python2 DHCP.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname-dhcp"
+
+  # Responder DHCP_Auto
+  cat > "$pkgdir/usr/bin/$pkgname-dhcp-auto" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname/tools
+exec bash DHCP_Auto.sh "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname-dhcp-auto"
+
+  # Responder FindSMB2Uptime
+  cat > "$pkgdir/usr/bin/$pkgname-findsmb2uptime" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname/tools
+exec python2 FindSMB2UPTime.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname-findsmb2uptime"
+
+  # Responder FindSQLSrv
+  cat > "$pkgdir/usr/bin/$pkgname-findsqlsrv" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname/tools
+exec python2 FindSQLSrv.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname-findsqlsrv"
+
+  # Responder ICMP-Redirect
+  cat > "$pkgdir/usr/bin/$pkgname-icmp-redirect" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname/tools
+exec python2 Icmp-Redirect.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname-icmp-redirect"
+
+  # Responder Multirelay
+  cat > "$pkgdir/usr/bin/$pkgname-multirelay" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname/tools
+exec python2 MultiRelay.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname-multirelay"
+
+  # Responder RunFinger
+  cat > "$pkgdir/usr/bin/$pkgname-runfinger" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname/tools
+exec python2 RunFinger.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname-runfinger"
+
+  # Responder cachedump
+  cat > "$pkgdir/usr/bin/$pkgname-cachedump" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname/tools/MultiRelay/creddump
+exec python2 cachedump.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname-cachedump"
+
+  # Responder lsadump
+  cat > "$pkgdir/usr/bin/$pkgname-lsadump" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname/tools/MultiRelay/creddump
+exec python2 lsadump.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname-lsadump"
+
+  # Responder pwdump
+  cat > "$pkgdir/usr/bin/$pkgname-pwdump" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname/tools/MultiRelay/creddump
+exec python2 pwdump.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname-pwdump"
 }
 

@@ -1,0 +1,45 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=httpscreenshot
+pkgver=59.0de1ade
+pkgrel=1
+pkgdesc='A tool for grabbing screenshots and HTML of large numbers of websites.'
+groups=('cynuxsecurity' 'cynuxsecurity-misc')
+arch=('any')
+url='https://github.com/breenmachine/httpscreenshot'
+license=('custom:unknown')
+depends=('python2' 'python2-selenium' 'python2-pillow6' 'python2-python-libnmap'
+         'python2-m2crypto' 'python2-requests' 'python2-beautifulsoup4'
+         'python2-requesocks' 'python2-pyvirtualdisplay')
+makedepends=('git')
+source=("git+https://github.com/breenmachine/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+
+  rm README.md
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec python2 $pkgname.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

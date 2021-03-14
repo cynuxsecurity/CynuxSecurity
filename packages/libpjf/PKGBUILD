@@ -1,0 +1,36 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=libpjf
+pkgver=204.a6fb2f5
+pkgrel=1
+pkgdesc='A C library of data structures with tools (based on libasn).'
+arch=('x86_64' 'aarch64')
+url='https://github.com/pforemski/libpjf'
+license=('GPL3')
+depends=('pcre' 'linux-headers')
+makedepends=('git')
+source=("git+https://github.com/pforemski/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $pkgname
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  make DESTDIR="$pkgdir" install
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

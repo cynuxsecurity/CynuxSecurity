@@ -1,0 +1,24 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=httpgrep
+pkgver=1.8
+pkgrel=2
+groups=('cynuxsecurity' 'cynuxsecurity-webapp' 'cynuxsecurity-scanner')
+pkgdesc='A python tool which scans for HTTP servers and finds given strings in URIs.'
+url='https://nullsecurity.net/tools/scanner.html'
+license=('custom:unknown')
+arch=('any')
+depends=('python' 'python-requests')
+source=("https://github.com/nullsecuritynet/tools/raw/master/scanner/$pkgname/release/$pkgname-$pkgver.tar.gz")
+sha512sums=('ab8db8cce96713ae0f213b5299eb1b4276d3ec4a2dbf0a81f023ada80d48dcea01645da578b362ebbb1f5729b720e379f7f6e076cff48262c912da891cd09dc5')
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 755 "$pkgname.py" "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+}
+

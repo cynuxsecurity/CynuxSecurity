@@ -1,0 +1,22 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=x64dbg
+pkgver=2021.02.15
+pkgrel=1
+pkgdesc='An open-source x64/x32 debugger for windows.'
+url='https://github.com/x64dbg/x64dbg/releases'
+groups=('cynuxsecurity' 'cynuxsecurity-windows' 'cynuxsecurity-debugger')
+license=('GPL3')
+arch=('any')
+source=("$pkgname.zip::https://github.com/x64dbg/x64dbg/releases/download/snapshot/snapshot_${pkgver//./-}_22-35.zip")
+sha512sums=('0d52825a9977e9d855c4c56b03810a973e5e4b1eb36f0a5b5eab231e026fb8eafd4fd0db33fb855a1980f95e930a6d85a9f0efae38ca8770c17f4937e56f25d8')
+
+package() {
+  install -dm 755 "$pkgdir/usr/share/windows/$pkgname"
+
+  rm "$pkgname.zip"
+
+  cp -a * "$pkgdir/usr/share/windows/$pkgname"
+}
+

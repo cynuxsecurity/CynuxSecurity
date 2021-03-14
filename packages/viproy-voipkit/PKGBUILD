@@ -1,0 +1,45 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=viproy-voipkit
+pkgver=81.427f26e
+pkgrel=1
+epoch=1
+groups=('cynuxsecurity' 'cynuxsecurity-exploitation' 'cynuxsecurity-fuzzer'
+        'cynuxsecurity-scanner')
+pkgdesc='VoIP Pen-Test Kit for Metasploit Framework'
+depends=('ruby1.9' 'metasploit')
+makedepends=('git')
+arch=('any')
+url='http://viproy.com/'
+license=('custom')
+options=('!strip')
+source=('git+https://github.com/fozavci/viproy-voipkit.git')
+sha512sums=('SKIP')
+install="$pkgname.install"
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/share/$pkgname/"
+  install -dm 755 "$pkgdir/usr/share/$pkgname/modules/auxiliary/spoof/cisco"
+  install -dm 755 "$pkgdir/usr/share/$pkgname/lib/msf/core/auxiliary"
+  install -dm 755 "$pkgdir/usr/share/$pkgname/modules/auxiliary/voip"
+
+  install -dm 755 "$pkgdir/usr/share/metasploit/lib/rex/proto/sip"
+  install -dm 755 "$pkgdir/usr/share/metasploit/lib/msf/core/auxiliary"
+  install -dm 755 "$pkgdir/usr/share/metasploit/modules/auxiliary/scanner/sip"
+  install -dm 755 "$pkgdir/usr/share/doc/metasploit/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  cp -a --no-preserve=ownership * "$pkgdir/usr/share/$pkgname/"
+}
+

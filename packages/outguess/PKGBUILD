@@ -1,36 +1,30 @@
-# Maintainer: CynuxSecurity <team [at] cynuxsecurity [dot] org>
-# Contributor: Kyle Keen <keenerd@gmail.com>
-# Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
-
-buildarch=220
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
 
 pkgname=outguess
 pkgver=0.2
-pkgrel=3
-groups=("cynuxsecurity" "cynuxsecurity-crypto" "cynuxsecurity-stego")
-pkgdesc="A universal steganographic tool"
-arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
-url="http://www.outguess.org"
-depends=("glibc")
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-crypto' 'cynuxsecurity-misc')
+pkgdesc='A universal steganographic tool.'
+arch=('x86_64' 'aarch64')
+url='http://www.outguess.org/'
 license=('GPL')
-source=("https://ftp.mirrorservice.org/sites/ftp.wiretapped.net/pub/security/steganography/outguess/outguess-$pkgver.tar.gz" "destdir.patch")
-sha512sums=('2901e2e8f6495f1483897bfde2a84b658335aa733f3ad16959e6b906dec8675c72f5468a0f60b14d231ff64b7768be2cf06be6bbd833286f07a632a9ca45a1e6'
-            'fcb515dbf85311a602adfa7d59a54e93a160dbe3792760dd81e500fd6b6b3663b890ffda5ab3123076bd24f54adcb62f442f04fb68c128bfe0aced916ef0fbba')
-
-prepare() {
-   cd "$pkgname"
-   patch -Np1 < $srcdir/destdir.patch
-}
+source=("http://ftp.mirrorservice.org/sites/ftp.wiretapped.net/pub/security/steganography/$pkgname/$pkgname-$pkgver.tar.gz")
+sha512sums=('2901e2e8f6495f1483897bfde2a84b658335aa733f3ad16959e6b906dec8675c72f5468a0f60b14d231ff64b7768be2cf06be6bbd833286f07a632a9ca45a1e6')
 
 build() {
-    cd "$pkgname"
-    ./configure --prefix=/usr --mandir=/usr/share/man
-    make
+  cd $pkgname
+
+  ./configure --prefix=/usr
+
+  make
 }
 
 package() {
-    cd "$pkgname"
-    install -dm755 "$pkgdir/usr/bin"
-    install -dm755 "$pkgdir/usr/share/man/man1"
-    make DESTDIR=$pkgdir install
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/"{bin,man/man1}
+
+  make prefix="$pkgdir/usr" install
 }
+

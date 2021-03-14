@@ -1,0 +1,36 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+#
+# Initial author: Mohammadreza Abdollahzadeh <morealaz at gmail dot com>
+# Modified: noptrix at cynuxsecurity d0t org
+
+pkgname=java-openjfx-bin
+_ver=14
+pkgver=14
+pkgrel=1
+pkgdesc="Java OpenJFX ${_ver} client application platform (Gluon build)."
+arch=('x86_64')
+url='https://openjfx.io/'
+license=('GPL2')
+depends=('ffmpeg' 'gstreamer' "java-environment>=$_ver" 'libxtst' 'qt5-base'
+         'webkit2gtk')
+provides=("java-openjfx=$_ver")
+conflicts=("java-openjfx=$_ver" "java${_ver}-openjfx")
+source=("https://download2.gluonhq.com/openjfx/$pkgver/openjfx-${pkgver}_linux-x64_bin-sdk.zip"
+        "https://download2.gluonhq.com/openjfx/$pkgver/openjfx-${pkgver}_linux-x64_bin-jmods.zip")
+sha512sums=('5164ac004ddf88b9bfac8a6c8308ea28d3419aa38a77091b025a47998cd6fb8443943972a52d09e7a5c40ed7a55883d0c0ba317b14f108a6af09e6766597e956'
+            'd5942fb4842470277be66df0300ded4dd7c94efdb491ea6f0abda57db12343c7fd254c7290f2a6735f29a005027b2d47474ab283fd22775bd9161ca718c06bc0')
+
+package() {
+  _jvmdir="usr/lib/jvm/java-${_ver}-openjdk"
+
+  install -dm 750 "$pkgdir/$_jvmdir"
+  install -dm 750 "$pkgdir/$_jvmdir/jmods"
+  install -dm 750 "$pkgdir/usr/share/licenses/java$_ver-openjdk"
+
+  cp -a "javafx-sdk-$pkgver/lib" "$pkgdir/$_jvmdir/"
+  mv "$pkgdir/$_jvmdir/lib/src.zip" "$pkgdir/$_jvmdir/lib/javafx-src.zip"
+  cp -a "javafx-sdk-$pkgver/legal" "$pkgdir/usr/share/licenses/java$_ver-openjdk/"
+  cp -a "javafx-jmods-$pkgver/"* "$pkgdir/$_jvmdir/jmods/"
+}
+

@@ -1,0 +1,33 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=raven
+pkgver=0.3
+pkgrel=4
+epoch=1
+pkgdesc='A Linkedin information gathering tool that can be used by pentesters to gather information about an organization employees using Linkedin.'
+groups=('cynuxsecurity' 'cynuxsecurity-social' 'cynuxsecurity-recon')
+arch=('x86_64')
+url='https://github.com/0x09AL/raven'
+license=('GPL3')
+depends=('glibc')
+makedepends=('git' 'go-pie')
+source=("https://github.com/0x09AL/$pkgname/releases/download/v$pkgver-Linux/Raven-Linux-x64.tar.xz")
+sha512sums=('24d3aaefc6c8cfa26cf1d20bdd77564c133838240ee8858804e83cc2c46ed0b85bc50c4d80337d28405b7484348585584422fa36bed43a60ad9c8a8a6db7a54d')
+
+package() {
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -m 755 $pkgname "$pkgdir/usr/share/$pkgname/$pkgname"
+  install -m 644 -t "$pkgdir/usr/share/$pkgname/" config.conf db_file.db
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec ./$pkgname "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

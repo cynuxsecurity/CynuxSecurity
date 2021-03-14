@@ -1,0 +1,32 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=kismon
+pkgver=1.0.2
+pkgrel=2
+pkgdesc='GUI client for kismet (wireless scanner/sniffer/monitor).'
+groups=('cynuxsecurity' 'cynuxsecurity-wireless')
+arch=('any')
+url='https://www.salecker.org/software/kismon.html'
+license=('BSD')
+depends=('python' 'gtk3' 'gobject-introspection-runtime' 'python-simplejson'
+         'python-cairo' 'osm-gps-map' 'python-gobject' 'python-requests'
+         'python-lxml' 'kismet' 'python-kismet-rest')
+makedepends=('python-setuptools')
+source=("http://files.salecker.org/kismon/$pkgname-$pkgver.tar.gz")
+sha512sums=('ce1d0f524a27237bf8656e73571aaa557838582eec48f8750770b116b74bb208d78f48fe18b096b475d9b796c9a91d45338f6698b4ee6b944185aecaaa7dedc1')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}
+

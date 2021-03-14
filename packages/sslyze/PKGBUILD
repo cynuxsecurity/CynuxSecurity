@@ -1,0 +1,42 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=sslyze
+pkgver=4.0.2
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-crypto' 'cynuxsecurity-scanner')
+pkgdesc='Python tool for analyzing the configuration of SSL servers and for identifying misconfigurations.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/nabla-c0d3/sslyze'
+license=('GPL2')
+depends=('python' 'python-tls-parser' 'python-cryptography' 'python-nassl'
+         'python-typing_extensions')
+makedepends=('python-setuptools')
+source=("https://github.com/nabla-c0d3/$pkgname/archive/$pkgver.zip"
+        'setup.py.patch')
+sha512sums=('eb3cc5fa972b940a0260ee36c7ca8b290e19873df45db3b1ab851d86c5d4ec19be20f0bbae5f49c57f03d796ee81e2e7714db6d075e0a8522a90aa8918fc030a'
+            '2cab23839ba95d5137b3cfc25f20232389b66b2ece92e17f377e584761821458e346d513733f6227d0354ce6ad0019d2cd02365af341b07634b27cc54dc9985f')
+
+prepare() {
+  cd
+  #patch -p1 < setup.py.patch
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm -rf "$pkgdir/usr/lib/python3.9/site-packages/tests"
+
+  sed -i 's/sslyze==3.0.7/sslyze/' "$pkgdir/usr/bin/$pkgname"
+}
+

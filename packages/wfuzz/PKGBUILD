@@ -1,21 +1,56 @@
-# Maintainer: CynuxSecurity <team@cynuxsecurity.org>
-
-buildarch=1
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
 
 pkgname=wfuzz
-pkgver=3.1.0
-pkgrel=1
-groups=('cynuxsecurity' 'cynuxsecurity-webapps' 'cynuxsecurity-fuzzers')
-pkgdesc="Utility to fuzz web applications to find their not linked resources"
-url="https://github.com/xmendez/wfuzz"
+pkgver=1155.1b695ee
+pkgrel=2
+groups=('cynuxsecurity' 'cynuxsecurity-fuzzer' 'cynuxsecurity-webapp')
+pkgdesc='Utility to bruteforce web applications to find their not linked resources.'
+url='https://github.com/xmendez/wfuzz'
 arch=('any')
-license=('GPL')
-depends=('python-pycurl' 'python-six' 'python-wxpython' 'python-chardet' 'python-shodan' 'python-pytest')
-makedepends=('python-setuptools')
-source=("${url}/archive/v${pkgver}.tar.gz")
-sha512sums=('5b340679794775a04aa375f36f01765abbff5118cb51041cd367a1af1b7c06ef6506412bb411c06efa2f09cecc3c4cf3359e204ef41775e0a248135a35f83402')
+license=('GPL2')
+depends=('python' 'python-lxml' 'python-pycurl' 'python-chardet' 'python-six'
+         'python-future')
+makedepends=('git')
+source=('git+https://github.com/xmendez/wfuzz.git')
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" -O1
+  cd $pkgname
+
+  _tools='wfencode wfuzz wfpayload wxfuzz'
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm LICENSE README.md setup.py
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  for t in $_tools; do
+    if [ "$t" = "wfuzz" ]; then
+      cat > "$pkgdir/usr/bin/$t" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec python src/$t-cli.py "\$@"
+EOF
+    else
+      cat > "$pkgdir/usr/bin/$t" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec python src/$t.py "\$@"
+EOF
+    fi
+    chmod +x "$pkgdir/usr/bin/$t"
+  done
 }
+

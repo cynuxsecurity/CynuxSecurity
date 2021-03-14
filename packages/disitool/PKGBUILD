@@ -1,0 +1,23 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=disitool
+pkgver=0.3
+pkgrel=2
+groups=('cynuxsecurity' 'cynuxsecurity-forensic')
+pkgdesc='Tool to work with Windows executables digital signatures.'
+arch=('any')
+url='https://blog.didierstevens.com/my-software/#disitool'
+license=('custom:unknown')
+depends=('python2' 'python2-pefile')
+source=("http://didierstevens.com/files/software/disitool_v${pkgver//./_}.zip")
+sha512sums=('4548baf0d2590217d41825aac66ea7a96bbe5f7ef66127031bc8bd245b6885a08a2e528dd71d1cb9f5608f16e9f0ae2d7afe020ebc8037c524be26ba69af5dd7')
+
+prepare() {
+  sed -i 's|/usr/bin/python|/usr/bin/python2|' disitool.py
+}
+
+package() {
+  install -Dm 755 "$pkgname.py" "$pkgdir/usr/bin/$pkgname"
+}
+

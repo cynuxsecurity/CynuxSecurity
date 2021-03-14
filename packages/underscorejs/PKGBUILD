@@ -1,0 +1,24 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=underscorejs
+_script=underscore
+pkgver=1.11.0
+pkgrel=1
+pkgdesc='Utility-belt library for JavaScript that provides a lot of the functional programming support that you would expect in Prototype.js (or Ruby), but without extending any of the built-in JavaScript objects.'
+arch=('any')
+url='http://underscorejs.org/'
+license=('MIT')
+source=('http://underscorejs.org/underscore.js'
+        'http://underscorejs.org/underscore-min.js')
+sha512sums=('bdc0a8fc9d34852cc5aa455948421c8f5ca70b28743414cfe16d6b8f525d8afaeaa95ae08689f896e9b0fe0e7d8cfabb5e600bcb67d3ec716f45ce17eb1a6047'
+            'c0188d26dd495de03fadaf45f0ada3c8ee019f1af47513eccbb25a32a4a5c6a4e35061ded59f859b91cc8c25aa90862fa7fa026dd2448af679a4bbc0b4ad1cb1')
+
+package() {
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 underscore-min.js \
+    "$pkgdir/usr/share/$pkgname/underscore-min.js"
+  install -Dm 644 underscore.js "$pkgdir/usr/share/$pkgname/underscore.js"
+}
+

@@ -1,0 +1,29 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=hash-buster
+pkgver=48.3f1d7c9
+pkgrel=2
+pkgdesc='A python script which scraps online hash crackers to find cleartext of a hash.'
+groups=('cynuxsecurity' 'cynuxsecurity-crypto')
+arch=('any')
+url='https://github.com/UltimateHackers/Hash-Buster/'
+license=('MIT')
+depends=('python' 'python-requests')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/UltimateHackers/Hash-Buster.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm 755 hash.py "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+}
+

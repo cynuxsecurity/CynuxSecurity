@@ -1,0 +1,31 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+#
+# This PKGBUILD file was initially retrieved from AUR and all credits goes to:
+# Maintainer: Tilman Blumenbach <tilman [AT] ax86 [DOT] net>
+
+pkgname=terminus-font-ttf
+pkgver=4.47.0
+pkgrel=3
+pkgdesc='Monospaced bitmap font designed for long work with computers (TTF version, mainly for Java applications).'
+arch=('any')
+url='https://files.ax86.net/terminus-ttf'
+license=('custom:OFL')
+depends=('fontconfig' 'xorg-mkfontdir')
+source=("https://files.ax86.net/terminus-ttf/files/${pkgver}/terminus-ttf-${pkgver}.zip")
+sha512sums=('500e0aa12223f958dd0b00d1637ee26370700f937998335d54bc94528045157c5646ff6a2b35c37b44b765d36ebaf26cbf50458819debd536b29cb393833a584')
+install="$pkgname.install"
+
+package() {
+  cd "terminus-ttf-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/share/fonts/TTF"
+
+  for i in *.ttf; do
+    destname="$(echo "$i" | sed -E 's|-[[:digit:].]+\.ttf$|.ttf|')"
+    install -Dm 644 "$i" "$pkgdir/usr/share/fonts/TTF/$destname"
+  done
+
+  install -Dm 644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}
+

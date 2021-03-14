@@ -1,0 +1,40 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=sipshock
+pkgver=7.6ab5591
+pkgrel=6
+groups=('cynuxsecurity' 'cynuxsecurity-scanner' 'cynuxsecurity-voip')
+pkgdesc='A scanner for SIP proxies vulnerable to Shellshock.'
+arch=('any')
+url='https://github.com/zaf/sipshock'
+license=('GPL3')
+depends=('glibc' 'go')
+makedepends=('git')
+source=("git+https://github.com/zaf/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+  cd $pkgname
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 "$pkgname.go" "$pkgdir/usr/share/$pkgname/$pkgname.go"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" Readme.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+exec go run /usr/share/$pkgname/$pkgname.go "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+}
+

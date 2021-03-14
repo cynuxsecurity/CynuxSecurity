@@ -1,0 +1,27 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=halberd
+pkgver=0.2.4
+pkgrel=3
+groups=('cynuxsecurity' 'cynuxsecurity-scanner' 'cynuxsecurity-webapp')
+pkgdesc='Halberd discovers HTTP load balancers. It is useful for web application security auditing and for load balancer configuration testing.'
+url='http://halberd.superadditive.com/'
+arch=('any')
+license=('GPL')
+depends=('python2')
+source=("https://files.pythonhosted.org/packages/02/99/67d88f4d10c729e64052dfbd79e4662c492a5c32d55f30eb699bb19cfd9d/$pkgname-$pkgver.tar.gz")
+sha512sums=('80563f9a903a034163ede3319e88305bce8d2de9541aa1fc4d42dff6dd55516d000b0e50af6a053e3c894d6f30bb9d0d27461d0b353ff246b281def8ce6dfd80')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  python2 setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  python2 setup.py install --prefix=/usr --root=$pkgdir -O1 --skip-build
+}
+

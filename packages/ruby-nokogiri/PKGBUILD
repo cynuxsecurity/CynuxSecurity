@@ -1,0 +1,30 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=ruby-nokogiri
+_pkgname=nokogiri
+pkgver=1.11.1
+pkgrel=1
+pkgdesc='An HTML, XML, SAX, and Reader parser.'
+arch=('any')
+license=('MIT')
+depends=('ruby-mini_portile2')
+makedepends=('ruby-rdoc')
+options=('!distcc')
+url='http://nokogiri.org'
+source=("https://rubygems.org/gems/$_pkgname-$pkgver.gem")
+sha512sums=('6d73cde64190afd0850eca9bedb41ceccd34919f04bd83726ba41cf1bda1bab3ecd56a5c4d391f1eb9f7e407a80ec65c922a2ebf8c7854ffc8a08bbd284f6827')
+noextract=("$_pkgname-$pkgver.gem")
+
+package() {
+  _gemdir=$(ruby -e 'puts Gem.default_dir')
+
+  if [[ $CARCH == arm* ]] ; then
+    gem install --no-user-install --ignore-dependencies --no-rdoc --no-ri \
+      -i "$pkgdir$_gemdir" "$_pkgname-$pkgver.gem"
+  else
+    gem install --no-user-install --ignore-dependencies -i "$pkgdir$_gemdir" \
+      "$_pkgname-$pkgver.gem"
+  fi
+}
+

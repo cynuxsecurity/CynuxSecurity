@@ -1,35 +1,41 @@
-# Maintainer: CynuxSecurity <team@cynuxsecurity.org>
-
-buildarch=1
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
 
 pkgname=hash-identifier
-pkgver=1.1
-pkgrel=5
+pkgver=6.0e08a97
+pkgrel=1
+pkgdesc='Software to identify the different types of hashes used to encrypt data and especially passwords.'
 groups=('cynuxsecurity' 'cynuxsecurity-crypto')
-pkgdesc="Identifies the different types of hashes used to encrypt data, especially passwords"
 arch=('any')
-url='http://code.google.com/p/hash-identifier'
-license=('GPL3')
-makedepends=('subversion' 'dos2unix')
-depends=('python2')
-source=("${pkgname}::https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/hash-identifier/Hash_ID_v${pkgver}.py")
-sha512sums=('af889ebd84d2bd73c9a9623b5573bbb8a4cf5d3ffa6de75b272644905c4c1fa7e5bfcfb24d5ac75ffd73e4305447dd357f16b6248a16424094fc8b8cffca378d')
+url='https://github.com/blackploit/hash-identifier'
+license=('custom:unknown')
+depends=('python')
+makedepends=('git' 'dos2unix')
+source=("git+https://github.com/blackploit/$pkgname.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
 
 prepare() {
-  cd "${srcdir}"
-  grep -iRl 'python' "${pkgname}" | xargs sed -i 's|python$|python2|'
+  cd $pkgname
+
+  dos2unix hash-id.py
 }
 
 package() {
-  cd "${srcdir}"
-  install -dm755 "${pkgdir}/usr/bin"
-  install -dm755 "${pkgdir}/usr/share/${pkgname}"
-  cp "${pkgname}" "${pkgdir}/usr/share/${pkgname}"
+  cd $pkgname
 
-cat > "${pkgdir}/usr/bin/hashid" <<EOF
-#!/bin/sh
-python2 "/usr/share/${pkgname}/${pkgname}" "\$@"
-EOF
-chmod 755 "${pkgdir}/usr/bin/hashid"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 755 hash-id.py "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+
+  rm README.md
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
 }
 

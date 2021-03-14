@@ -1,0 +1,26 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=hollows-hunter
+pkgver=0.2.9
+pkgrel=1
+pkgdesc='Scans all running processes. Recognizes and dumps a variety of potentially malicious implants (replaced/injected PEs, shellcodes, hooks, in-memory patches).'
+url='https://github.com/hasherezade/hollows_hunter'
+groups=('cynuxsecurity' 'cynuxsecurity-windows' 'cynuxsecurity-malware'
+        'cynuxsecurity-binary')
+license=('BSD')
+arch=('any')
+makedepends=('unzip')
+source=("https://github.com/hasherezade/${pkgname//-/_}/releases/download/v$pkgver/${pkgname//-/_}64.zip"
+        "https://github.com/hasherezade/${pkgname//-/_}/releases/download/v$pkgver/${pkgname//-/_}32.zip")
+sha512sums=('ae7085a25a31691c697ffec0cfa9f62300a146f505f2118e75398b7d5c58034f978b09b7fb87d45a644a708f9fedce34898a64393d2d18e8855bdce933fb5501'
+            'e7aa172dc9951598d0ac7294d614ae8244fd73e18f12b284628ed78383017d819d3f74560c10b8464b19966e02cea71613d5af7b57daca31200a1782000a79bc')
+noextract=("${pkgname//-/_}64.zip" "${pkgname//-/_}32.zip")
+
+package() {
+  install -dm 755 "$pkgdir/usr/share/windows/$pkgname/"{64,32}
+
+  unzip -qq "${pkgname//-/_}64.zip" -d "$pkgdir/usr/share/windows/$pkgname/64/"
+  unzip -qq "${pkgname//-/_}32.zip" -d "$pkgdir/usr/share/windows/$pkgname/32/"
+}
+

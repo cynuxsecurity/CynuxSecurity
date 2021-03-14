@@ -1,0 +1,40 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=gowitness
+pkgver=165.33c35a5
+pkgrel=1
+pkgdesc='A golang, web screenshot utility using Chrome Headless.'
+arch=('x86_64' 'aarch64')
+groups=('cynuxsecurity' 'cynuxsecurity-webapp' 'cynuxsecurity-recon')
+url='https://github.com/sensepost/gowitness'
+license=('GPL3')
+depends=('chromium')
+makedepends=('git' 'go-pie')
+source=("git+https://github.com/sensepost/$pkgname.git")
+sha512sums=('SKIP')
+_url='github.com/sensepost/gowitness'
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  mkdir -p "src/$_url" && rm -rf "src/$_url" && mv $pkgname "src/$_url" &&
+    cd "src/$_url"
+
+  GOPATH="$srcdir" go get -v -d $_url
+  GOPATH="$srcdir" go build -v $_url
+}
+
+package() {
+  cd "src/$_url"
+
+  install -Dm 755 $pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

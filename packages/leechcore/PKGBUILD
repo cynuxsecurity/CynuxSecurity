@@ -1,0 +1,30 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=leechcore
+_pkgname=LeechCore
+pkgver=2.3
+pkgrel=1
+pkgdesc='Physical Memory Acquisition Library & The LeechAgent Remote Memory Acquisition Agent.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/ufrisk/LeechCore/releases'
+license=('GPL3')
+depends=('libusb')
+makedepends=('gcc' 'make')
+source=("https://github.com/ufrisk/$_pkgname/archive/v$pkgver.tar.gz")
+sha512sums=('d592e2ce844e7ab9521e765e3bb2952ab04424d04f7569f70706bd67895f03dbd48af2e13fbb082b55cdfd73bdf3ca613f4f8717c5de31a86e4f83057ca31f67')
+
+build() {
+  cd "$_pkgname-$pkgver/$pkgname"
+
+  make
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  install -Dm 755 "files/$pkgname.so" "$pkgdir/usr/lib/$pkgname.so"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+

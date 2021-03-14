@@ -1,29 +1,57 @@
-# Maintainer: CynuxSecurity <team@cynuxsecurity.org>
-
-buildarch=220
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
 
 pkgname=netdiscover
-pkgver=0.5.1
+pkgver=162.e3c3331
 pkgrel=1
 groups=('cynuxsecurity' 'cynuxsecurity-recon' 'cynuxsecurity-wireless')
-pkgdesc="An active/passive address reconnaissance tool, mainly developed for those wireless networks without dhcp server, when you are wardriving. It can be also used on hub/switched networks."
-arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
-url="https://github.com/netdiscover-scanner/netdiscover"
+pkgdesc='An active/passive address reconnaissance tool, mainly developed for those wireless networks without dhcp server, when you are wardriving. It can be also used on hub/switched networks.'
+arch=('x86_64' 'aarch64')
+url='http://nixgeneration.com/~jaime/netdiscover/'
 license=('GPL')
-makedepends=('dos2unix')
-depends=('libpcap' 'libnet')
-source=("${url}/archive/${pkgver}.tar.gz")
-sha512sums=('b8b60b77c55966eb950aafb7d5d924e88b437a96a3d227cd943156d2a1c3ed81df57e90930132e11e13e341f43f475dbb27936ebf2db2c23d66885c71d7a1960')
+depends=('libnet' 'libpcap')
+makedepends=('git' 'gcc' 'make' 'dos2unix')
+provides=('netdiscover')
+conflicts=('netdiscover')
+source=("git+https://github.com/netdiscover-scanner/$pkgname.git"
+        'misc.diff'
+        'oui.diff')
+sha512sums=('SKIP'
+            '3b00414c351b05a87301098cdef66bd119f9a156e04fffc3ce7a1a426e0a4e60a8c8a31bab552a9762646a76d094828e3da8f7cb3ab23585f937d623b28c4d82'
+            'c2fb66559a89e2bcc574ae7753f349c885b10871473d6fe9640b4ae286ffe84a0f7e688c2357c68803452ca9c5fafe1df6651c67051519ff2044f655c05e467f')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  cd $pkgname
+
+  #patch -p0 -i "$srcdir/oui.diff"
+  #patch -p0 -i "$srcdir/misc.diff"
+
+  ./update-oui-database.sh
+  ./autogen.sh
+}
 
 build() {
-    cd ${pkgname}-${pkgver}
-    sh update-oui-database.sh
-    ./autogen.sh
-    ./configure --prefix=/usr/ --sysconfdir=/etc/ --sbindir=/usr/bin
-    make
+  cd $pkgname
+
+  ./configure --prefix=/usr --sysconfdir=/etc --sbindir=/usr/bin
+
+  make
 }
 
 package() {
-    cd ${pkgname}-${pkgver}
-    make DESTDIR="$pkgdir" install
+  cd $pkgname
+
+  make DESTDIR="$pkgdir" install
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README* INSTALL AUTHORS \
+    ChangeLog doc/netdiscover.txt
+  install -Dm 644 doc/netdiscover.8 "$pkgdir/usr/share/man/man8/$pkgname.8"
+  install -Dm 644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
 }
+

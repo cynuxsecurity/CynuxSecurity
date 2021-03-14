@@ -1,0 +1,46 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=whatportis
+pkgver=48.e8e1665
+pkgrel=3
+groups=('cynuxsecurity' 'cynuxsecurity-misc')
+pkgdesc='A command to search port names and numbers.'
+arch=('any')
+url='https://github.com/ncrocfer/whatportis'
+license=('MIT')
+depends=('python' 'python-click' 'python-simplejson' 'python-flask'
+         'python-tinydb' 'python-prettytable' 'python-requests')
+makedepends=('git' 'python-setuptools')
+source=('git+https://github.com/ncrocfer/whatportis.git'
+        'setup.py.patch')
+sha512sums=('SKIP'
+            '5675a69a37e86de5b9f65587916d5f5078531520fe0f68b06a22035997e4c9e2d6f2e5cbb2879413b950ab67a720af552d43f563176c7d25ee1f0f1952923216')
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  patch -p1 < setup.py.patch
+}
+
+build() {
+  cd $pkgname
+
+  python setup.py build
+}
+
+package() {
+  cd $pkgname
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.rst
+  install -Dm 644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  #chmod 666 "$pkgdir/usr/lib/python3.9/site-packages/$pkgname/ports.json"
+}
+

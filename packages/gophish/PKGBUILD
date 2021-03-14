@@ -1,39 +1,57 @@
-# Maintainer: CynuxSecurity <team@cynuxsecurity.org>
-# Contributor: xorond <xorond@gmail.com>
-
-buildarch=220
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
 
 pkgname=gophish
-pkgver=0.11.0
+pkgver=764.54d9eb2
 pkgrel=1
-pkgdesc="Open-source phishing toolkit designed for businesses and penetration testers. It provides the ability to quickly and easily setup and execute phishing engagements and security awareness training."
-arch=('armv6h' 'armv7h' 'x86_64' 'i686' 'aarch64')
-url="https://github.com/gophish/gophish"
-groups=('cynuxsecurity' 'cynuxsecurity-social-engineering')
-license=("MIT")
-depends=('glibc' 'bash')
-makedepends=('go' 'git')
-source=("https://github.com/gophish/gophish/archive/v${pkgver}.tar.gz")
-sha512sums=('ca5a857674d6a025ce60abdb8848e479a834b34abacb3c4a3ba70865173e7b5c8110b25771f359b592e9b806e9bf64b6a095b590bd460b220ad718d1f5309a8f')
+groups=('cynuxsecurity' 'cynuxsecurity-social')
+pkgdesc='Open-Source Phishing Framework.'
+arch=('x86_64' 'aarch64')
+url='https://github.com/gophish/gophish'
+license=('MIT')
+makedepends=('git' 'go-pie')
+source=("git+https://github.com/$pkgname/$pkgname.git")
+sha512sums=('SKIP')
+_url="github.com/$pkgname/$pkgname"
+
+pkgver() {
+  cd $pkgname
+
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
 
 build() {
-  cd ${pkgname}-${pkgver}
-  GOPATH="${srcdir}" go get -fix -v -x github.com/gophish/gophish
+  cd $pkgname
+
+  mkdir -p "src/$_url" && rm -rf "src/$_url" && mv $pkgname "src/$_url" &&
+    cd "src/$_url"
+
+  GOPATH="$srcdir" go get -d -t $_url
 }
 
 package() {
-  cd "${pkgname}-${pkgver}"
-  GOPATH="${srcdir}" go build -v github.com/gophish/gophish
-  install -dm755 "${pkgdir}/usr/bin"
-  install -dm755 "${pkgdir}/usr/share/licenses/${pkgname}"
-  install -dm755 "${pkgdir}/usr/share/${pkgname}"
-  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-  cp -a --no-preserve=ownership * "${pkgdir}/usr/share/${pkgname}/"
+  cd $pkgname
 
-cat > "${pkgdir}/usr/bin/gophish" << EOF
-#!/usr/bin/env bash
-cd /usr/share/gophish
-./gophish "\$@"
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  GOPATH="$srcdir" go build -v $_url
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" *.md VERSION
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm -rf LICENSE *.md
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  chmod -R g-w "$pkgdir/usr/share/$pkgname"
+  chmod +x "$pkgdir/usr/share/gophish/$pkgname"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec ./$pkgname "\$@"
 EOF
-  chmod 755 "${pkgdir}/usr/bin/gophish"
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
 }
+

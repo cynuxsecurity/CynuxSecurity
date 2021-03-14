@@ -1,0 +1,58 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=spiderfoot
+pkgver=3.3
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-recon')
+pkgdesc='The Open Source Footprinting Tool.'
+url='https://github.com/smicallef/spiderfoot'
+arch=('any')
+license=('GPL2')
+depends=('python' 'python-adblockparser' 'python-dnspython' 'python-exifread'
+         'python-cherrypy' 'python-mako' 'python-beautifulsoup4' 'python-lxml'
+         'python-netaddr' 'python-pysocks' 'python-requests' 'python-ipwhois'
+         'python-ipaddr' 'python-phonenumbers' 'python-pygexf' 'python-pypdf2'
+         'python-stem' 'python-python-whois' 'python-future' 'python-secure'
+         'python-pyopenssl' 'python-python-docx' 'python-python-pptx'
+         'python-networkx' 'python-cryptography' 'python-publicsuffixlist')
+source=("https://github.com/smicallef/$pkgname/archive/v$pkgver.tar.gz")
+sha512sums=('5e888d263ec46466d501dc3b383d5b5bb29b4271556a14f40bedcda3eda910e1e100b00d440b0b5c2e744507273629ce0b18e56d4ca4f45d194d6924ce25794c')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+
+  #sed -i 's|treebuilders._base|treebuilders.base|g' ext/bs4/builder/_html5lib.py
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/bin"
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md THANKYOU \
+    VERSION
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  rm README.md LICENSE THANKYOU VERSION
+
+  cp -a * "$pkgdir/usr/share/$pkgname/"
+
+  cat > "$pkgdir/usr/bin/$pkgname" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec python sf.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+
+  cat > "$pkgdir/usr/bin/$pkgname-cli" << EOF
+#!/bin/sh
+cd /usr/share/$pkgname
+exec python sfcli.py "\$@"
+EOF
+
+  chmod +x "$pkgdir/usr/bin/$pkgname-cli"
+}
+

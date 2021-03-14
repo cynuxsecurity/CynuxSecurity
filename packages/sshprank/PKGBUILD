@@ -1,0 +1,26 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=sshprank
+pkgver=1.3.5
+pkgrel=1
+groups=('cynuxsecurity' 'cynuxsecurity-cracker' 'cynuxsecurity-scanner'
+        'cynuxsecurity-fingerprint')
+pkgdesc='A fast SSH mass-scanner, login cracker and banner grabber tool using the python-masscan and shodan module.'
+url='https://nullsecurity.net/tools/cracker.html'
+license=('custom:unknown')
+arch=('any')
+depends=('python' 'python-python-masscan' 'python-paramiko' 'python-shodan')
+source=("https://github.com/nullsecuritynet/tools/raw/master/cracker/$pkgname/release/$pkgname-$pkgver.tar.gz")
+sha512sums=('71f3802204659e05207a55e41d18de200c563ba312124fdb682fc87bfcdc4e5c76dc37d20f4ed62fdc0b3b75100c388975021804824ec2e130b964d26f6d461f')
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+
+  install -Dm 755 "$pkgname.py" "$pkgdir/usr/bin/$pkgname"
+  cp -a lists "$pkgdir/usr/share/$pkgname/"
+  install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname/" README.md docs/TODO
+}
+

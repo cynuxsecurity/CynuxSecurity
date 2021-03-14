@@ -1,0 +1,27 @@
+# This file is part of CynuxSecurity Linux ( https://www.cynuxsecurity.org/ ).
+# See COPYING for license details.
+
+pkgname=cookiejar
+pkgver=0.0.3
+pkgrel=2
+pkgdesc='Cookiecutter templates discovery and management.'
+arch=('any')
+url='https://pypi.org/project/cookiejar/#files'
+license=('BSD')
+depends=('python' 'python-pager' 'python-cookiecutter')
+makedepends=('python-setuptools')
+source=("https://files.pythonhosted.org/packages/ee/ed/9f12c2ff7678dc2219b925b191dea0ab9f4ae28f885180c864ca5ce48f9a/$pkgname-$pkgver.tar.gz")
+sha512sums=('833a2d7903787b7058d8326f95460de9ee05ec03142076660d966a17728a5ab504061d008bd9ad9f8d27155e949a4c8d7aaeb5f8eed4a2546dc0625291944188')
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py build
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py install --root="$pkgdir" --prefix=/usr -O1 --skip-build
+}
+
